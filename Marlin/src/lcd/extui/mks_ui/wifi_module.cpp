@@ -911,7 +911,7 @@ uint8_t exploreDisk(const char * const path, const uint8_t recu_level, const boo
 }
 
 static void wifi_gcode_exec(uint8_t * const cmd_line) {
-  char tempBuf[100] = { '\0' };
+  char tempBuf[140] = { '\0' }; // @adv was too small
   int cmd_value;
   volatile int print_rate;
 

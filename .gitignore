@@ -177,3 +177,6 @@ tags
 .aider*
 !.aiderignore
 .env
+
+/data/
+.python-version

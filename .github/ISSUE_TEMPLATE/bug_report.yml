@@ -1,43 +1,19 @@
 name: 🪲 Report a bug
-description: Create a bug report to help improve Marlin Firmware
+description: Create a bug report to help improve ADVd12 firmware
 title: "[BUG] (bug summary)"
 labels: ["Bug: Potential ?"]
 body:
   - type: markdown
     attributes:
-      value: >
-        Do you want to ask a question? Are you looking for support? Please use one of the [support links](https://github.com/MarlinFirmware/Marlin/issues/new/choose).
-
-  - type: markdown
-    attributes:
       value: |
-        **Thank you for reporting a bug in Marlin Firmware!**
-
-        ## Before Reporting a Bug
-
-        - Read and understand Marlin's [Code of Conduct](https://github.com/MarlinFirmware/Marlin/blob/bugfix-2.1.x/.github/code_of_conduct.md). You are expected to comply with it, including treating everyone with respect.
-
-        - Test with the [`bugfix-2.1.x` branch](https://github.com/MarlinFirmware/Marlin/archive/bugfix-2.1.x.zip) to see whether the issue still exists.
+        **Thank you for reporting a bug in ADVd12 Firmware!**
 
         ## Instructions
 
-        Please follow the instructions below. Failure to do so may result in your issue being closed. See [Contributing to Marlin](https://github.com/MarlinFirmware/Marlin/blob/bugfix-2.1.x/.github/contributing.md) for additional guidelines.
+        Please follow the instructions below:
 
         1. Provide a good title starting with [BUG].
         2. Fill out all sections of this bug report form.
-        3. Always attach configuration files so we can build and test your setup.
-
-  - type: dropdown
-    attributes:
-      label: Did you test the latest `bugfix-2.1.x` code?
-      description: >-
-        Always try the latest code to make sure the issue you are reporting is not already fixed. To download
-        the latest code just [click this link](https://github.com/MarlinFirmware/Marlin/archive/bugfix-2.1.x.zip).
-      options:
-        - Yes, and the problem still exists.
-        - No, but I will test it now!
-    validations:
-      required: true
 
   - type: markdown
     attributes:
@@ -54,14 +30,9 @@ body:
 
         When pasting formatted text don't forget to put ` ``` ` (on its own line) before and after to make it readable.
       placeholder: |
-        Marlin doesn't work.
+        ADVd12 doesn't work.
     validations:
       required: true
-
-  - type: input
-    attributes:
-      label: Bug Timeline
-      description: Is this a new bug or an old issue? When did it first start?
 
   - type: textarea
     attributes:
@@ -93,42 +64,24 @@ body:
 
   - type: input
     attributes:
-      label: Version of Marlin Firmware
-      description: "See the About Menu on the LCD or the output of `M115`. NOTE: For older releases we only patch critical bugs."
+      label: Version of ADVd12 firmware
+      description: "See the About Menu on the LCD or the output of `M115`."
     validations:
       required: true
 
   - type: input
     attributes:
       label: Printer model
-      description: Creality Ender-3, Prusa mini, or Kossel Delta?
-
-  - type: input
-    attributes:
-      label: Electronics
-      description: Stock electronics, upgrade board, or something else?
-
-  - type: input
-    attributes:
-      label: LCD/Controller
-      description: Some Marlin behaviors are determined by the controller. Describe your LCD/Controller model and version.
-
-  - type: input
-    attributes:
-      label: Other add-ons
-      description: Please list any other hardware add-ons that could be involved.
+      description: Wanhao D12-230 Dual Extruder with BLTouch?
 
   - type: dropdown
     attributes:
       label: Bed Leveling
       description: What kind of bed leveling compensation are you using?
       options:
-        - UBL Bilinear mesh
-        - ABL Bilinear mesh
-        - ABL Linear grid
-        - ABL 3-point
-        - MBL Manual Bed Leveling
-        - No Bed Leveling
+        - BLTouch
+        - BLTouch clone
+        - Manual Bed Leveling
 
   - type: dropdown
     attributes:
@@ -158,21 +111,9 @@ body:
   - type: markdown
     attributes:
       value: |
-        # Attachments
-
-  - type: checkboxes
-    attributes:
-      label: Don't forget to include
-      options:
-        - label: A ZIP file containing your `Configuration.h` and `Configuration_adv.h`.
-          required: true
-
-  - type: markdown
-    attributes:
-      value: |
         ### Optional items to include:
         - 'Log output from the host. (`M111 S247` for maximum logging.)'
-        - Images or videos demonstrating the problem, if it helps to make it clear.
+        - Images demonstrating the problem, if it helps to make it clear.
         - A G-Code file that exposes the problem, if not affecting _all_ G-code.
 
   - type: textarea

@@ -18,7 +18,7 @@ Clearly describe the submitted changes with lots of details. Include images wher
 
 ### Requirements
 
-<!-- Does this PR require a specific board, LCD, etc.? -->
+<!-- Does this PR require a specific hardware? -->
 
 ### Benefits
 

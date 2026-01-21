@@ -81,7 +81,7 @@
 #endif
 
 #if !defined(D12_SIMULATOR)
-#define MKS_WIFI_MODULE  // Not supported by the Simulator
+//#define MKS_WIFI_MODULE  // Not supported by the Simulator
 #endif
 
 #define TOUCH_SCREEN

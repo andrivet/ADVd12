@@ -49,11 +49,11 @@
 
 // Model of printer
 // Change also the default environment in platformio.ini
-#define D12_230_v1_2
+//#define D12_230_v1_2
 //#define D12_230_v1_3
 //#define D12_500_Pro
 //#define D12_300_Pro
-//#define D12_SIMULATOR
+#define D12_SIMULATOR
 
 // Kind of drivers
 //#define D12_FULL_TMC2209

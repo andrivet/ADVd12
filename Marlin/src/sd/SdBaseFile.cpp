@@ -603,7 +603,7 @@ bool SdBaseFile::open(SdBaseFile * const dirFile, const char *path, const uint8_
     uint8_t dlname[LONG_FILENAME_LENGTH];
   #endif
 
-  if (!dirFile || isOpen()) return false;
+  if (!dirFile || isOpen() || !dirFile->vol_) return false;
 
   if (*path == '/') {                                         // Path starts with '/'
     if (!dirFile->isRoot()) {                                 // Is the passed dirFile the root?

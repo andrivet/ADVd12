@@ -67,7 +67,7 @@ def encrypt_mks(source, target, env, new_name):
     finally:
         fwfile.close()
         enfile.close()
-        fwpath.unlink()
+        # fwpath.unlink() Keep the unencrypted file for now to be able to upload it directly if needed
 
 def add_post_action(action):
     env.AddPostAction(str(Path("$BUILD_DIR", "${PROGNAME}.bin")), action)

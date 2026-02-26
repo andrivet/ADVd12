@@ -53,14 +53,13 @@
 //#define D12_230_v1_3
 //#define D12_500_Pro
 //#define D12_300_Pro
-#define D12_SIMULATOR
+//#define D12_SIMULATOR
 
 // Kind of drivers
 //#define D12_FULL_TMC2209
 
 // BLTouch
-#define D12_BL_TOUCH
-#define NUM_SERVOS 1
+//#define D12_BL_TOUCH
 
 // Kind of display
 //#define TFT_COLOR_UI

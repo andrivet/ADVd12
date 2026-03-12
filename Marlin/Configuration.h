@@ -63,10 +63,14 @@
 
 // Kind of display
 //#define TFT_COLOR_UI
-#define TFT_LVGL_UI
+//#define TFT_LVGL_UI
+#define TFT_ADV_UI
 #if defined(D12_SIMULATOR)
 // Set to 0 to avoid long delay when showing the logo
-#define HAS_LOGO_IN_FLASH 0
+#define HAS_LOGO_IN_FLASH 1
+#define REINIT_NOISY_LCD // To avoid compilation waning
+#else
+#define HAS_LOGO_IN_FLASH 1
 #endif
 
 //===========================================================================
@@ -3694,6 +3698,7 @@
 #endif
 
 #if ENABLED(TFT_LVGL_UI)
+  // Disable for the moment because it is not stable enough
   //#define MKS_WIFI_MODULE // MKS WiFi module
 #endif
 

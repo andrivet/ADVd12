@@ -416,6 +416,11 @@
   #define STD_ENCODER_PULSES_PER_STEP 4
 #endif
 
+#if ENABLED(TFT_ADV_UI)
+  #define HAS_TFT_ADV_UI 1
+  #define SERIAL_RUNTIME_HOOK 1
+#endif
+
 // FSMC/SPI TFT Panels
 #if ENABLED(TFT_CLASSIC_UI)
   #define TFT_SCALED_DOGLCD 1
@@ -741,7 +746,7 @@
   #define HAS_FSMC_TFT 1
   #if TFT_SCALED_DOGLCD
     #define HAS_FSMC_GRAPHICAL_TFT 1
-  #elif HAS_TFT_LVGL_UI
+  #elif HAS_TFT_LVGL_UI || HAS_TFT_ADV_UI
     #define HAS_TFT_LVGL_UI_FSMC 1
   #endif
 #elif ENABLED(TFT_INTERFACE_SPI)

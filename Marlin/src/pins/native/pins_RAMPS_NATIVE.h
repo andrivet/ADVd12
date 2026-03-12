@@ -405,7 +405,7 @@
 // LCD / Controller
 //
 
-#if ANY(TFT_COLOR_UI, TFT_CLASSIC_UI, TFT_LVGL_UI)
+#if ANY(TFT_COLOR_UI, TFT_CLASSIC_UI, TFT_LVGL_UI, TFT_ADV_UI)
 
   #define TFT_CS_PIN                          49
   #define TFT_DC_PIN                          43

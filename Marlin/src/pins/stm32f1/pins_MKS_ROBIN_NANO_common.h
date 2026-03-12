@@ -160,7 +160,7 @@
   //#define POWER_LOSS_PIN                  PA2   // PW_DET
   //#define PS_ON_PIN                       PB2   // PW_OFF
 
-#if HAS_TFT_LVGL_UI
+#if HAS_TFT_LVGL_UI || HAS_TFT_ADV_UI
   #define WIFI_IO0_PIN                      PC13
   #define WIFI_IO1_PIN                      PC7
   #define WIFI_RESET_PIN                    PA5

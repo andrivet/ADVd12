@@ -73,6 +73,10 @@
   #include <lvgl.h>
 #endif
 
+#if HAS_TFT_ADV_UI
+  #include "advd12/core.h"
+#endif
+
 #if HAS_DWIN_E3V2
   #include "lcd/dwin/common/encoder.h"
   #if ENABLED(DWIN_CREALITY_LCD)
@@ -895,6 +899,7 @@ void Marlin::idle(const bool no_stepper_sleep/*=false*/) {
 
   // Update the LVGL interface
   TERN_(HAS_TFT_LVGL_UI, LV_TASK_HANDLER());
+  TERN_(HAS_TFT_ADV_UI, advd12::Core::task_handler());
 
   // Manage Fixed-time Motion Control
   TERN_(FT_MOTION, ftMotion.loop());
@@ -925,6 +930,7 @@ void Marlin::kill(FSTR_P const lcd_error/*=nullptr*/, FSTR_P const lcd_component
   #endif
 
   TERN_(HAS_TFT_LVGL_UI, lv_draw_error_message(lcd_error));
+  TERN_(HAS_TFT_ADV_UI, advd12::Core::draw_error_message(lcd_error));
 
   // "Error:Printer halted. kill() called!"
   SERIAL_ERROR_MSG(STR_ERR_KILLED);
@@ -1671,6 +1677,11 @@ void setup() {
       if (!card.isMounted()) SETUP_RUN(card.mount()); // Mount SD to load graphics and fonts
     #endif
     SETUP_RUN(tft_lvgl_init());
+  #endif
+
+  #if HAS_TFT_ADV_UI
+    if (!card.isMounted()) SETUP_RUN(card.mount()); // Mount SD to load graphics and fonts
+    SETUP_RUN(advd12::Core::init());
   #endif
 
   #if ALL(HAS_WIRED_LCD, SHOW_BOOTSCREEN)

@@ -108,7 +108,8 @@ void Core::flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p
 static bool get_touch(int16_t * const x, int16_t * const y) {
   if(!XPT2046::getRawPoint(x, y)) return false;
 
-  // TODO: calibration
+  *x = uint16_t((uint32_t(*x) * _TOUCH_CALIBRATION_X) >> 16) + _TOUCH_OFFSET_X;
+  *y = uint16_t((uint32_t(*y) * _TOUCH_CALIBRATION_Y) >> 16) + _TOUCH_OFFSET_Y;
 
   return true;
 }

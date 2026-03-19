@@ -31,12 +31,12 @@ MainPanel main_panel;
 void MainPanel::draw() {
   panel();
 
-  button(IMG_CONTROLS, "Controls", 28, 34, [this] { return on_controls(); });
-  button(IMG_LEVELING, "Leveling", 124, 34, [this] { return on_leveling(); });
-  button(IMG_PRINT, "Printing", 220, 34, [this] { return on_print(); });
-  button(IMG_TUNING, "Tools", 28, 154, [this] { return on_tuning(); });
-  button(IMG_SETTINGS, "Settings", 124, 154, [this] { return on_settings(); });
-  button(IMG_INFO, "Info", 220, 154, [this] { return on_info(); });
+  button(IMG_CONTROLS, "Controls", 28, 34, 64, 64, [this] { return on_controls(); });
+  button(IMG_LEVELING, "Leveling", 124, 34, 64, 64, [this] { return on_leveling(); });
+  button(IMG_PRINT, "Printing", 220, 34, 64, 64, [this] { return on_print(); });
+  button(IMG_TUNING, "Tools", 28, 154, 64, 64, [this] { return on_tuning(); });
+  button(IMG_SETTINGS, "Settings", 124, 154, 64, 64, [this] { return on_settings(); });
+  button(IMG_INFO, "Info", 220, 154, 64, 64, [this] { return on_info(); });
 
   rectangle(330, 0, 3, 284);
   rectangle(0, 284, 480, 3);

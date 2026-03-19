@@ -26,6 +26,7 @@
 #include "panels.h"
 #include "../core.h"
 
+
 static lv_style_t style_panel;
 static lv_style_t style_rectangle;
 static lv_style_t style_button_down;
@@ -108,13 +109,20 @@ lv_obj_t* Panel::rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coor
   return rect;
 }
 
-lv_obj_t* Panel::button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, std::function<void()> cb) {
-  auto btn = lv_img_create(scr_);
+lv_obj_t* Panel::button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, std::function<void()> cb) {
+  lv_obj_t * btn = lv_imgbtn_create(lv_scr_act());
+  lv_obj_set_pos(btn, x, y);
+  lv_obj_set_width(btn, w);
+  lv_obj_set_height(btn, h);
+
+  lv_imgbtn_set_src(btn, LV_IMGBTN_STATE_RELEASED, nullptr, img, nullptr);
+  lv_imgbtn_set_src(btn, LV_IMGBTN_STATE_PRESSED,  nullptr, img, nullptr);
+  lv_imgbtn_set_src(btn, LV_IMGBTN_STATE_DISABLED, nullptr, img, nullptr);
 
   lv_obj_add_style(btn, &style_button_up, LV_PART_MAIN | LV_STATE_DEFAULT);
   lv_obj_add_style(btn, &style_button_down, LV_PART_MAIN | LV_STATE_PRESSED);
-  lv_img_set_src(btn, img);
-  lv_obj_set_pos(btn, x, y);
+
+  lv_obj_clear_flag(btn, LV_OBJ_FLAG_SCROLLABLE);
 
   auto label = lv_label_create(scr_);
   lv_label_set_text(label, text);
@@ -122,6 +130,7 @@ lv_obj_t* Panel::button(const char *img, const char *text, lv_coord_t x, lv_coor
   lv_obj_align_to(label, btn, LV_ALIGN_BOTTOM_MID, 0, 32);
 
   lv_obj_add_event_cb(btn, handle_event, LV_EVENT_PRESSED, &cb);
+
   return btn;
 }
 

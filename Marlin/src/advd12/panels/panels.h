@@ -54,7 +54,7 @@ struct Panel {
 protected:
   void panel();
   lv_obj_t* rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height);
-  lv_obj_t* button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, std::function<void()> cb);
+  lv_obj_t* button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, std::function<void()> cb);
   lv_obj_t* icon(const char *img, lv_coord_t x, lv_coord_t y);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, LABEL label);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind);

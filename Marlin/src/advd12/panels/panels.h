@@ -64,7 +64,7 @@ protected:
   void switch_panel(Panel& panel);
 
   void layout_main();
-  void layout_menu();
+  void layout_menu(const char *title);
   void variables_time();
   void variables_xyz();
 

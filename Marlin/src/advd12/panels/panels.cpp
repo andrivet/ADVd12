@@ -197,10 +197,15 @@ void Panel::layout_main() {
   rectangle(0, 284, 480, 3);
 }
 
-void Panel::layout_menu() {
+void Panel::layout_menu(const char *title) {
   rectangle(344, 0, 3, 284);
   rectangle(0, 284, 480, 3);
-  rectangle(0, 53, 344, 3);
+  auto rect = rectangle(0, 53, 344, 3);
+
+  auto label = lv_label_create(scr_);
+  lv_label_set_text(label, title);
+  lv_obj_align_to(label, rect, LV_ALIGN_TOP_MID, 0, -36);
+  lv_obj_add_style(label, &style_label_regular, LV_PART_MAIN | LV_STATE_DEFAULT);
 }
 
 void Panel::variables_time() {

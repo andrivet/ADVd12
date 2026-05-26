@@ -26,6 +26,7 @@
 #pragma once
 #include <functional>
 #include <lvgl.h>
+#include "events.h"
 
 enum struct LABEL {
   REGULAR,
@@ -48,20 +49,45 @@ enum struct ALIGN {
 struct Panel {
   virtual ~Panel() = default;
 
-  virtual void draw() = 0;
-  virtual void clear();
-
 protected:
-  void panel();
+  void create();
+  virtual void prepare() = 0;
+
   lv_obj_t* rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height);
-  lv_obj_t* button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, std::function<void()> cb);
+  lv_obj_t* big_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y);
+  lv_obj_t* medium_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y);
+  lv_obj_t* control(const char *img, lv_coord_t x, lv_coord_t y);
   lv_obj_t* icon(const char *img, lv_coord_t x, lv_coord_t y);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, LABEL label);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind);
 
+  void switch_panel(Panel& panel);
+
+  void layout_main();
+  void layout_menu();
+  void variables_time();
+  void variables_xyz();
+
 private:
-  static void handle_event(lv_event_t *e);
+  void release();
+  lv_obj_t* button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_coord_t label_y_offset);
 
 private:
   lv_obj_t *scr_ = nullptr;
+};
+
+template<typename Derived, unsigned N>
+struct PanelBase: Panel {
+  using Handler = void (Derived::*)(lv_event_t *);
+
+  void bind(lv_obj_t *obj, Handler handler) {
+    events_.bind(obj, static_cast<Derived*>(this), handler);
+  }
+
+  void reset_bindings() {
+    events_.reset();
+  }
+
+private:
+  EventBinder<Derived, N> events_;
 };

@@ -24,6 +24,7 @@
  */
 
 #include "panels.h"
+#include "../core/ids.h"
 #include "../core.h"
 
 
@@ -53,7 +54,7 @@ void advd12::Core::init_lvgl_styles() {
 
   lv_style_init(&style_button_down);
   lv_style_set_img_recolor(&style_button_down, lv_color_black());
-  lv_style_set_img_recolor_opa(&style_button_down, LV_OPA_70);
+  lv_style_set_img_recolor_opa(&style_button_down, LV_OPA_40);
 
   lv_style_init(&style_button_up);
 
@@ -82,23 +83,23 @@ void advd12::Core::init_lvgl_styles() {
   lv_style_set_text_font(&style_label_time, value_font);
 }
 
-void Panel::clear() {
+void Panel::release() {
   if(!scr_) return;
   lv_obj_del(scr_);
   scr_ = nullptr;
 }
 
-void Panel::handle_event(lv_event_t *e) {
-  auto user_data = lv_event_get_user_data(e);
-  auto cb = static_cast<std::function<void()>*>(user_data);
-  (*cb)();
-}
-
-void Panel::panel() {
+void Panel::create() {
   if(scr_ != nullptr) return;
   scr_ = lv_obj_create(nullptr);
   lv_obj_add_style(scr_, &style_panel, LV_PART_MAIN | LV_STATE_DEFAULT);
   lv_scr_load(scr_);
+}
+
+void Panel::switch_panel(Panel &panel) {
+  panel.create();
+  release();
+  panel.prepare();
 }
 
 lv_obj_t* Panel::rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height) {
@@ -109,8 +110,8 @@ lv_obj_t* Panel::rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coor
   return rect;
 }
 
-lv_obj_t* Panel::button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, std::function<void()> cb) {
-  lv_obj_t * btn = lv_imgbtn_create(lv_scr_act());
+lv_obj_t* Panel::button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_coord_t label_y_offset) {
+  lv_obj_t * btn = lv_imgbtn_create(scr_);
   lv_obj_set_pos(btn, x, y);
   lv_obj_set_width(btn, w);
   lv_obj_set_height(btn, h);
@@ -124,14 +125,26 @@ lv_obj_t* Panel::button(const char *img, const char *text, lv_coord_t x, lv_coor
 
   lv_obj_clear_flag(btn, LV_OBJ_FLAG_SCROLLABLE);
 
-  auto label = lv_label_create(scr_);
-  lv_label_set_text(label, text);
-  lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
-  lv_obj_align_to(label, btn, LV_ALIGN_BOTTOM_MID, 0, 32);
-
-  lv_obj_add_event_cb(btn, handle_event, LV_EVENT_PRESSED, &cb);
+  if(text) {
+    auto label = lv_label_create(scr_);
+    lv_label_set_text(label, text);
+    lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_align_to(label, btn, LV_ALIGN_BOTTOM_MID, 0, label_y_offset);
+  }
 
   return btn;
+}
+
+lv_obj_t* Panel::big_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y) {
+  return button(img, text, x, y, 64, 64, 32);
+}
+
+lv_obj_t* Panel::medium_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y) {
+  return button(img, text, x, y, 54, 54, 20);
+}
+
+lv_obj_t* Panel::control(const char *img, lv_coord_t x, lv_coord_t y) {
+  return button(img, nullptr, x, y, 48, 48, 0);
 }
 
 lv_obj_t* Panel::icon(const char *img, lv_coord_t x, lv_coord_t y) {
@@ -177,4 +190,39 @@ lv_obj_t* Panel::text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w
   lv_obj_set_width(label, width);
   lv_obj_set_style_text_align(label, label_align(align), LV_PART_MAIN);
   return label;
+}
+
+void Panel::layout_main() {
+  rectangle(344, 0, 3, 284);
+  rectangle(0, 284, 480, 3);
+}
+
+void Panel::layout_menu() {
+  rectangle(344, 0, 3, 284);
+  rectangle(0, 284, 480, 3);
+  rectangle(0, 53, 344, 3);
+}
+
+void Panel::variables_time() {
+  icon(IMG_EXTRUDER, 363, 19);
+  text("198.0", 398, 11, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
+  text("200", 398, 31, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
+
+  icon(IMG_BED, 363, 73);
+  text("100.6", 398, 65, 64, ALIGN::RIGHT, LABEL::BED);
+  text("100", 398, 85, 64, ALIGN::RIGHT, LABEL::BED);
+
+  icon(IMG_FAN, 363, 118);
+  text("100", 398, 118 + 4, 64, ALIGN::RIGHT, LABEL::FAN);
+
+  icon(IMG_ET, 363, 179);
+  text("00:32", 398, 179 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+  icon(IMG_TC, 363, 211);
+  text("12:34", 398, 211 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+  icon(IMG_PERCENT, 363, 243);
+  text("40", 398, 243 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+}
+
+void Panel::variables_xyz() {
+
 }

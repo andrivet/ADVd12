@@ -61,7 +61,7 @@ void Core::init() {
   // TODO: init servo and probe
 
   // TODO: draw main screen
-  main_panel.draw();
+  main_panel.show();
 }
 
 void Core::init_lvgl() {

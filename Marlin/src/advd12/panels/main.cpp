@@ -24,61 +24,55 @@
  */
 
 #include "main.h"
+
+#include "controls.h"
 #include "../core/ids.h"
 
-MainPanel main_panel;
+void MainPanel::show() {
+  create();
+  prepare();
+}
 
-void MainPanel::draw() {
-  panel();
+void MainPanel::prepare() {
+  layout_main();
+  variables_time();
 
-  button(IMG_CONTROLS, "Controls", 28, 34, 64, 64, [this] { return on_controls(); });
-  button(IMG_LEVELING, "Leveling", 124, 34, 64, 64, [this] { return on_leveling(); });
-  button(IMG_PRINT, "Printing", 220, 34, 64, 64, [this] { return on_print(); });
-  button(IMG_TUNING, "Tools", 28, 154, 64, 64, [this] { return on_tuning(); });
-  button(IMG_SETTINGS, "Settings", 124, 154, 64, 64, [this] { return on_settings(); });
-  button(IMG_INFO, "Info", 220, 154, 64, 64, [this] { return on_info(); });
+  auto controls = big_button(IMG_CONTROLS, "Controls", 36, 34);
+  auto leveling = big_button(IMG_LEVELING, "Leveling", 140, 34);
+  auto print    = big_button(IMG_PRINT, "Printing", 244, 34);
+  auto tuning   = big_button(IMG_TUNING, "Tools", 36, 154);
+  auto settings = big_button(IMG_SETTINGS, "Settings", 140, 154);
+  auto info     = big_button(IMG_INFO, "Info", 244, 154);
 
-  rectangle(330, 0, 3, 284);
-  rectangle(0, 284, 480, 3);
+  reset_bindings();
+  bind(controls, &MainPanel::on_controls);
+  bind(leveling, &MainPanel::on_leveling);
+  bind(print, &MainPanel::on_print);
+  bind(tuning, &MainPanel::on_tuning);
+  bind(settings, &MainPanel::on_settings);
+  bind(info, &MainPanel::on_info);
+}
 
-  icon(IMG_EXTRUDER, 363, 20);
-  text("198.0", 398, 9, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
-  text("200", 398, 37, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
+void MainPanel::on_controls(lv_event_t *e) {
+  switch_panel(controls_panel);
+}
 
-  icon(IMG_BED, 363, 87);
-  text("100.6", 398, 73, 64, ALIGN::RIGHT, LABEL::BED);
-  text("100", 398, 101, 64, ALIGN::RIGHT, LABEL::BED);
-
-  icon(IMG_FAN, 363, 149);
-  text("% 100", 398, 149 + 4, 64, ALIGN::RIGHT, LABEL::FAN);
-
-  icon(IMG_ET, 363, 197);
-  text("00:32", 398, 197 + 4, 64, ALIGN::RIGHT, LABEL::TIME);
-  icon(IMG_TC, 363, 245);
-  text("12:34", 398, 245 + 4, 64, ALIGN::RIGHT, LABEL::TIME);
+void MainPanel::on_leveling(lv_event_t *e) {
 
 }
 
-void MainPanel::on_controls() {
+void MainPanel::on_print(lv_event_t *e) {
 
 }
 
-void MainPanel::on_leveling() {
+void MainPanel::on_tuning(lv_event_t *e) {
 
 }
 
-void MainPanel::on_print() {
+void MainPanel::on_settings(lv_event_t *e) {
 
 }
 
-void MainPanel::on_tuning() {
-
-}
-
-void MainPanel::on_settings() {
-
-}
-
-void MainPanel::on_info() {
+void MainPanel::on_info(lv_event_t *e) {
 
 }

@@ -26,16 +26,18 @@
 #pragma once
 #include "panels.h"
 
-struct MainPanel: Panel {
-  void draw() override;
+struct MainPanel: PanelBase<MainPanel, 6> {
+  void show();
 
 private:
-  void on_controls();
-  void on_leveling();
-  void on_print();
-  void on_tuning();
-  void on_settings();
-  void on_info();
+  void prepare() override;
+
+  void on_controls(lv_event_t *e);
+  void on_leveling(lv_event_t *e);
+  void on_print(lv_event_t *e);
+  void on_tuning(lv_event_t *e);
+  void on_settings(lv_event_t *e);
+  void on_info(lv_event_t *e);
 };
 
-extern MainPanel main_panel;
+inline MainPanel main_panel;

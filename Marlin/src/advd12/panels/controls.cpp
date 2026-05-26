@@ -25,3 +25,50 @@
 
 
 #include "controls.h"
+#include "main.h"
+#include "../core/ids.h"
+
+void ControlsPanel::prepare() {
+  layout_menu("Controls");
+  variables_time();
+
+  auto back = control(IMG_BACK, 7, 2);
+
+  auto load   = medium_button(IMG_LOAD, "Load", 19, 76);
+  auto heat   = medium_button(IMG_HEAT, "Preheat", 101, 76);
+  auto cool   = medium_button(IMG_COOL, "Cooldown", 183, 76);
+  auto move   = medium_button(IMG_MOVE, "Move", 265, 76);
+  auto disable= medium_button(IMG_MOTOR, "Disable", 19, 188);
+
+  reset_bindings();
+  bind(back, &ControlsPanel::on_back);
+  bind(load, &ControlsPanel::on_load_unload);
+  bind(heat, &ControlsPanel::on_preheat);
+  bind(cool, &ControlsPanel::on_cooldown);
+  bind(move, &ControlsPanel::on_move);
+  bind(disable, &ControlsPanel::on_disable_motors);
+}
+
+void ControlsPanel::on_back(lv_event_t *e) {
+  switch_panel(main_panel);
+}
+
+void ControlsPanel::on_load_unload(lv_event_t *e) {
+
+}
+
+void ControlsPanel::on_preheat(lv_event_t *e) {
+
+}
+
+void ControlsPanel::on_cooldown(lv_event_t *e) {
+
+}
+
+void ControlsPanel::on_move(lv_event_t *e) {
+
+}
+
+void ControlsPanel::on_disable_motors(lv_event_t *e) {
+
+}

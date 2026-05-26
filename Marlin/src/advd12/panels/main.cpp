@@ -24,8 +24,8 @@
  */
 
 #include "main.h"
-
 #include "controls.h"
+#include "leveling.h"
 #include "../core/ids.h"
 
 void MainPanel::show() {
@@ -40,7 +40,7 @@ void MainPanel::prepare() {
   auto controls = big_button(IMG_CONTROLS, "Controls", 36, 34);
   auto leveling = big_button(IMG_LEVELING, "Leveling", 140, 34);
   auto print    = big_button(IMG_PRINT, "Printing", 244, 34);
-  auto tuning   = big_button(IMG_TUNING, "Tools", 36, 154);
+  auto tuning   = big_button(IMG_TUNING, "Tuning", 36, 154);
   auto settings = big_button(IMG_SETTINGS, "Settings", 140, 154);
   auto info     = big_button(IMG_INFO, "Info", 244, 154);
 
@@ -58,7 +58,7 @@ void MainPanel::on_controls(lv_event_t *e) {
 }
 
 void MainPanel::on_leveling(lv_event_t *e) {
-
+  switch_panel(leveling_panel);
 }
 
 void MainPanel::on_print(lv_event_t *e) {

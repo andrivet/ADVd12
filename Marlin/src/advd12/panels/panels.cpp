@@ -143,8 +143,21 @@ lv_obj_t* Panel::medium_button(const char *img, const char *text, lv_coord_t x, 
   return button(img, text, x, y, 54, 54, 20);
 }
 
-lv_obj_t* Panel::control(const char *img, lv_coord_t x, lv_coord_t y) {
-  return button(img, nullptr, x, y, 48, 48, 0);
+lv_obj_t* Panel::control(const char *img, lv_coord_t x, lv_coord_t y, const char *text) {
+  auto btn = button(img, nullptr, x, y, 48, 48, 0);
+
+  if(text) {
+    auto label = lv_label_create(scr_);
+    lv_label_set_text(label, text);
+    lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_align_to(label, btn, LV_ALIGN_BOTTOM_MID, 0, 20);
+  }
+
+  return btn;
+}
+
+lv_obj_t* Panel::small_control(const char *img, lv_coord_t x, lv_coord_t y) {
+  return button(img, nullptr, x, y, 38, 38, 0);
 }
 
 lv_obj_t* Panel::icon(const char *img, lv_coord_t x, lv_coord_t y) {

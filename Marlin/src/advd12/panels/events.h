@@ -27,15 +27,31 @@
 #include <lvgl.h>
 #include <array>
 
+enum struct EventType { PRESSED = 0x01, LONG = 0x02, REPEAT = 0x04 };
+
+inline bool operator&(EventType lhs, EventType rhs) {
+  return (static_cast<unsigned>(lhs) & static_cast<unsigned>(rhs)) != 0;
+}
+
+inline EventType operator|(EventType lhs, EventType rhs) {
+  return static_cast<EventType>(static_cast<unsigned>(lhs) | static_cast<unsigned>(rhs));
+}
+
 template<typename T, unsigned N>
 struct EventBinder {
   using Handler = void (T::*)(lv_event_t *);
 
-  void bind(lv_obj_t *obj, T *self, Handler handler) {
+  void bind(lv_obj_t *obj, T *self, Handler handler, EventType type) {
     auto binding = &bindings_[binding_count_++];
     binding->self = self;
     binding->handler = handler;
-    lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_CLICKED, binding);
+
+    if(type & EventType::PRESSED)
+      lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_PRESSED, binding);
+    if(type & EventType::LONG)
+      lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_LONG_PRESSED, binding);
+    if(type & EventType::REPEAT)
+      lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_LONG_PRESSED_REPEAT, binding);
   }
 
   void reset() {

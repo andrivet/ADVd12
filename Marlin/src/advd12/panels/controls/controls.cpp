@@ -25,6 +25,7 @@
 
 
 #include "controls.h"
+#include "load_unload.h"
 #include "../main.h"
 #include "../../core/ids.h"
 
@@ -54,7 +55,7 @@ void ControlsPanel::on_back(lv_event_t *e) {
 }
 
 void ControlsPanel::on_load_unload(lv_event_t *e) {
-
+  switch_panel(load_unload_panel);
 }
 
 void ControlsPanel::on_preheat(lv_event_t *e) {

@@ -56,7 +56,8 @@ protected:
   lv_obj_t* rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height);
   lv_obj_t* big_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y);
   lv_obj_t* medium_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y);
-  lv_obj_t* control(const char *img, lv_coord_t x, lv_coord_t y);
+  lv_obj_t* control(const char *img, lv_coord_t x, lv_coord_t y, const char *text = nullptr);
+  lv_obj_t* small_control(const char *img, lv_coord_t x, lv_coord_t y);
   lv_obj_t* icon(const char *img, lv_coord_t x, lv_coord_t y);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, LABEL label);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind);
@@ -80,8 +81,8 @@ template<typename Derived, unsigned N>
 struct PanelBase: Panel {
   using Handler = void (Derived::*)(lv_event_t *);
 
-  void bind(lv_obj_t *obj, Handler handler) {
-    events_.bind(obj, static_cast<Derived*>(this), handler);
+  void bind(lv_obj_t *obj, Handler handler, EventType type = EventType::PRESSED) {
+    events_.bind(obj, static_cast<Derived*>(this), handler, type);
   }
 
   void reset_bindings() {

@@ -25,8 +25,8 @@
 
 
 #include "tuning.h"
-#include "main.h"
-#include "../core/ids.h"
+#include "../main.h"
+#include "../../core/ids.h"
 
 void TuningPanel::prepare() {
   layout_menu("Tuning");

@@ -24,10 +24,10 @@
  */
 
 #include "main.h"
-#include "controls.h"
-#include "leveling.h"
-#include "tuning.h"
-#include "settings.h"
+#include "controls/controls.h"
+#include "leveling/leveling.h"
+#include "tuning/tuning.h"
+#include "settings/settings.h"
 #include "infos.h"
 #include "../core/ids.h"
 

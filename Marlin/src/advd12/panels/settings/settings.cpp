@@ -25,8 +25,8 @@
 
 
 #include "settings.h"
-#include "main.h"
-#include "../core/ids.h"
+#include "../main.h"
+#include "../../core/ids.h"
 
 void SettingsPanel::prepare() {
   layout_menu("Settings");

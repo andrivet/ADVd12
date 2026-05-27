@@ -24,7 +24,7 @@
  */
 
 #pragma once
-#include "panels.h"
+#include "../panels.h"
 
 struct ControlsPanel: PanelBase<ControlsPanel, 6> {
 private:

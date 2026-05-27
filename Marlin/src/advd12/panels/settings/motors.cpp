@@ -25,8 +25,8 @@
 
 
 #include "motors.h"
-#include "main.h"
-#include "../core/ids.h"
+#include "../main.h"
+#include "../../core/ids.h"
 
 void MotorsPanel::prepare() {
   layout_menu("Motors");

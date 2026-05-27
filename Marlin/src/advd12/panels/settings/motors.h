@@ -24,18 +24,16 @@
  */
 
 #pragma once
-#include "panels.h"
+#include "../panels.h"
 
-struct SettingsPanel: PanelBase<SettingsPanel, 7> {
+struct MotorsPanel: PanelBase<MotorsPanel, 7> {
 private:
   void prepare() override;
   void on_back(lv_event_t *e);
-  void on_motors(lv_event_t *e);
-  void on_pid(lv_event_t *e);
-  void on_sensor(lv_event_t *e);
-  void on_brightness(lv_event_t *e);
-  void on_beeper(lv_event_t *e);
-  void on_runout(lv_event_t *e);
+  void on_steps(lv_event_t *e);
+  void on_feedrate(lv_event_t *e);
+  void on_max_acceleration(lv_event_t *e);
+  void on_default_acceleration(lv_event_t *e);
 };
 
-inline SettingsPanel settings_panel;
+inline MotorsPanel motors_panel;

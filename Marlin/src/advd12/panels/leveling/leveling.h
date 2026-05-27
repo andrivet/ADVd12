@@ -24,16 +24,18 @@
  */
 
 #pragma once
-#include "panels.h"
+#include "../panels.h"
 
-struct MotorsPanel: PanelBase<MotorsPanel, 7> {
+struct LevelingPanel: PanelBase<LevelingPanel, 7> {
 private:
   void prepare() override;
   void on_back(lv_event_t *e);
-  void on_steps(lv_event_t *e);
-  void on_feedrate(lv_event_t *e);
-  void on_max_acceleration(lv_event_t *e);
-  void on_default_acceleration(lv_event_t *e);
+  void on_rough_leveling(lv_event_t *e);
+  void on_automatic_leveling(lv_event_t *e);
+  void on_reset_leveling(lv_event_t *e);
+  void on_z_height(lv_event_t *e);
+  void on_x_twist(lv_event_t *e);
+  void on_leveling_grid(lv_event_t *e);
 };
 
-inline MotorsPanel motors_panel;
+inline LevelingPanel leveling_panel;

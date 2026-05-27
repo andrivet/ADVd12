@@ -25,8 +25,8 @@
 
 
 #include "controls.h"
-#include "main.h"
-#include "../core/ids.h"
+#include "../main.h"
+#include "../../core/ids.h"
 
 void ControlsPanel::prepare() {
   layout_menu("Controls");

@@ -25,8 +25,8 @@
 
 
 #include "leveling.h"
-#include "main.h"
-#include "../core/ids.h"
+#include "../main.h"
+#include "../../core/ids.h"
 
 void LevelingPanel::prepare() {
   layout_menu("Leveling");

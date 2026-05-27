@@ -74,3 +74,7 @@ inline constexpr char IMG_STATS[7]      = "I:0037";
 inline constexpr char IMG_VERSIONS[7]   = "I:0038";
 inline constexpr char IMG_COPYRIGHTS[7] = "I:0039";
 inline constexpr char IMG_IO[7]         = "I:0040";
+
+inline constexpr char IMG_STEPS[7]      = "I:0041";
+inline constexpr char IMG_FEEDRATE[7]   = "I:0042";
+inline constexpr char IMG_ACCELERATION[7] = "I:0043";

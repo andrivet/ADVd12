@@ -26,6 +26,9 @@
 #include "main.h"
 #include "controls.h"
 #include "leveling.h"
+#include "tuning.h"
+#include "settings.h"
+#include "infos.h"
 #include "../core/ids.h"
 
 void MainPanel::show() {
@@ -66,13 +69,13 @@ void MainPanel::on_print(lv_event_t *e) {
 }
 
 void MainPanel::on_tuning(lv_event_t *e) {
-
+  switch_panel(tuning_panel);
 }
 
 void MainPanel::on_settings(lv_event_t *e) {
-
+  switch_panel(settings_panel);
 }
 
 void MainPanel::on_info(lv_event_t *e) {
-
+  switch_panel(infos_panel);
 }

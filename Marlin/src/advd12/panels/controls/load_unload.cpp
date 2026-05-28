@@ -24,9 +24,16 @@
  */
 
 #include <cstdio>
+#include "../../../inc/MarlinConfig.h"
+#include "../../../lcd/extui/ui_api.h"
 #include "load_unload.h"
 #include "controls.h"
 #include "../../core/ids.h"
+#include "../../core/core.h"
+
+bool LoadUnloadPanel::can_switch() {
+  return advd12::Core::check_not_busy();
+}
 
 void LoadUnloadPanel::prepare() {
   layout_menu("Load & Unload");
@@ -48,6 +55,9 @@ void LoadUnloadPanel::prepare() {
 
   temp_text_ = text("", 144, 101, LABEL::REGULAR);
   show_temp();
+
+  advd12::Core::reset_status();
+  previous_z_ = advd12::Core::ensure_z_enough_space();
 }
 
 void LoadUnloadPanel::show_temp() {
@@ -58,6 +68,8 @@ void LoadUnloadPanel::show_temp() {
 }
 
 void LoadUnloadPanel::on_back(lv_event_t *e) {
+  ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
+  ExtUI::setAxisPosition_mm(previous_z_, ExtUI::Z, 20);
   switch_panel(controls_panel);
 }
 

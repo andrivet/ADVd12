@@ -28,6 +28,7 @@
 
 struct LoadUnloadPanel: PanelBase<LoadUnloadPanel, 5> {
 private:
+  bool can_switch() override;
   void prepare() override;
   void on_back(lv_event_t *e);
   void on_minus(lv_event_t *e);
@@ -37,6 +38,7 @@ private:
   void show_temp();
 
 private:
+  float previous_z_ = 0;
   unsigned temp_ = 200;
   lv_obj_t *temp_text_ = nullptr;
 };

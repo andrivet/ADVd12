@@ -68,7 +68,7 @@
 #if defined(D12_SIMULATOR)
 // Set to 0 to avoid long delay when showing the logo
 #define HAS_LOGO_IN_FLASH 1
-#define REINIT_NOISY_LCD // To avoid compilation waning
+//#define REINIT_NOISY_LCD // To avoid compilation waning
 #else
 #define HAS_LOGO_IN_FLASH 1
 #endif
@@ -3544,7 +3544,7 @@
 // Third-party or vendor-customized controller interfaces.
 // Sources should be installed in 'src/lcd/extui'.
 //
-//#define EXTENSIBLE_UI
+#define EXTENSIBLE_UI
 
 #if ENABLED(EXTENSIBLE_UI)
   //#define EXTUI_LOCAL_BEEPER // Enables use of local Beeper pin with external display

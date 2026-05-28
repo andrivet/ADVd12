@@ -83,3 +83,8 @@ inline constexpr char IMG_MINUS[7]        = "I:0044";
 inline constexpr char IMG_PLUS[7]         = "I:0045";
 inline constexpr char IMG_UNLOAD[7]       = "I:0046";
 inline constexpr char IMG_LOAD2[7]        = "I:0047";
+
+inline constexpr char IMG_SAVE[7]         = "I:0048";
+inline constexpr char IMG_PREVIOUS[7]     = "I:0049";
+inline constexpr char IMG_NEXT[7]         = "I:0050";
+inline constexpr char IMG_COOLDOWN[7]     = "I:0051";

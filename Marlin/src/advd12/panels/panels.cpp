@@ -25,22 +25,23 @@
 
 #include "panels.h"
 #include "../core/ids.h"
-#include "../core.h"
+#include "../core/core.h"
+#include "../core/display.h"
 
+namespace {
+lv_style_t style_panel;
+lv_style_t style_rectangle;
+lv_style_t style_button_down;
+lv_style_t style_button_up;
+lv_style_t style_button_label;
+lv_style_t style_label_regular;
+lv_style_t style_label_extruder;
+lv_style_t style_label_bed;
+lv_style_t style_label_fan;
+lv_style_t style_label_time;
+}
 
-static lv_style_t style_panel;
-static lv_style_t style_rectangle;
-static lv_style_t style_button_down;
-static lv_style_t style_button_up;
-static lv_style_t style_button_label;
-static lv_style_t style_label_regular;
-static lv_style_t style_label_extruder;
-static lv_style_t style_label_bed;
-static lv_style_t style_label_fan;
-static lv_style_t style_label_time;
-
-
-void advd12::Core::init_lvgl_styles() {
+void advd12::Display::init_lvgl_styles() {
   auto value_font = &lv_font_montserrat_20;
   auto label_font = &lv_font_montserrat_16;
 
@@ -83,6 +84,10 @@ void advd12::Core::init_lvgl_styles() {
   lv_style_set_text_font(&style_label_time, value_font);
 }
 
+bool Panel::can_switch() {
+  return true;
+}
+
 void Panel::release() {
   if(!scr_) return;
   lv_obj_del(scr_);
@@ -97,6 +102,7 @@ void Panel::create() {
 }
 
 void Panel::switch_panel(Panel &panel) {
+  if(!panel.can_switch()) return;
   panel.create();
   release();
   panel.prepare();
@@ -242,5 +248,5 @@ void Panel::variables_time() {
 }
 
 void Panel::variables_xyz() {
-
+  // TODO
 }

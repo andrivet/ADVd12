@@ -51,6 +51,7 @@ struct Panel {
 
 protected:
   void create();
+  virtual bool can_switch();
   virtual void prepare() = 0;
 
   lv_obj_t* rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height);

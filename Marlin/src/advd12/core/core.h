@@ -24,26 +24,22 @@
  */
 #pragma once
 
-#include <lvgl.h>
+#include "../marlin/types.h"
 
-class __FlashStringHelper;
-typedef const __FlashStringHelper* FSTR_P;
+namespace advd12::Core {
 
-namespace advd12 {
+void startup();
+void idle();
+void killed(const FlashChar* error, const FlashChar* component);
+void killed(const FlashChar* error, heater_id_t header_id);
+void send_lcd_zero();
 
-struct Core {
-  static void init();
-  static void task_handler();
-  static void draw_error_message(FSTR_P msg);
-  static void calibrate();
+bool is_busy();
+bool is_printing();
+bool is_print_paused();
 
-private:
-  static void init_lvgl();
-  static void init_lvgl_drivers();
-  static void flush(lv_disp_drv_t * disp, const lv_area_t * area, lv_color_t * color_p);
-  static void input_read(lv_indev_drv_t * indev, lv_indev_data_t * data);
-  static void init_lvgl_styles();
-  static void systick();
+bool check_not_busy();
+void reset_status();
+float ensure_z_enough_space();
+
 };
-
-}

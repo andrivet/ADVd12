@@ -28,6 +28,8 @@
 #include "../core/core.h"
 #include "../core/display.h"
 
+Panel *Panel::current_panel_ = nullptr;
+
 namespace {
 lv_style_t style_panel;
 lv_style_t style_rectangle;
@@ -99,12 +101,14 @@ void Panel::create() {
   scr_ = lv_obj_create(nullptr);
   lv_obj_add_style(scr_, &style_panel, LV_PART_MAIN | LV_STATE_DEFAULT);
   lv_scr_load(scr_);
+  current_panel_ = this;
 }
 
 void Panel::switch_panel(Panel &panel) {
   if(!panel.can_switch()) return;
+  auto old_panel = current_panel_;
   panel.create();
-  release();
+  if(old_panel) old_panel->release();
   panel.prepare();
 }
 

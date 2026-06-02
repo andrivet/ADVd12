@@ -29,6 +29,7 @@
 #include "tft.h"
 #include "images.h"
 #include "../panels/main.h"
+#include "../panels/calibration.h"
 
 #include "../../HAL/HAL.h"
 #include "../../lcd/marlinui.h"
@@ -70,7 +71,10 @@ void init() {
   // TODO: init servo and probe
 
   // TODO: draw main screen
-  main_panel.show();
+  if(TouchCalibration::need_calibration())
+    calibration_panel.show();
+  else
+    main_panel.show();
 }
 
 void task_handler() {
@@ -83,7 +87,7 @@ void draw_error_message(FSTR_P msg) {
 }
 
 void calibrate() {
-  // TODO
+  Panel::switch_panel(calibration_panel);
 }
 
 namespace {
@@ -132,8 +136,14 @@ namespace {
   bool get_touch(int16_t * const x, int16_t * const y) {
     if(!XPT2046::getRawPoint(x, y)) return false;
 
-    *x = uint16_t((uint32_t(*x) * _TOUCH_CALIBRATION_X) >> 16) + _TOUCH_OFFSET_X;
-    *y = uint16_t((uint32_t(*y) * _TOUCH_CALIBRATION_Y) >> 16) + _TOUCH_OFFSET_Y;
+    auto state = TouchCalibration::get_calibration_state();
+    if(WITHIN(state, CALIBRATION_TOP_LEFT, CALIBRATION_BOTTOM_LEFT)) {
+      if(TouchCalibration::handleTouch(*x, *y)) calibration_panel.update();
+      return false;
+    }
+
+    *x = static_cast<int16_t>((uint32_t(*x) * _TOUCH_CALIBRATION_X) >> 16) + _TOUCH_OFFSET_X;
+    *y = static_cast<int16_t>((uint32_t(*y) * _TOUCH_CALIBRATION_Y) >> 16) + _TOUCH_OFFSET_Y;
 
     return true;
   }

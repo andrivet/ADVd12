@@ -48,11 +48,13 @@ enum struct ALIGN {
 
 struct Panel {
   virtual ~Panel() = default;
+  static void switch_panel(Panel& panel);
 
 protected:
   void create();
   virtual bool can_switch();
   virtual void prepare() = 0;
+  lv_obj_t* scr() const { return scr_; }
 
   lv_obj_t* rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height);
   lv_obj_t* big_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y);
@@ -62,8 +64,6 @@ protected:
   lv_obj_t* icon(const char *img, lv_coord_t x, lv_coord_t y);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, LABEL label);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind);
-
-  void switch_panel(Panel& panel);
 
   void layout_main();
   void layout_menu(const char *title);
@@ -76,6 +76,7 @@ private:
 
 private:
   lv_obj_t *scr_ = nullptr;
+  static Panel *current_panel_;
 };
 
 template<typename Derived, unsigned N>

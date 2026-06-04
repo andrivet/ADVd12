@@ -23,59 +23,77 @@
  *
  */
 
+#include <lvgl.h>
 #include "main.h"
+#include "panel.h"
 #include "controls/controls.h"
 #include "leveling/leveling.h"
 #include "tuning/tuning.h"
 #include "settings/settings.h"
 #include "infos.h"
+#include "panels.h"
 #include "../core/ids.h"
 
-void MainPanel::show() {
-  create();
-  prepare();
+namespace {
+Panel<6> main_panel;
+
+void on_controls(lv_event_t *e);
+void on_leveling(lv_event_t *e);
+void on_print(lv_event_t *e);
+void on_tuning(lv_event_t *e);
+void on_settings(lv_event_t *e);
+void on_info(lv_event_t *e);
 }
 
-void MainPanel::prepare() {
-  layout_main();
-  variables_time();
-
-  auto controls = big_button(IMG_CONTROLS, "Controls", 36, 34);
-  auto leveling = big_button(IMG_LEVELING, "Leveling", 140, 34);
-  auto print    = big_button(IMG_PRINT, "Printing", 244, 34);
-  auto tuning   = big_button(IMG_TUNING, "Tuning", 36, 154);
-  auto settings = big_button(IMG_SETTINGS, "Settings", 140, 154);
-  auto info     = big_button(IMG_INFO, "Info", 244, 154);
-
-  reset_bindings();
-  bind(controls, &MainPanel::on_controls);
-  bind(leveling, &MainPanel::on_leveling);
-  bind(print, &MainPanel::on_print);
-  bind(tuning, &MainPanel::on_tuning);
-  bind(settings, &MainPanel::on_settings);
-  bind(info, &MainPanel::on_info);
+bool MainPanel::can_switch() {
+  return true;
 }
 
-void MainPanel::on_controls(lv_event_t *e) {
-  switch_panel(controls_panel);
+void MainPanel::create() {
+  if(!main_panel.create()) return;
+  main_panel.layout_main();
+  main_panel.variables_time();
+
+  auto controls = main_panel.big_button(IMG_CONTROLS, "Controls", 36, 34);
+  auto leveling = main_panel.big_button(IMG_LEVELING, "Leveling", 140, 34);
+  auto print    = main_panel.big_button(IMG_PRINT, "Printing", 244, 34);
+  auto tuning   = main_panel.big_button(IMG_TUNING, "Tuning", 36, 154);
+  auto settings = main_panel.big_button(IMG_SETTINGS, "Settings", 140, 154);
+  auto info     = main_panel.big_button(IMG_INFO, "Info", 244, 154);
+
+  main_panel.reset_bindings();
+  main_panel.bind(controls, &on_controls);
+  main_panel.bind(leveling, &on_leveling);
+  main_panel.bind(print, &on_print);
+  main_panel.bind(tuning, &on_tuning);
+  main_panel.bind(settings, &on_settings);
+  main_panel.bind(info, &on_info);
 }
 
-void MainPanel::on_leveling(lv_event_t *e) {
-  switch_panel(leveling_panel);
+namespace {
+
+void on_controls(lv_event_t *e) {
+  PanelBase::switch_panel<ControlsPanel>();
 }
 
-void MainPanel::on_print(lv_event_t *e) {
+void on_leveling(lv_event_t *e) {
+  PanelBase::switch_panel<LevelingPanel>();
+}
+
+void on_print(lv_event_t *e) {
 
 }
 
-void MainPanel::on_tuning(lv_event_t *e) {
-  switch_panel(tuning_panel);
+void on_tuning(lv_event_t *e) {
+  PanelBase::switch_panel<TuningPanel>();
 }
 
-void MainPanel::on_settings(lv_event_t *e) {
-  switch_panel(settings_panel);
+void on_settings(lv_event_t *e) {
+  PanelBase::switch_panel<SettingsPanel>();
 }
 
-void MainPanel::on_info(lv_event_t *e) {
-  switch_panel(infos_panel);
+void on_info(lv_event_t *e) {
+  PanelBase::switch_panel<InfosPanel>();
+}
+
 }

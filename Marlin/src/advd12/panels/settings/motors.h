@@ -24,16 +24,9 @@
  */
 
 #pragma once
-#include "../panels.h"
 
-struct MotorsPanel: PanelBase<MotorsPanel, 7> {
-private:
-  void prepare() override;
-  void on_back(lv_event_t *e);
-  void on_steps(lv_event_t *e);
-  void on_feedrate(lv_event_t *e);
-  void on_max_acceleration(lv_event_t *e);
-  void on_default_acceleration(lv_event_t *e);
+struct MotorsPanel {
+  static bool can_switch();
+  static void create();
 };
 
-inline MotorsPanel motors_panel;

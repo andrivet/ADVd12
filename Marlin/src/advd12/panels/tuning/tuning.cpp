@@ -23,64 +23,87 @@
  *
  */
 
-
+#include <lvgl.h>
 #include "tuning.h"
 #include "../main.h"
 #include "../../core/ids.h"
+#include "src/advd12/panels/panels.h"
 
-void TuningPanel::prepare() {
-  layout_menu("Tuning");
-  variables_time();
+namespace {
+Panel<8> tuning_panel;
 
-  auto back = control(IMG_BACK, 7, 2);
-
-  auto sensor = medium_button(IMG_SENSOR, "BLTouch", 19, 76);
-  auto extruder = medium_button(IMG_EXTRUDER2, "Extruder", 101, 76);
-  auto pid = medium_button(IMG_PID, " PID", 183, 76);
-  auto vibrations = medium_button(IMG_VIBRATIONS, "Vibrations", 265, 76);
-  auto shaping = medium_button(IMG_SHAPING, "X Shaping", 19, 188);
-  auto skew = medium_button(IMG_SKEW, "Skew", 19, 188);
-  auto linear_adv = medium_button(IMG_LINEAR_ADV, "Linear Adv", 101, 188);
-
-  reset_bindings();
-  bind(back, &TuningPanel::on_back);
-  bind(sensor, &TuningPanel::on_bltouch);
-  bind(extruder, &TuningPanel::on_extruder);
-  bind(pid, &TuningPanel::on_pid);
-  bind(vibrations, &TuningPanel::on_vibrations);
-  bind(shaping, &TuningPanel::on_shaping);
-  bind(skew, &TuningPanel::on_skew);
-  bind(linear_adv, &TuningPanel::on_linear_advance);
+void on_back(lv_event_t *e);
+void on_bltouch(lv_event_t *e);
+void on_extruder(lv_event_t *e);
+void on_pid(lv_event_t *e);
+void on_vibrations(lv_event_t *e);
+void on_shaping(lv_event_t *e);
+void on_skew(lv_event_t *e);
+void on_linear_advance(lv_event_t *e);
 }
 
-void TuningPanel::on_back(lv_event_t *e) {
-  switch_panel(main_panel);
+bool TuningPanel::can_switch() {
+  return true;
 }
 
-void TuningPanel::on_bltouch(lv_event_t *e) {
+void TuningPanel::create() {
+  if(!tuning_panel.create()) return;
+  tuning_panel.layout_menu("Tuning");
+  tuning_panel.variables_time();
+
+  auto back = tuning_panel.control(IMG_BACK, 7, 2);
+
+  auto sensor = tuning_panel.medium_button(IMG_SENSOR, "BLTouch", 19, 76);
+  auto extruder = tuning_panel.medium_button(IMG_EXTRUDER2, "Extruder", 101, 76);
+  auto pid = tuning_panel.medium_button(IMG_PID, " PID", 183, 76);
+  auto vibrations = tuning_panel.medium_button(IMG_VIBRATIONS, "Vibrations", 265, 76);
+  auto shaping = tuning_panel.medium_button(IMG_SHAPING, "X Shaping", 19, 188);
+  auto skew = tuning_panel.medium_button(IMG_SKEW, "Skew", 19, 188);
+  auto linear_adv = tuning_panel.medium_button(IMG_LINEAR_ADV, "Linear Adv", 101, 188);
+
+  tuning_panel.reset_bindings();
+  tuning_panel.bind(back, &on_back);
+  tuning_panel.bind(sensor, &on_bltouch);
+  tuning_panel.bind(extruder, &on_extruder);
+  tuning_panel.bind(pid, &on_pid);
+  tuning_panel.bind(vibrations, &on_vibrations);
+  tuning_panel.bind(shaping, &on_shaping);
+  tuning_panel.bind(skew, &on_skew);
+  tuning_panel.bind(linear_adv, &on_linear_advance);
+}
+
+namespace {
+
+void on_back(lv_event_t *e) {
+  PanelBase::switch_panel<MainPanel>();
+}
+
+void on_bltouch(lv_event_t *e) {
 
 }
 
-void TuningPanel::on_extruder(lv_event_t *e) {
+void on_extruder(lv_event_t *e) {
 
 }
 
-void TuningPanel::on_pid(lv_event_t *e) {
+void on_pid(lv_event_t *e) {
 
 }
 
-void TuningPanel::on_vibrations(lv_event_t *e) {
+void on_vibrations(lv_event_t *e) {
 
 }
 
-void TuningPanel::on_shaping(lv_event_t *e) {
+void on_shaping(lv_event_t *e) {
 
 }
 
-void TuningPanel::on_skew(lv_event_t *e) {
+void on_skew(lv_event_t *e) {
 
 }
 
-void TuningPanel::on_linear_advance(lv_event_t *e) {
+void on_linear_advance(lv_event_t *e) {
+
+}
 
 }

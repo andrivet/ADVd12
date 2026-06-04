@@ -37,13 +37,12 @@ inline EventType operator|(EventType lhs, EventType rhs) {
   return static_cast<EventType>(static_cast<unsigned>(lhs) | static_cast<unsigned>(rhs));
 }
 
-template<typename T, unsigned N>
+template<unsigned N>
 struct EventBinder {
-  using Handler = void (T::*)(lv_event_t *);
+  using Handler = void(*)(lv_event_t *);
 
-  void bind(lv_obj_t *obj, T *self, Handler handler, EventType type) {
+  void bind(lv_obj_t *obj, Handler handler, EventType type) {
     auto binding = &bindings_[binding_count_++];
-    binding->self = self;
     binding->handler = handler;
 
     if(type & EventType::PRESSED)
@@ -60,7 +59,6 @@ struct EventBinder {
 
 private:
   struct Binding {
-    T *self;
     Handler handler;
   };
 
@@ -69,7 +67,7 @@ private:
 
   static void handler(lv_event_t *event) {
     auto *binding = static_cast<Binding *>(lv_event_get_user_data(event));
-    if(binding && binding->self && binding->handler)
-      (binding->self->*(binding->handler))(event);
+    if(binding && binding->handler)
+      (binding->handler)(event);
   }
 };

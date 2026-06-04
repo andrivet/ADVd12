@@ -24,71 +24,149 @@
  */
 
 #include <cstdio>
+#include <lvgl.h>
 #include "../../../inc/MarlinConfig.h"
 #include "../../../lcd/extui/ui_api.h"
 #include "load_unload.h"
 #include "controls.h"
+#include "../panels.h"
+#include "../wait.h"
 #include "../../core/ids.h"
 #include "../../core/core.h"
+#include "../../core/task.h"
+#include "../../core/status.h"
+
+namespace {
+
+float previous_z_ = 0;
+celsius_t temp_ = 200;
+bool load_ = true;
+lv_obj_t *temp_text_ = nullptr;
+
+Panel<5> load_unload_panel;
+
+void on_back(lv_event_t *e);
+void on_minus(lv_event_t *e);
+void on_plus(lv_event_t *e);
+void on_unload(lv_event_t *e);
+void on_load(lv_event_t *e);
+void show_temp();
+void prepare(bool load);
+void extrude();
+}
 
 bool LoadUnloadPanel::can_switch() {
   return advd12::Core::check_not_busy();
 }
 
-void LoadUnloadPanel::prepare() {
-  layout_menu("Load & Unload");
-  variables_time();
+void LoadUnloadPanel::create() {
+  if(!load_unload_panel.create()) return;
+  load_unload_panel.layout_menu("Load & Unload");
+  load_unload_panel.variables_time();
 
-  auto back = control(IMG_BACK, 7, 2);
+  auto back = load_unload_panel.control(IMG_BACK, 7, 2);
 
-  auto minus = small_control(IMG_MINUS, 93, 93);
-  auto plus = small_control(IMG_PLUS, 213, 93);
-  auto unload = control(IMG_UNLOAD, 89, 181, "Unload");
-  auto load = control(IMG_LOAD2, 209, 181, "Load");
+  auto minus = load_unload_panel.small_control(IMG_MINUS, 93, 93);
+  auto plus = load_unload_panel.small_control(IMG_PLUS, 213, 93);
+  auto unload = load_unload_panel.control(IMG_UNLOAD, 89, 181, "Unload");
+  auto load = load_unload_panel.control(IMG_LOAD2, 209, 181, "Load");
 
-  reset_bindings();
-  bind(back, &LoadUnloadPanel::on_back);
-  bind(minus, &LoadUnloadPanel::on_minus, EventType::PRESSED | EventType::REPEAT);
-  bind(plus, &LoadUnloadPanel::on_plus, EventType::PRESSED | EventType::REPEAT);
-  bind(unload, &LoadUnloadPanel::on_unload);
-  bind(load, &LoadUnloadPanel::on_load);
+  load_unload_panel.reset_bindings();
+  load_unload_panel.bind(back, &on_back);
+  load_unload_panel.bind(minus, &on_minus, EventType::PRESSED | EventType::REPEAT);
+  load_unload_panel.bind(plus, &on_plus, EventType::PRESSED | EventType::REPEAT);
+  load_unload_panel.bind(unload, &on_unload);
+  load_unload_panel.bind(load, &on_load);
 
-  temp_text_ = text("", 144, 101, LABEL::REGULAR);
+  temp_text_ = load_unload_panel.text("", 144, 101, LABEL::REGULAR);
   show_temp();
 
   advd12::Core::reset_status();
   previous_z_ = advd12::Core::ensure_z_enough_space();
 }
 
-void LoadUnloadPanel::show_temp() {
+namespace {
+
+void show_temp() {
   if(!temp_text_) return;
-  char temp[8];
+  char temp[12];
   sprintf(temp, "%d°C", temp_);
   lv_label_set_text(temp_text_, temp);
 }
 
-void LoadUnloadPanel::on_back(lv_event_t *e) {
+void on_back(lv_event_t *e) {
   ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
   ExtUI::setAxisPosition_mm(previous_z_, ExtUI::Z, 20);
-  switch_panel(controls_panel);
+  PanelBase::switch_panel<ControlsPanel>();
 }
 
-void LoadUnloadPanel::on_minus(lv_event_t *e) {
+void on_minus(lv_event_t *e) {
   if(temp_ <= 0) return;
   temp_--;
   show_temp();
 }
 
-void LoadUnloadPanel::on_plus(lv_event_t *e) {
+void on_plus(lv_event_t *e) {
   if(temp_ >= 300) return;
   temp_++;
   show_temp();
 }
 
-void LoadUnloadPanel::on_unload(lv_event_t *e) {
-
+void on_unload(lv_event_t *e) {
+  prepare(false);
 }
 
-void LoadUnloadPanel::on_load(lv_event_t *e) {
+void on_load(lv_event_t *e) {
+  prepare(true);
+}
+
+//! Prepare Load or Unload step #1: set the target temperature, setup the next step and display a wait message
+void prepare(bool load) {
+  load_ = load;
+
+  ExtUI::setTargetTemp_celsius(temp_, ExtUI::H0, true);
+  if(ExtUI::getDefaultTemp_celsius(ExtUI::H0) != temp_) {
+    ExtUI::setDefaultTemp_celsius(temp_, ExtUI::H0);
+    ExtUI::saveSettings();
+  }
+
+  ExtUI::setHostKeepaliveState(GcodeSuite::IN_PROCESS);
+  auto title = load ? GET_TEXT_F(MSG_FILAMENT_CHANGE_LOAD) : GET_TEXT_F(MSG_FILAMENT_CHANGE_UNLOAD);
+  Wait::wait_back(title, GET_TEXT_F(MSG_HEATING), [] () -> void {
+    background_task.clear();
+    Status::set(GET_TEXT_F(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+    ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
+    ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
+  });
+
+  background_task.set([] () -> CALLBACK_RESULT {
+    if(ExtUI::getActualTemp_celsius(ExtUI::E0) < ExtUI::getTargetTemp_celsius(ExtUI::E0)) return CALLBACK_RESULT::CONTINUE;
+    extrude();
+    return CALLBACK_RESULT::STOP;
+  });
+}
+
+void extrude() {
+  ExtUI::setAxisPosition_mm(
+    ExtUI::getAxisPosition_mm(ExtUI::E0) + (load_ ? FILAMENT_CHANGE_SLOW_LOAD_LENGTH : -FILAMENT_CHANGE_SLOW_LOAD_LENGTH),
+    ExtUI::E0,
+    load_ ? FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE : FILAMENT_CHANGE_UNLOAD_FEEDRATE
+  );
+
+  auto title = load_ ? GET_TEXT_F(MSG_FILAMENT_CHANGE_LOAD) : GET_TEXT_F(MSG_FILAMENT_CHANGE_UNLOAD);
+  Wait::wait_back(title, GET_TEXT_F(ADVD12_MSG_IN_PROGRESS), [] () -> void {
+    background_task.clear();
+    Status::set(GET_TEXT_F(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+    ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
+    ExtUI::stopMove();
+  });
+
+  background_task.set([] () -> CALLBACK_RESULT {
+    if(ExtUI::isMoving()) return CALLBACK_RESULT::CONTINUE;
+    ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
+    Status::set_default();
+    return CALLBACK_RESULT::STOP;
+  });
+}
 
 }

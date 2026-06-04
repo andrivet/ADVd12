@@ -72,9 +72,9 @@ void init() {
 
   // TODO: draw main screen
   if(TouchCalibration::need_calibration())
-    calibration_panel.show();
+    CalibrationPanel::create();
   else
-    main_panel.show();
+    MainPanel::create();
 }
 
 void task_handler() {
@@ -87,7 +87,7 @@ void draw_error_message(FSTR_P msg) {
 }
 
 void calibrate() {
-  Panel::switch_panel(calibration_panel);
+  PanelBase::switch_panel<CalibrationPanel>();
 }
 
 namespace {
@@ -138,7 +138,7 @@ namespace {
 
     auto state = TouchCalibration::get_calibration_state();
     if(WITHIN(state, CALIBRATION_TOP_LEFT, CALIBRATION_BOTTOM_LEFT)) {
-      if(TouchCalibration::handleTouch(*x, *y)) calibration_panel.update();
+      if(TouchCalibration::handleTouch(*x, *y)) CalibrationPanel::update();
       return false;
     }
 

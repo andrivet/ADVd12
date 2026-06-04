@@ -24,20 +24,8 @@
  */
 
 #pragma once
-#include "panels.h"
 
-struct MainPanel: PanelBase<MainPanel, 6> {
-  void show();
-
-private:
-  void prepare() override;
-
-  void on_controls(lv_event_t *e);
-  void on_leveling(lv_event_t *e);
-  void on_print(lv_event_t *e);
-  void on_tuning(lv_event_t *e);
-  void on_settings(lv_event_t *e);
-  void on_info(lv_event_t *e);
+struct MainPanel {
+  static bool can_switch();
+  static void create();
 };
-
-inline MainPanel main_panel;

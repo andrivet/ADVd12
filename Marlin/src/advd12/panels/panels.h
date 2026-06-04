@@ -46,15 +46,13 @@ enum struct ALIGN {
 };
 
 
-struct Panel {
-  virtual ~Panel() = default;
-  static void switch_panel(Panel& panel);
+struct PanelBase {
+  template<typename T>
+  static void switch_panel();
 
-protected:
-  void create();
-  virtual bool can_switch();
-  virtual void prepare() = 0;
-  lv_obj_t* scr() const { return scr_; }
+  [[nodiscard]] bool create();
+  void release();
+  [[nodiscard]] lv_obj_t* scr() const { return scr_; }
 
   lv_obj_t* rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height);
   lv_obj_t* big_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y);
@@ -71,20 +69,25 @@ protected:
   void variables_xyz();
 
 private:
-  void release();
   lv_obj_t* button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_coord_t label_y_offset);
 
 private:
   lv_obj_t *scr_ = nullptr;
-  static Panel *current_panel_;
+  static PanelBase *current_panel_;
 };
 
-template<typename Derived, unsigned N>
-struct PanelBase: Panel {
-  using Handler = void (Derived::*)(lv_event_t *);
+template<typename T>
+void PanelBase::switch_panel() {
+  if(!T::can_switch()) return;
+  T::create();
+}
+
+template<unsigned N>
+struct Panel: PanelBase {
+  using Handler = void(*)(lv_event_t *);
 
   void bind(lv_obj_t *obj, Handler handler, EventType type = EventType::PRESSED) {
-    events_.bind(obj, static_cast<Derived*>(this), handler, type);
+    events_.bind(obj, handler, type);
   }
 
   void reset_bindings() {
@@ -92,5 +95,5 @@ struct PanelBase: Panel {
   }
 
 private:
-  EventBinder<Derived, N> events_;
+  EventBinder<N> events_{};
 };

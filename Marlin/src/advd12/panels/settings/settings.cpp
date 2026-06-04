@@ -23,58 +23,80 @@
  *
  */
 
-
+#include <lvgl.h>
 #include "settings.h"
 #include "../main.h"
 #include "../../core/ids.h"
+#include "src/advd12/panels/panels.h"
 
-void SettingsPanel::prepare() {
-  layout_menu("Settings");
-  variables_time();
+namespace {
+Panel<7> settings_panel;
 
-  auto back = control(IMG_BACK, 7, 2);
-
-  auto motors = medium_button(IMG_MOTOR, "Motors", 19, 76);
-  auto pid = medium_button(IMG_PID, "PID", 101, 76);
-  auto sensor = medium_button(IMG_SENSOR, " Sensor", 183, 76);
-  auto brightness = medium_button(IMG_BRIGHTNESS, "LCD", 265, 76);
-  auto beeper = medium_button(IMG_BEEPER, "X Beeper", 19, 188);
-  auto runout = medium_button(IMG_RUNOUT, "Runout", 19, 188);
-
-  reset_bindings();
-  bind(back, &SettingsPanel::on_back);
-  bind(motors, &SettingsPanel::on_motors);
-  bind(pid, &SettingsPanel::on_pid);
-  bind(sensor, &SettingsPanel::on_sensor);
-  bind(brightness, &SettingsPanel::on_brightness);
-  bind(beeper, &SettingsPanel::on_beeper);
-  bind(runout, &SettingsPanel::on_runout);
+void on_back(lv_event_t *e);
+void on_motors(lv_event_t *e);
+void on_pid(lv_event_t *e);
+void on_sensor(lv_event_t *e);
+void on_brightness(lv_event_t *e);
+void on_beeper(lv_event_t *e);
+void on_runout(lv_event_t *e);
 }
 
-void SettingsPanel::on_back(lv_event_t *e) {
-  switch_panel(main_panel);
+bool SettingsPanel::can_switch() {
+  return true;
 }
 
-void SettingsPanel::on_motors(lv_event_t *e) {
+void SettingsPanel::create() {
+  if(!settings_panel.create()) return;
+  settings_panel.layout_menu("Settings");
+  settings_panel.variables_time();
+
+  auto back = settings_panel.control(IMG_BACK, 7, 2);
+
+  auto motors = settings_panel.medium_button(IMG_MOTOR, "Motors", 19, 76);
+  auto pid = settings_panel.medium_button(IMG_PID, "PID", 101, 76);
+  auto sensor = settings_panel.medium_button(IMG_SENSOR, " Sensor", 183, 76);
+  auto brightness = settings_panel.medium_button(IMG_BRIGHTNESS, "LCD", 265, 76);
+  auto beeper = settings_panel.medium_button(IMG_BEEPER, "X Beeper", 19, 188);
+  auto runout = settings_panel.medium_button(IMG_RUNOUT, "Runout", 19, 188);
+
+  settings_panel.reset_bindings();
+  settings_panel.bind(back, &on_back);
+  settings_panel.bind(motors, &on_motors);
+  settings_panel.bind(pid, &on_pid);
+  settings_panel.bind(sensor, &on_sensor);
+  settings_panel.bind(brightness, &on_brightness);
+  settings_panel.bind(beeper, &on_beeper);
+  settings_panel.bind(runout, &on_runout);
+}
+
+namespace {
+
+void on_back(lv_event_t *e) {
+  PanelBase::switch_panel<MainPanel>();
+}
+
+void on_motors(lv_event_t *e) {
 
 }
 
-void SettingsPanel::on_pid(lv_event_t *e) {
+void on_pid(lv_event_t *e) {
 
 }
 
-void SettingsPanel::on_sensor(lv_event_t *e) {
+void on_sensor(lv_event_t *e) {
 
 }
 
-void SettingsPanel::on_brightness(lv_event_t *e) {
+void on_brightness(lv_event_t *e) {
 
 }
 
-void SettingsPanel::on_beeper(lv_event_t *e) {
+void on_beeper(lv_event_t *e) {
 
 }
 
-void SettingsPanel::on_runout(lv_event_t *e) {
+void on_runout(lv_event_t *e) {
+
+}
 
 }

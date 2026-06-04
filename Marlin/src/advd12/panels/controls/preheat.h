@@ -24,42 +24,14 @@
  */
 
 #pragma once
-#include "../panels.h"
 
-struct PreheatPanel: PanelBase<PreheatPanel, 11> {
-  struct Preheat {
-    unsigned extruder;
-    unsigned bed;
-    unsigned fan;
-  };
-
-  static constexpr unsigned NB_PREHEAT = 5;
-
-private:
-  void prepare() override;
-  void on_back(lv_event_t *e);
-  void on_save(lv_event_t *e);
-  void on_previous(lv_event_t *e);
-  void on_next(lv_event_t *e);
-  void on_ext_minus(lv_event_t *e);
-  void on_ext_plus(lv_event_t *e);
-  void on_bed_minus(lv_event_t *e);
-  void on_bed_plus(lv_event_t *e);
-  void on_fan_minus(lv_event_t *e);
-  void on_fan_plus(lv_event_t *e);
-  void on_cooldown(lv_event_t *e);
-  void show_index() const;
-  void show_ext() const;
-  void show_bed() const;
-  void show_fan() const;
-
-private:
-  unsigned index_ = 0;
-  std::array<Preheat, NB_PREHEAT> preheats_{};
-  lv_obj_t *index_text_ = nullptr;
-  lv_obj_t *ext_text_ = nullptr;
-  lv_obj_t *bed_text_ = nullptr;
-  lv_obj_t *fan_text_ = nullptr;
+struct Preheat {
+  unsigned extruder;
+  unsigned bed;
+  unsigned fan;
 };
 
-inline PreheatPanel preheat_panel;
+struct PreheatPanel {
+  static bool can_switch();
+  static void create();
+};

@@ -28,7 +28,7 @@
 #include "../core/core.h"
 #include "../core/display.h"
 
-Panel *Panel::current_panel_ = nullptr;
+PanelBase *PanelBase::current_panel_ = nullptr;
 
 namespace {
 lv_style_t style_panel;
@@ -86,33 +86,24 @@ void advd12::Display::init_lvgl_styles() {
   lv_style_set_text_font(&style_label_time, value_font);
 }
 
-bool Panel::can_switch() {
-  return true;
-}
-
-void Panel::release() {
+void PanelBase::release() {
   if(!scr_) return;
   lv_obj_del(scr_);
   scr_ = nullptr;
 }
 
-void Panel::create() {
-  if(scr_ != nullptr) return;
+bool PanelBase::create() {
+  if(scr_ != nullptr) return false;
   scr_ = lv_obj_create(nullptr);
   lv_obj_add_style(scr_, &style_panel, LV_PART_MAIN | LV_STATE_DEFAULT);
   lv_scr_load(scr_);
+
+  if(current_panel_) current_panel_->release();
   current_panel_ = this;
+  return true;
 }
 
-void Panel::switch_panel(Panel &panel) {
-  if(!panel.can_switch()) return;
-  auto old_panel = current_panel_;
-  panel.create();
-  if(old_panel) old_panel->release();
-  panel.prepare();
-}
-
-lv_obj_t* Panel::rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height) {
+lv_obj_t* PanelBase::rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height) {
   auto rect = lv_obj_create(scr_);
   lv_obj_set_pos(rect, x, y);
   lv_obj_set_size(rect, width, height);
@@ -120,7 +111,7 @@ lv_obj_t* Panel::rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coor
   return rect;
 }
 
-lv_obj_t* Panel::button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_coord_t label_y_offset) {
+lv_obj_t* PanelBase::button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_coord_t label_y_offset) {
   lv_obj_t * btn = lv_imgbtn_create(scr_);
   lv_obj_set_pos(btn, x, y);
   lv_obj_set_width(btn, w);
@@ -145,15 +136,15 @@ lv_obj_t* Panel::button(const char *img, const char *text, lv_coord_t x, lv_coor
   return btn;
 }
 
-lv_obj_t* Panel::big_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y) {
+lv_obj_t* PanelBase::big_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y) {
   return button(img, text, x, y, 64, 64, 32);
 }
 
-lv_obj_t* Panel::medium_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y) {
+lv_obj_t* PanelBase::medium_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y) {
   return button(img, text, x, y, 54, 54, 20);
 }
 
-lv_obj_t* Panel::control(const char *img, lv_coord_t x, lv_coord_t y, const char *text) {
+lv_obj_t* PanelBase::control(const char *img, lv_coord_t x, lv_coord_t y, const char *text) {
   auto btn = button(img, nullptr, x, y, 48, 48, 0);
 
   if(text) {
@@ -166,11 +157,11 @@ lv_obj_t* Panel::control(const char *img, lv_coord_t x, lv_coord_t y, const char
   return btn;
 }
 
-lv_obj_t* Panel::small_control(const char *img, lv_coord_t x, lv_coord_t y) {
+lv_obj_t* PanelBase::small_control(const char *img, lv_coord_t x, lv_coord_t y) {
   return button(img, nullptr, x, y, 38, 38, 0);
 }
 
-lv_obj_t* Panel::icon(const char *img, lv_coord_t x, lv_coord_t y) {
+lv_obj_t* PanelBase::icon(const char *img, lv_coord_t x, lv_coord_t y) {
   auto icon = lv_img_create(scr_);
   lv_img_set_src(icon, img);
   lv_obj_set_pos(icon, x, y);
@@ -187,7 +178,7 @@ static lv_style_t *label_style(LABEL kind) {
   }
 }
 
-lv_obj_t* Panel::text(const char *text, lv_coord_t x, lv_coord_t y, LABEL kind) {
+lv_obj_t* PanelBase::text(const char *text, lv_coord_t x, lv_coord_t y, LABEL kind) {
   auto label = lv_label_create(scr_);
   lv_label_set_text(label, text);
   lv_obj_set_pos(label, x, y);
@@ -204,7 +195,7 @@ static lv_text_align_t label_align(ALIGN align) {
   }
 }
 
-lv_obj_t* Panel::text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind) {
+lv_obj_t* PanelBase::text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind) {
   auto label = lv_label_create(scr_);
   lv_label_set_text(label, text);
   lv_obj_set_pos(label, x, y);
@@ -215,12 +206,12 @@ lv_obj_t* Panel::text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w
   return label;
 }
 
-void Panel::layout_main() {
+void PanelBase::layout_main() {
   rectangle(344, 0, 3, 284);
   rectangle(0, 284, 480, 3);
 }
 
-void Panel::layout_menu(const char *title) {
+void PanelBase::layout_menu(const char *title) {
   rectangle(344, 0, 3, 284);
   rectangle(0, 284, 480, 3);
   auto rect = rectangle(0, 53, 344, 3);
@@ -231,7 +222,7 @@ void Panel::layout_menu(const char *title) {
   lv_obj_add_style(label, &style_label_regular, LV_PART_MAIN | LV_STATE_DEFAULT);
 }
 
-void Panel::variables_time() {
+void PanelBase::variables_time() {
   icon(IMG_EXTRUDER, 363, 19);
   text("198.0", 398, 11, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
   text("200", 398, 31, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
@@ -251,6 +242,6 @@ void Panel::variables_time() {
   text("40", 398, 243 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
 }
 
-void Panel::variables_xyz() {
+void PanelBase::variables_xyz() {
   // TODO
 }

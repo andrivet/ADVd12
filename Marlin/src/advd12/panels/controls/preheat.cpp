@@ -24,121 +24,164 @@
  */
 
 #include <cstdio>
+#include <array>
+#include <lvgl.h>
 #include "preheat.h"
+#include "panel.h"
 #include "controls.h"
 #include "../../core/ids.h"
+#include "src/advd12/panels/panels.h"
 
-void PreheatPanel::prepare() {
-  layout_menu("Preheat");
-  variables_time();
+namespace {
+constexpr unsigned NB_PREHEAT = 5;
 
-  auto back = control(IMG_BACK, 7, 2);
-  auto save = control(IMG_SAVE, 289, 2);
+unsigned index_ = 0;
+std::array<Preheat, NB_PREHEAT> preheats_{};
+lv_obj_t *index_text_ = nullptr;
+lv_obj_t *ext_text_ = nullptr;
+lv_obj_t *bed_text_ = nullptr;
+lv_obj_t *fan_text_ = nullptr;
 
-  auto previous = small_control(IMG_PREVIOUS, 53, 71);
-  auto next = small_control(IMG_NEXT, 173, 71);
-  auto ext_minus = small_control(IMG_MINUS, 53, 123);
-  auto ext_plus = small_control(IMG_PLUS, 173, 123);
-  auto bed_minus = small_control(IMG_MINUS, 53, 175);
-  auto bed_plus = small_control(IMG_PLUS, 173, 175);
-  auto fan_minus = small_control(IMG_MINUS, 53, 227);
-  auto fan_plus = small_control(IMG_PLUS, 173, 227);
-  auto cooldown = control(IMG_COOLDOWN, 262, 123, "Cooldown");
+Panel<11> preheat_panel;
 
-  reset_bindings();
-  bind(back, &PreheatPanel::on_back);
-  bind(save, &PreheatPanel::on_save);
-  bind(previous, &PreheatPanel::on_previous);
-  bind(next, &PreheatPanel::on_next);
-  bind(ext_minus, &PreheatPanel::on_ext_minus, EventType::PRESSED | EventType::REPEAT);
-  bind(ext_plus, &PreheatPanel::on_ext_plus, EventType::PRESSED | EventType::REPEAT);
-  bind(bed_minus, &PreheatPanel::on_bed_minus, EventType::PRESSED | EventType::REPEAT);
-  bind(bed_plus, &PreheatPanel::on_bed_plus, EventType::PRESSED | EventType::REPEAT);
-  bind(fan_minus, &PreheatPanel::on_fan_minus, EventType::PRESSED | EventType::REPEAT);
-  bind(fan_plus, &PreheatPanel::on_fan_plus, EventType::PRESSED | EventType::REPEAT);
-  bind(cooldown, &PreheatPanel::on_cooldown);
+void on_back(lv_event_t *e);
+void on_save(lv_event_t *e);
+void on_previous(lv_event_t *e);
+void on_next(lv_event_t *e);
+void on_ext_minus(lv_event_t *e);
+void on_ext_plus(lv_event_t *e);
+void on_bed_minus(lv_event_t *e);
+void on_bed_plus(lv_event_t *e);
+void on_fan_minus(lv_event_t *e);
+void on_fan_plus(lv_event_t *e);
+void on_cooldown(lv_event_t *e);
 
-  index_text_ = text("", 121, 79, LABEL::REGULAR);
-  ext_text_ = text("", 108, 131, LABEL::REGULAR);
-  bed_text_ = text("", 108, 183, LABEL::REGULAR);
-  fan_text_ = text("", 108, 235, LABEL::REGULAR);
+void show_index();
+void show_ext();
+void show_bed();
+void show_fan();
+}
+
+bool PreheatPanel::can_switch() {
+  return true;
+}
+
+void PreheatPanel::create() {
+  if(!preheat_panel.create()) return;
+  preheat_panel.layout_menu("Preheat");
+  preheat_panel.variables_time();
+
+  auto back = preheat_panel.control(IMG_BACK, 7, 2);
+  auto save = preheat_panel.control(IMG_SAVE, 289, 2);
+
+  auto previous = preheat_panel.small_control(IMG_PREVIOUS, 53, 71);
+  auto next = preheat_panel.small_control(IMG_NEXT, 173, 71);
+  auto ext_minus = preheat_panel.small_control(IMG_MINUS, 53, 123);
+  auto ext_plus = preheat_panel.small_control(IMG_PLUS, 173, 123);
+  auto bed_minus = preheat_panel.small_control(IMG_MINUS, 53, 175);
+  auto bed_plus = preheat_panel.small_control(IMG_PLUS, 173, 175);
+  auto fan_minus = preheat_panel.small_control(IMG_MINUS, 53, 227);
+  auto fan_plus = preheat_panel.small_control(IMG_PLUS, 173, 227);
+  auto cooldown = preheat_panel.control(IMG_COOLDOWN, 262, 123, "Cooldown");
+
+  preheat_panel.reset_bindings();
+  preheat_panel.bind(back, &on_back);
+  preheat_panel.bind(save, &on_save);
+  preheat_panel.bind(previous, &on_previous);
+  preheat_panel.bind(next, &on_next);
+  preheat_panel.bind(ext_minus, &on_ext_minus, EventType::PRESSED | EventType::REPEAT);
+  preheat_panel.bind(ext_plus, &on_ext_plus, EventType::PRESSED | EventType::REPEAT);
+  preheat_panel.bind(bed_minus, &on_bed_minus, EventType::PRESSED | EventType::REPEAT);
+  preheat_panel.bind(bed_plus, &on_bed_plus, EventType::PRESSED | EventType::REPEAT);
+  preheat_panel.bind(fan_minus, &on_fan_minus, EventType::PRESSED | EventType::REPEAT);
+  preheat_panel.bind(fan_plus, &on_fan_plus, EventType::PRESSED | EventType::REPEAT);
+  preheat_panel.bind(cooldown, &on_cooldown);
+
+  index_text_ = preheat_panel.text("", 121, 79, LABEL::REGULAR);
+  ext_text_ = preheat_panel.text("", 108, 131, LABEL::REGULAR);
+  bed_text_ = preheat_panel.text("", 108, 183, LABEL::REGULAR);
+  fan_text_ = preheat_panel.text("", 108, 235, LABEL::REGULAR);
   show_index();
   show_ext();
   show_bed();
   show_fan();
 }
 
-void PreheatPanel::show_index() const {
+namespace {
+
+void show_index() {
   if(!index_text_) return;
   char text[8];
   sprintf(text, "%d/5", index_ + 1);
   lv_label_set_text(index_text_, text);
 }
 
-void PreheatPanel::show_ext() const {
+void show_ext() {
   if(!ext_text_) return;
   char text[8];
   sprintf(text, "%d°C", preheats_[index_].extruder);
   lv_label_set_text(ext_text_, text);
 }
 
-void PreheatPanel::show_bed() const {
+void show_bed() {
   if(!bed_text_) return;
   char text[8];
   sprintf(text, "%d°C", preheats_[index_].bed);
   lv_label_set_text(bed_text_, text);
 }
 
-void PreheatPanel::show_fan() const {
+void show_fan() {
   if(!fan_text_) return;
   char text[8];
   sprintf(text, "%d%%", preheats_[index_].fan);
   lv_label_set_text(fan_text_, text);
 }
 
-void PreheatPanel::on_back(lv_event_t *e) {
-  switch_panel(controls_panel);
+void on_back(lv_event_t *e) {
+  PanelBase::switch_panel<ControlsPanel>();
 }
 
-void PreheatPanel::on_save(lv_event_t *e) {
+void on_save(lv_event_t *e) {
   // TODO: Preheat
-  switch_panel(controls_panel);
+  PanelBase::switch_panel<ControlsPanel>();
 }
 
-void PreheatPanel::on_previous(lv_event_t *e) {
+void on_previous(lv_event_t *e) {
   if(index_ <= 0) index_ = NB_PREHEAT - 1; else index_--;
   show_index();
 }
 
-void PreheatPanel::on_next(lv_event_t *e) {
+void on_next(lv_event_t *e) {
   if(index_ >= NB_PREHEAT - 1) index_ = 0; else index_++;
   show_index();
 }
 
-void PreheatPanel::on_ext_minus(lv_event_t *e) {
+void on_ext_minus(lv_event_t *e) {
 
 }
 
-void PreheatPanel::on_ext_plus(lv_event_t *e) {
+void on_ext_plus(lv_event_t *e) {
 
 }
 
-void PreheatPanel::on_bed_minus(lv_event_t *e) {
+void on_bed_minus(lv_event_t *e) {
 
 }
 
-void PreheatPanel::on_bed_plus(lv_event_t *e) {
+void on_bed_plus(lv_event_t *e) {
 
 }
 
-void PreheatPanel::on_fan_minus(lv_event_t *e) {
+void on_fan_minus(lv_event_t *e) {
 
 }
 
-void PreheatPanel::on_fan_plus(lv_event_t *e) {
+void on_fan_plus(lv_event_t *e) {
 
 }
 
-void PreheatPanel::on_cooldown(lv_event_t *e) {
+void on_cooldown(lv_event_t *e) {
+
+}
 
 }

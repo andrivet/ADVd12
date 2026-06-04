@@ -23,54 +23,75 @@
  *
  */
 
-
+#include <lvgl.h>
 #include "controls.h"
 #include "load_unload.h"
 #include "preheat.h"
 #include "../main.h"
+#include "../panels.h"
 #include "../../core/ids.h"
 
-void ControlsPanel::prepare() {
-  layout_menu("Controls");
-  variables_time();
+namespace {
+Panel<6> controls_panel;
 
-  auto back = control(IMG_BACK, 7, 2);
-
-  auto load   = medium_button(IMG_LOAD, "Load", 19, 76);
-  auto heat   = medium_button(IMG_HEAT, "Preheat", 101, 76);
-  auto cool   = medium_button(IMG_COOL, "Cooldown", 183, 76);
-  auto move   = medium_button(IMG_MOVE, "Move", 265, 76);
-  auto disable= medium_button(IMG_MOTOR, "Disable", 19, 188);
-
-  reset_bindings();
-  bind(back, &ControlsPanel::on_back);
-  bind(load, &ControlsPanel::on_load_unload);
-  bind(heat, &ControlsPanel::on_preheat);
-  bind(cool, &ControlsPanel::on_cooldown);
-  bind(move, &ControlsPanel::on_move);
-  bind(disable, &ControlsPanel::on_disable_motors);
+void on_back(lv_event_t *e);
+void on_load_unload(lv_event_t *e);
+void on_preheat(lv_event_t *e);
+void on_cooldown(lv_event_t *e);
+void on_move(lv_event_t *e);
+void on_disable_motors(lv_event_t *e);
 }
 
-void ControlsPanel::on_back(lv_event_t *e) {
-  switch_panel(main_panel);
+bool ControlsPanel::can_switch() {
+  return true;
 }
 
-void ControlsPanel::on_load_unload(lv_event_t *e) {
-  switch_panel(load_unload_panel);
+void ControlsPanel::create() {
+  if(!controls_panel.create()) return;
+  controls_panel.layout_menu("Controls");
+  controls_panel.variables_time();
+
+  auto back = controls_panel.control(IMG_BACK, 7, 2);
+
+  auto load   = controls_panel.medium_button(IMG_LOAD, "Load", 19, 76);
+  auto heat   = controls_panel.medium_button(IMG_HEAT, "Preheat", 101, 76);
+  auto cool   = controls_panel.medium_button(IMG_COOL, "Cooldown", 183, 76);
+  auto move   = controls_panel.medium_button(IMG_MOVE, "Move", 265, 76);
+  auto disable= controls_panel.medium_button(IMG_MOTOR, "Disable", 19, 188);
+
+  controls_panel.reset_bindings();
+  controls_panel.bind(back, &on_back);
+  controls_panel.bind(load, &on_load_unload);
+  controls_panel.bind(heat, &on_preheat);
+  controls_panel.bind(cool, &on_cooldown);
+  controls_panel.bind(move, &on_move);
+  controls_panel.bind(disable, &on_disable_motors);
 }
 
-void ControlsPanel::on_preheat(lv_event_t *e) {
-  switch_panel(preheat_panel);
+namespace {
+
+void on_back(lv_event_t *e) {
+  PanelBase::switch_panel<MainPanel>();
 }
 
-void ControlsPanel::on_cooldown(lv_event_t *e) {
+void on_load_unload(lv_event_t *e) {
+  PanelBase::switch_panel<LoadUnloadPanel>();
+}
+
+void on_preheat(lv_event_t *e) {
+  PanelBase::switch_panel<PreheatPanel>();
+}
+
+void on_cooldown(lv_event_t *e) {
 
 }
 
-void ControlsPanel::on_move(lv_event_t *e) {
+void on_move(lv_event_t *e) {
 
 }
 
-void ControlsPanel::on_disable_motors(lv_event_t *e) {
+void on_disable_motors(lv_event_t *e) {
+
+}
 
 }

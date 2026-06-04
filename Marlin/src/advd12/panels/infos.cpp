@@ -23,46 +23,67 @@
  *
  */
 
-
+#include <lvgl.h>
+#include "panels.h"
 #include "infos.h"
 #include "main.h"
 #include "../core/ids.h"
 
-void InfosPanel::prepare() {
-  layout_menu("Infos");
-  variables_time();
+namespace {
 
-  auto back = control(IMG_BACK, 7, 2);
+Panel<5> infos_panel;
 
-  auto stats = medium_button(IMG_STATS, "Stats", 19, 76);
-  auto versions = medium_button(IMG_VERSIONS, "Versions", 101, 76);
-  auto copyrights = medium_button(IMG_COPYRIGHTS, "Copyright", 183, 76);
-  auto io = medium_button(IMG_IO, "I/O", 265, 76);
-
-  reset_bindings();
-  bind(back, &InfosPanel::on_back);
-  bind(stats, &InfosPanel::on_stats);
-  bind(versions, &InfosPanel::on_versions);
-  bind(copyrights, &InfosPanel::on_copyrights);
-  bind(io, &InfosPanel::on_io);
+void on_back(lv_event_t *e);
+void on_stats(lv_event_t *e);
+void on_versions(lv_event_t *e);
+void on_copyrights(lv_event_t *e);
+void on_io(lv_event_t *e);
 }
 
-void InfosPanel::on_back(lv_event_t *e) {
-  switch_panel(main_panel);
+bool InfosPanel::can_switch() {
+  return true;
 }
 
-void InfosPanel::on_stats(lv_event_t *e) {
+void InfosPanel::create() {
+  if(!infos_panel.create()) return;
+  infos_panel.layout_menu("Infos");
+  infos_panel.variables_time();
+
+  auto back = infos_panel.control(IMG_BACK, 7, 2);
+
+  auto stats = infos_panel.medium_button(IMG_STATS, "Stats", 19, 76);
+  auto versions = infos_panel.medium_button(IMG_VERSIONS, "Versions", 101, 76);
+  auto copyrights = infos_panel.medium_button(IMG_COPYRIGHTS, "Copyright", 183, 76);
+  auto io = infos_panel.medium_button(IMG_IO, "I/O", 265, 76);
+
+  infos_panel.reset_bindings();
+  infos_panel.bind(back, &on_back);
+  infos_panel.bind(stats, &on_stats);
+  infos_panel.bind(versions, &on_versions);
+  infos_panel.bind(copyrights, &on_copyrights);
+  infos_panel.bind(io, &on_io);
+}
+
+namespace {
+
+void on_back(lv_event_t *e) {
+  PanelBase::switch_panel<MainPanel>();
+}
+
+void on_stats(lv_event_t *e) {
 
 }
 
-void InfosPanel::on_versions(lv_event_t *e) {
+void on_versions(lv_event_t *e) {
 
 }
 
-void InfosPanel::on_copyrights(lv_event_t *e) {
+void on_copyrights(lv_event_t *e) {
 
 }
 
-void InfosPanel::on_io(lv_event_t *e) {
+void on_io(lv_event_t *e) {
+
+}
 
 }

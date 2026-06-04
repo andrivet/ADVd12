@@ -23,46 +23,66 @@
  *
  */
 
-
+#include <lvgl.h>
 #include "motors.h"
 #include "../main.h"
 #include "../../core/ids.h"
+#include "src/advd12/panels/panels.h"
 
-void MotorsPanel::prepare() {
-  layout_menu("Motors");
-  variables_time();
+namespace {
+Panel<5> motors_panel;
 
-  auto back = control(IMG_BACK, 7, 2);
-
-  auto steps = medium_button(IMG_STEPS, "Steps", 19, 76);
-  auto feedrate = medium_button(IMG_FEEDRATE, "Feedrate", 101, 76);
-  auto max_accel = medium_button(IMG_ACCELERATION, "Max Accel", 183, 76);
-  auto def_accel = medium_button(IMG_ACCELERATION, "Def Accel", 265, 76);
-
-  reset_bindings();
-  bind(back, &MotorsPanel::on_back);
-  bind(steps, &MotorsPanel::on_steps);
-  bind(feedrate, &MotorsPanel::on_feedrate);
-  bind(max_accel, &MotorsPanel::on_max_acceleration);
-  bind(def_accel, &MotorsPanel::on_default_acceleration);
+void on_back(lv_event_t *e);
+void on_steps(lv_event_t *e);
+void on_feedrate(lv_event_t *e);
+void on_max_acceleration(lv_event_t *e);
+void on_default_acceleration(lv_event_t *e);
 }
 
-void MotorsPanel::on_back(lv_event_t *e) {
-  switch_panel(main_panel);
+bool MotorsPanel::can_switch() {
+  return true;
 }
 
-void MotorsPanel::on_steps(lv_event_t *e) {
+void MotorsPanel::create() {
+  if(!motors_panel.create()) return;
+  motors_panel.layout_menu("Motors");
+  motors_panel.variables_time();
+
+  auto back = motors_panel.control(IMG_BACK, 7, 2);
+
+  auto steps = motors_panel.medium_button(IMG_STEPS, "Steps", 19, 76);
+  auto feedrate = motors_panel.medium_button(IMG_FEEDRATE, "Feedrate", 101, 76);
+  auto max_accel = motors_panel.medium_button(IMG_ACCELERATION, "Max Accel", 183, 76);
+  auto def_accel = motors_panel.medium_button(IMG_ACCELERATION, "Def Accel", 265, 76);
+
+  motors_panel.reset_bindings();
+  motors_panel.bind(back, &on_back);
+  motors_panel.bind(steps, &on_steps);
+  motors_panel.bind(feedrate, &on_feedrate);
+  motors_panel.bind(max_accel, &on_max_acceleration);
+  motors_panel.bind(def_accel, &on_default_acceleration);
+}
+
+namespace {
+
+void on_back(lv_event_t *e) {
+  PanelBase::switch_panel<MainPanel>();
+}
+
+void on_steps(lv_event_t *e) {
 
 }
 
-void MotorsPanel::on_feedrate(lv_event_t *e) {
+void on_feedrate(lv_event_t *e) {
 
 }
 
-void MotorsPanel::on_max_acceleration(lv_event_t *e) {
+void on_max_acceleration(lv_event_t *e) {
 
 }
 
-void MotorsPanel::on_default_acceleration(lv_event_t *e) {
+void on_default_acceleration(lv_event_t *e) {
+
+}
 
 }

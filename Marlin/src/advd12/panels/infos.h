@@ -24,16 +24,8 @@
  */
 
 #pragma once
-#include "panels.h"
 
-struct InfosPanel: PanelBase<InfosPanel, 7> {
-private:
-  void prepare() override;
-  void on_back(lv_event_t *e);
-  void on_stats(lv_event_t *e);
-  void on_versions(lv_event_t *e);
-  void on_copyrights(lv_event_t *e);
-  void on_io(lv_event_t *e);
+struct InfosPanel {
+  static bool can_switch();
+  static void create();
 };
-
-inline InfosPanel infos_panel;

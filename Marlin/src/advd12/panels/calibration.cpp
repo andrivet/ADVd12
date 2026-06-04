@@ -27,18 +27,28 @@
 #include "main.h"
 #include "../../lcd/tft_io/touch_calibration.h"
 
-void CalibrationPanel::show() {
-  create();
-  prepare();
+namespace {
+Panel<0> calibration_panel;
+
+lv_obj_t *line(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height);
+
+lv_obj_t *cross_line1_ = nullptr;
+lv_obj_t *cross_line2_ = nullptr;
 }
 
-void CalibrationPanel::prepare() {
+bool CalibrationPanel::can_switch() {
+  return true;
+}
+
+void CalibrationPanel::create() {
+  if(!calibration_panel.create()) return;
+
   TouchCalibration::calibration_start();
   auto pt = TouchCalibration::calibration_points[0];
   cross_line1_ = line(pt.x - 15, pt.y, 31, 1);
   cross_line2_ = line(pt.x, pt.y - 15, 1, 31);
 
-  auto label = lv_label_create(scr());
+  auto label = lv_label_create(calibration_panel.scr());
   lv_label_set_text(label, "LCD Calibration");
   lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
   lv_obj_align_to(label, nullptr, LV_ALIGN_CENTER, 0, 0);
@@ -49,7 +59,7 @@ void CalibrationPanel::update() {
 
   if(stage == CALIBRATION_SUCCESS || stage == CALIBRATION_FAIL) {
     TouchCalibration::calibration_end();
-    switch_panel(main_panel);
+    PanelBase::switch_panel<MainPanel>();
     return;
   }
 
@@ -58,11 +68,13 @@ void CalibrationPanel::update() {
   lv_obj_set_pos(cross_line2_, pt.x, pt.y - 15);
 }
 
-lv_obj_t *CalibrationPanel::line(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height) {
-  auto rect = lv_obj_create(scr());
+namespace {
+lv_obj_t *line(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height) {
+  auto rect = lv_obj_create(calibration_panel.scr());
   lv_obj_set_pos(rect, x, y);
   lv_obj_set_size(rect, width, height);
   lv_obj_set_style_bg_color(rect, lv_color_white(), LV_PART_MAIN);
   lv_obj_set_style_bg_opa(rect, LV_OPA_COVER, LV_PART_MAIN);
   return rect;
+}
 }

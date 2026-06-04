@@ -24,17 +24,8 @@
  */
 
 #pragma once
-#include "../panels.h"
 
-struct ControlsPanel: PanelBase<ControlsPanel, 6> {
-private:
-  void prepare() override;
-  void on_back(lv_event_t *e);
-  void on_load_unload(lv_event_t *e);
-  void on_preheat(lv_event_t *e);
-  void on_cooldown(lv_event_t *e);
-  void on_move(lv_event_t *e);
-  void on_disable_motors(lv_event_t *e);
+struct ControlsPanel {
+  static bool can_switch();
+  static void create();
 };
-
-inline ControlsPanel controls_panel;

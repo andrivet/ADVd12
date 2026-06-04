@@ -26,17 +26,8 @@
 #pragma once
 #include "panels.h"
 
-struct CalibrationPanel: PanelBase<CalibrationPanel, 6> {
-  void show();
-  void update();
-
-private:
-  void prepare() override;
-  lv_obj_t *line(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height);
-
-private:
-  lv_obj_t *cross_line1_ = nullptr;
-  lv_obj_t *cross_line2_ = nullptr;
+struct CalibrationPanel {
+  static void update();
+  static bool can_switch();
+  static void create();
 };
-
-inline CalibrationPanel calibration_panel;

@@ -24,19 +24,8 @@
  */
 
 #pragma once
-#include "../panels.h"
 
-struct TuningPanel: PanelBase<TuningPanel, 8> {
-private:
-  void prepare() override;
-  void on_back(lv_event_t *e);
-  void on_bltouch(lv_event_t *e);
-  void on_extruder(lv_event_t *e);
-  void on_pid(lv_event_t *e);
-  void on_vibrations(lv_event_t *e);
-  void on_shaping(lv_event_t *e);
-  void on_skew(lv_event_t *e);
-  void on_linear_advance(lv_event_t *e);
+struct TuningPanel {
+  static bool can_switch();
+  static void create();
 };
-
-inline TuningPanel tuning_panel;

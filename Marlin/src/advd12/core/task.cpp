@@ -23,9 +23,8 @@
  *
  */
 
+#include "../../inc/MarlinConfig.h"
 #include "task.h"
-
-unsigned long millis();
 
 Elapse::Elapse(unsigned delay): delay_{delay} {
   reset();

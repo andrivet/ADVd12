@@ -163,7 +163,7 @@ namespace ExtUI {
     //Mesh::progress(index);
   }
 
-  void onLevelingDone() {
+  void onLevelingDone(bool success) {
     //Mesh::done(success);
   }
 

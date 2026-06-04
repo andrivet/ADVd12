@@ -25,7 +25,7 @@
 
 #include <lvgl.h>
 #include "leveling.h"
-#include "panel.h"
+#include "../panels.h"
 #include "../main.h"
 #include "../../core/ids.h"
 #include "src/advd12/panels/panels.h"

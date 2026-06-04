@@ -25,13 +25,12 @@
 
 #include <lvgl.h>
 #include "main.h"
-#include "panel.h"
+#include "panels.h"
 #include "controls/controls.h"
 #include "leveling/leveling.h"
 #include "tuning/tuning.h"
 #include "settings/settings.h"
 #include "infos.h"
-#include "panels.h"
 #include "../core/ids.h"
 
 namespace {

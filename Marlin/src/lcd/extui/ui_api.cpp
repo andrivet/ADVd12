@@ -917,9 +917,13 @@ namespace ExtUI {
 
     #if ENABLED(BLTOUCH)
     bool isLevelingHighSpeed() { return bltouch.high_speed_mode; } // @advd12
+    #if HAS_BLTOUCH_HS_MODE
     void setLevelingHighSpeed(bool set) { bltouch.high_speed_mode = set; } // @advd12
-    bool isLevelingTouchSw() { return bltouch.sw_mode; } // @advd12
-    void setLevelingTouchSw(bool set) { bltouch.sw_mode = set; } // @advd12
+    #else
+    void setLevelingHighSpeed(bool set) { }
+    #endif
+    //bool isLevelingTouchSw() { return bltouch.sw_mode; } // @advd12
+    //void setLevelingTouchSw(bool set) { bltouch.sw_mode = set; } // @advd12
     #endif
 
     #if HAS_MESH

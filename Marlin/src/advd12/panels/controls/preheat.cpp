@@ -27,10 +27,9 @@
 #include <array>
 #include <lvgl.h>
 #include "preheat.h"
-#include "panel.h"
+#include "../panels.h"
 #include "controls.h"
 #include "../../core/ids.h"
-#include "src/advd12/panels/panels.h"
 
 namespace {
 constexpr unsigned NB_PREHEAT = 5;

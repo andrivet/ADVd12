@@ -215,7 +215,7 @@ bool load_filament(const float slow_load_length/*=0*/, const float fast_load_len
       hostui.prompt_do(PROMPT_USER_CONTINUE, F("Load Filament T"), tool, FPSTR(CONTINUE_STR));
     #endif
 
-    while (marlin.wait_for_user) {
+    while (marlin.wait_for_user == Marlin::WAIT_FOR_USER::WAIT ) { // @advd12
       impatient_beep(max_beep_count);
       #if ALL(HAS_FILAMENT_SENSOR, FILAMENT_CHANGE_RESUME_ON_INSERT)
         #if MULTI_FILAMENT_SENSOR
@@ -554,7 +554,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
   TERN_(HOST_PROMPT_SUPPORT, hostui.continue_prompt(GET_TEXT_F(MSG_NOZZLE_PARKED)));
   TERN_(EXTENSIBLE_UI, ExtUI::onUserConfirmRequired(GET_TEXT_F(MSG_NOZZLE_PARKED)));
   marlin.wait_start();    // LCD click or M108 will clear this
-  while (marlin.wait_for_user) {
+  while (marlin.wait_for_user == Marlin::WAIT_FOR_USER::WAIT ) { // @advd12
     impatient_beep(max_beep_count);
 
     // If the nozzle has timed out...

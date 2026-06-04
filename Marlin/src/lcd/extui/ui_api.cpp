@@ -309,6 +309,19 @@ namespace ExtUI {
     return GET_TEMP_ADJUSTMENT(thermalManager.degTargetHotend(extruder - E0));
   }
 
+  // @advd12
+  celsius_t getDefaultTemp_celsius(const heater_t heater) {
+    switch (heater) {
+      #if HAS_HEATED_BED
+        case BED: return GET_TEMP_ADJUSTMENT(thermalManager.degDefaultBed());
+      #endif
+      #if HAS_HEATED_CHAMBER
+        case CHAMBER: return GET_TEMP_ADJUSTMENT(thermalManager.degDefaultChamber());
+      #endif
+        default: return GET_TEMP_ADJUSTMENT(thermalManager.degDefaultHotend(heater - H0));
+      }
+    }
+
   //
   // Fan target/actual speed
   //
@@ -327,6 +340,15 @@ namespace ExtUI {
   //
   float getAxisPosition_mm(const axis_t axis) {
     return current_position[axis];
+  }
+
+  // @advd12
+  void getRealtimeAxisPositions_mm(xyz_pos_t &xyz) {
+    get_cartesian_from_steppers();
+    xyze_pos_t npos = LOGICAL_AXIS_ARRAY(0, cartes.x, cartes.y, cartes.z);
+    TERN_(HAS_POSITION_MODIFIERS, planner.unapply_modifiers(npos, true));
+    const auto lpos = npos.asLogical();
+    xyz.set(lpos.X, lpos.Y, lpos.Z);
   }
 
   float getAxisPosition_mm(const extruder_t extruder) {
@@ -353,6 +375,29 @@ namespace ExtUI {
 
     current_position[axis] = constrain(position, min, max);
     line_to_current_position(feedrate ?: manual_feedrate_mm_s[axis]);
+  }
+
+  // @advd12
+  void setMultipleAxisPosition_mm(size_t nb_axis, const float *positions, const axis_t *axis, const feedRate_t feedrate) {
+
+    for(size_t i = 0; i < nb_axis; ++i) {
+      // Get motion limit from software endstops, if any
+      float min, max;
+      soft_endstop.get_manual_axis_limits((AxisEnum)axis[i], min, max);
+
+      // Delta limits XY based on the current offset from center
+      // This assumes the center is 0,0
+      #if ENABLED(DELTA)
+        if (axis != Z) {
+          max = SQRT(sq(float(DELTA_PRINTABLE_RADIUS)) - sq(current_position[Y - axis])); // (Y - axis) == the other axis
+          min = -max;
+        }
+      #endif
+
+      current_position[axis[i]] = constrain(positions[i], min, max);
+    }
+
+    line_to_current_position(feedrate);
   }
 
   void setAxisPosition_mm(const float position, const extruder_t extruder, const feedRate_t feedrate/*=0*/) {
@@ -420,6 +465,7 @@ namespace ExtUI {
   #if ENABLED(HOST_KEEPALIVE_FEATURE)
     GcodeSuite::MarlinBusyState getHostKeepaliveState() { return gcode.busy_state; }
     bool getHostKeepaliveIsPaused() { return gcode.host_keepalive_is_paused(); }
+    void setHostKeepaliveState(GcodeSuite::MarlinBusyState state) { gcode.busy_state = state; } // @advd12
   #endif
 
   //
@@ -869,6 +915,13 @@ namespace ExtUI {
     void setLevelingActive(const bool state) { set_bed_leveling_enabled(state); }
     bool getLevelingIsValid() { return leveling_is_valid(); }
 
+    #if ENABLED(BLTOUCH)
+    bool isLevelingHighSpeed() { return bltouch.high_speed_mode; } // @advd12
+    void setLevelingHighSpeed(bool set) { bltouch.high_speed_mode = set; } // @advd12
+    bool isLevelingTouchSw() { return bltouch.sw_mode; } // @advd12
+    void setLevelingTouchSw(bool set) { bltouch.sw_mode = set; } // @advd12
+    #endif
+
     #if HAS_MESH
 
       bed_mesh_t& getMeshArray() { return bedlevel.z_values; }
@@ -914,7 +967,9 @@ namespace ExtUI {
   #if ENABLED(PRINTCOUNTER)
     char* getFailedPrints_str(char buffer[21])   { strcpy(buffer,i16tostr3left(print_job_timer.getStats().totalPrints - print_job_timer.getStats().finishedPrints)); return buffer; }
     char* getTotalPrints_str(char buffer[21])    { strcpy(buffer,i16tostr3left(print_job_timer.getStats().totalPrints));    return buffer; }
+    uint16_t getTotalPrints()                    { return print_job_timer.getStats().totalPrints; } // @advd12
     char* getFinishedPrints_str(char buffer[21]) { strcpy(buffer,i16tostr3left(print_job_timer.getStats().finishedPrints)); return buffer; }
+    uint16_t getFinishedPrints()                 { return print_job_timer.getStats().finishedPrints; } // @advd12
     char* getTotalPrintTime_str(char buffer[21]) { return duration_t(print_job_timer.getStats().printTime).toString(buffer); }
     char* getLongestPrint_str(char buffer[21])   { return duration_t(print_job_timer.getStats().longestPrint).toString(buffer); }
     char* getFilamentUsed_str(char buffer[21])   {
@@ -955,7 +1010,7 @@ namespace ExtUI {
   #endif
 
   void injectCommands_P(PGM_P const gcode) { queue.inject_P(gcode); }
-  void injectCommands(char * const gcode)  { queue.inject(gcode); }
+  void injectCommands(const char * const gcode)  { queue.inject(gcode); } // @advd12 add const qualifier
 
   bool commandsInQueue() { return (planner.has_blocks_queued() || queue.has_commands_queued()); }
 
@@ -969,7 +1024,7 @@ namespace ExtUI {
     return firmware_name;
   }
 
-  void setTargetTemp_celsius(const float inval, const heater_t heater) {
+  void setTargetTemp_celsius(const float inval, const heater_t heater, bool beep) { // @advd12
     float value = inval;
     #ifdef TOUCH_UI_LCD_TEMP_SCALING
       value *= TOUCH_UI_LCD_TEMP_SCALING;
@@ -983,18 +1038,18 @@ namespace ExtUI {
         case COOLER: thermalManager.setTargetCooler(LROUND(constrain(value, 0, COOLER_MAXTEMP))); break;
       #endif
       #if HAS_HEATED_BED
-        case BED: thermalManager.setTargetBed(LROUND(constrain(value, 0, BED_MAX_TARGET))); break;
+        case BED: thermalManager.setTargetBed(LROUND(constrain(value, 0, BED_MAX_TARGET)), beep); break; // @advd12
       #endif
       default: {
         #if HAS_HOTEND
           const int16_t e = heater - H0;
-          thermalManager.setTargetHotend(LROUND(constrain(value, 0, thermalManager.hotend_max_target(e))), e);
+          thermalManager.setTargetHotend(LROUND(constrain(value, 0, thermalManager.hotend_max_target(e))), e, beep); // @advd12
         #endif
       } break;
     }
   }
 
-  void setTargetTemp_celsius(const float inval, const extruder_t extruder) {
+  void setTargetTemp_celsius(const float inval, const extruder_t extruder, bool beep) {
     float value = inval;
     #ifdef TOUCH_UI_LCD_TEMP_SCALING
       value *= TOUCH_UI_LCD_TEMP_SCALING;
@@ -1004,6 +1059,23 @@ namespace ExtUI {
       enableHeater(extruder);
       thermalManager.setTargetHotend(LROUND(constrain(value, 0, thermalManager.hotend_max_target(e))), e);
     #endif
+  }
+
+  // @advd12
+  void setDefaultTemp_celsius(const float inval, const heater_t heater) {
+    if(inval <= 0) return;
+    switch (heater) {
+      #if HAS_HEATED_BED
+        case BED: thermalManager.setDefaultBed(LROUND(constrain(inval, 0, BED_MAX_TARGET))); break;
+      #endif
+      #if HAS_HEATED_CHAMBER
+        case CHAMBER: thermalManager.seztDefaultChamber(celsius);
+      #endif
+      default: {
+        const int16_t e = heater - H0;
+        thermalManager.setDefaultHotend(LROUND(constrain(inval, 0, thermalManager.hotend_max_target(e))), e);
+      }
+    }
   }
 
   void setTargetFan_percent(const float value, const fan_t fan) {
@@ -1021,9 +1093,13 @@ namespace ExtUI {
   void coolDown() { thermalManager.cooldown(); }
 
   bool awaitingUserConfirm() {
-    return TERN0(HAS_RESUME_CONTINUE, marlin.wait_for_user) || TERN0(HOST_KEEPALIVE_FEATURE, getHostKeepaliveIsPaused());
+    return TERN0(HAS_RESUME_CONTINUE, marlin.wait_for_user == Marlin::WAIT_FOR_USER::WAIT) || TERN0(HOST_KEEPALIVE_FEATURE, getHostKeepaliveIsPaused()); // @advd12
   }
-  void setUserConfirmed() { TERN_(HAS_RESUME_CONTINUE, marlin.user_resume()); }
+  void setUserConfirmed(bool abort) { TERN_(HAS_RESUME_CONTINUE, Marlin::wait_for_user = abort ? Marlin::WAIT_FOR_USER::ABORT : Marlin::WAIT_FOR_USER::CONTINUE); } // @advd12
+
+  #if HAS_LEVELING
+  void cancelLeveling() { ::g29_cancel = true; } // @advd12
+  #endif
 
   #if ENABLED(ADVANCED_PAUSE_FEATURE)
     void setPauseMenuResponse(PauseMenuResponse response) { pause_menu_response = response; }
@@ -1163,6 +1239,170 @@ namespace ExtUI {
   void FileList::changeDir(const char * const dirname) {
     TERN(HAS_MEDIA, card.cd(dirname), UNUSED(dirname));
   }
+
+  // @advd12
+  void setAllAxisUnhomed()
+  {
+    ::set_all_unhomed();
+  }
+
+  void setAllAxisPositionUnknown()
+  {
+    ::set_all_unhomed();
+  }
+
+  void finishAndDisableHeaters()
+  {
+    planner.finish_and_disable();
+  }
+
+  void cancelWaitForHeatup()
+  {
+    Marlin::wait_for_heatup = false;
+    setUserConfirmed(false);
+  }
+
+  void kill(FSTR_P const lcd_error, FSTR_P const lcd_component, const bool steppers_off)
+  {
+    Marlin::kill(lcd_error, lcd_component, steppers_off);
+  }
+
+  void killRightNow(const bool steppers_off)
+  {
+    Marlin::minkill(steppers_off);
+  }
+
+  #if PREHEAT_COUNT
+  uint8_t getNbMaterialPresets()
+  {
+    static_assert(COUNT(ui.material_preset) == PREHEAT_COUNT, "Update PREHEAT_COUNT");
+    return PREHEAT_COUNT;
+  }
+
+  int16_t getMaterialPresetHotendTemp_celsius(unsigned int index)
+  {
+    return ui.material_preset[index].hotend_temp;
+  }
+
+  int16_t getMaterialPresetBedTemp_celsius(unsigned int index)
+  {
+    return ui.material_preset[index].bed_temp;
+  }
+
+  uint8_t getMaterialPresetFanSpeed_percent(unsigned int index)
+  {
+    return ui8_to_percent(ui.material_preset[index].fan_speed);
+  }
+
+  void setMaterialPreset(unsigned int index, int16_t hotend_celcius, int16_t bed_celcius, uint8_t fan_percent)
+  {
+    ui.material_preset[index].hotend_temp = hotend_celcius;
+    ui.material_preset[index].bed_temp    = bed_celcius;
+    ui.material_preset[index].fan_speed   = map(constrain(fan_percent, 0, 100), 0, 100, 0, 255);
+  }
+  #endif
+
+  #if ENABLED(X_AXIS_TWIST_COMPENSATION)
+  bool getXTwistEnabled() {
+    return xatc.get_enabled();
+  }
+
+  float getXTwistSpacing()
+  {
+    return xatc.spacing;
+  }
+
+  float getXTwistStart()
+  {
+    return xatc.start;
+  }
+
+  const float* getXTwistZValues()
+  {
+    return xatc.z_offset;
+  }
+
+  void setXTwistStartSpacing(float start, float spacing)
+  {
+    xatc.start = start;
+    xatc.spacing = spacing;
+  }
+
+  void setXTwistZOffset(int index, float offset)
+  {
+    xatc.z_offset[index] = offset;
+  }
+
+  void setXTwistEnabled(bool enabled) {
+    xatc.set_enabled(enabled);
+  }
+
+  #endif
+
+  void saveSettings()
+  {
+    MarlinSettings::save();
+  }
+
+  void loadSettings()
+  {
+    MarlinSettings::load();
+  }
+
+  void resetSettings()
+  {
+    MarlinSettings::reset();
+  }
+
+  void watchdogReset()
+  {
+    MarlinHAL::watchdog_refresh();
+  }
+
+  void stopMove() {
+    quickstop_stepper();
+  }
+
+  void setAbsoluteZAxisPosition_mm(const float position) {
+    current_position.z = position;
+    sync_plan_position();
+  }
+
+  #if ENABLED(SKEW_CORRECTION)
+  #if ENABLED(SKEW_CORRECTION_FOR_Z)
+  void setSkewFactors(float xy, float xz, float yz) {
+    planner.skew_factor.xy = xy;
+    planner.skew_factor.xz = xz;
+    planner.skew_factor.yz = yz;
+    set_current_from_steppers_for_axis(ALL_AXES_ENUM);
+    sync_plan_position();
+  }
+  #else
+  void setSkewFactors(float xy) {
+    planner.skew_factor.xy = xy;
+    set_current_from_steppers_for_axis(ALL_AXES_ENUM);
+    sync_plan_position();
+  }
+  #endif
+  #endif
+
+  #if HAS_ZV_SHAPING
+    void setShapingDampingRatio(const AxisEnum axis, const_float_t zeta) {
+    stepper.set_shaping_damping_ratio(axis, zeta);
+  }
+
+  float getShapingDampingRatio(const AxisEnum axis) {
+    return stepper.get_shaping_damping_ratio(axis);
+  }
+
+  void setShapingFrequency(const AxisEnum axis, const_float_t freq) {
+    stepper.set_shaping_frequency(axis, freq);
+  }
+
+  float getShapingFrequency(const AxisEnum axis) {
+    return stepper.get_shaping_frequency(axis);
+  }
+  #endif
 
 } // namespace ExtUI
 

@@ -1294,6 +1294,15 @@ void MarlinSettings::postprocess() {
     }
 
     //
+    // Default temperatures @advd12
+    //
+    {
+      _FIELD_TEST(defaultHotendTemp);
+      EEPROM_WRITE(Temperature::default_hotend_temp);
+      EEPROM_WRITE(Temperature::default_bed_temp);
+    }
+
+    //
     // User-defined Thermistors
     //
     #if HAS_USER_THERMISTORS
@@ -2380,6 +2389,14 @@ void MarlinSettings::postprocess() {
           if (!validating && !isnan(pid.p))
             thermalManager.temp_chamber.pid.set(pid);
         #endif
+      }
+
+      //
+      // Default temperatures @advd12
+      //
+      {
+        EEPROM_READ(thermalManager.default_hotend_temp);
+        EEPROM_READ(thermalManager.default_bed_temp);
       }
 
       //

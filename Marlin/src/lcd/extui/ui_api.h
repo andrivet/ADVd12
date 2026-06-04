@@ -130,7 +130,7 @@ namespace ExtUI {
   bool canMove(const extruder_t);
   void injectCommands_P(PGM_P const);
   inline void injectCommands(FSTR_P const fstr) { injectCommands_P(FTOP(fstr)); }
-  void injectCommands(char * const);
+  void injectCommands(const char * const); // @advd12 add const qualifier
   bool commandsInQueue();
   inline void executeCommands(FSTR_P const fstr) { gcode.process_subcommands_now(fstr); }
   inline void executeCommands(char * const cstr) { gcode.process_subcommands_now(cstr); }
@@ -138,6 +138,7 @@ namespace ExtUI {
   #if ENABLED(HOST_KEEPALIVE_FEATURE)
     GcodeSuite::MarlinBusyState getHostKeepaliveState();
     bool getHostKeepaliveIsPaused();
+    void setHostKeepaliveState(GcodeSuite::MarlinBusyState state); // @advd12
   #endif
 
   #if ENABLED(JOYSTICK)
@@ -176,11 +177,13 @@ namespace ExtUI {
   celsius_float_t getActualTemp_celsius(const extruder_t);
   celsius_t getTargetTemp_celsius(const heater_t);
   celsius_t getTargetTemp_celsius(const extruder_t);
+  celsius_t getDefaultTemp_celsius(const heater_t); // @advd12
   uint8_t getActualFan_percent(const fan_t);
   uint8_t getTargetFan_percent(const fan_t);
 
   // High level positions, by Axis ID, Extruder ID
   float getAxisPosition_mm(const axis_t);
+  void getRealtimeAxisPositions_mm(xyz_pos_t &xyz); // @advd12
   float getAxisPosition_mm(const extruder_t);
   // Axis steps-per-mm, by Axis ID, Extruder ID
   float getAxisSteps_per_mm(const axis_t);
@@ -239,7 +242,22 @@ namespace ExtUI {
     void setLevelingActive(const bool);
     bool getLevelingIsValid();
     void onLevelingStart();
-    void onLevelingDone();
+    void onLevelingDone(bool success = true); // @advd12
+    void onLevelingProgress(const int8_t index, const int8_t xpos, const int8_t ypos); // @advd12
+    void cancelLeveling(); // @advd12
+
+    #if ENABLED(BLTOUCH)
+    bool isLevelingHighSpeed(); // @advd12
+    void setLevelingHighSpeed(bool set = true); // @advd12
+    bool isLevelingTouchSw(); // @advd12
+    void setLevelingTouchSw(bool set);// @advd12
+    #else
+    inline bool isLevelingHighSpeed() { return false; } // @advd12
+    inline void setLevelingHighSpeed(bool set = true) {} // @advd12
+    inline bool isLevelingTouchSw() { return false; } // @advd12
+    inline void setLevelingTouchSw(bool set) {} // @advd12
+    #endif
+
     #if ENABLED(PREHEAT_BEFORE_LEVELING)
       celsius_t getLevelingBedTemp();
     #endif
@@ -283,15 +301,18 @@ namespace ExtUI {
     // Printcounter strings (See nextion_tft.cpp)
     char* getFailedPrints_str(char buffer[21]);
     char* getTotalPrints_str(char buffer[21]);
+    uint16_t getTotalPrints(); // @advd12
     char* getFinishedPrints_str(char buffer[21]);
+    uint16_t getFinishedPrints(); // @advd12
     char* getTotalPrintTime_str(char buffer[21]);
     char* getLongestPrint_str(char buffer[21]);
     char* getFilamentUsed_str(char buffer[21]);
   #endif
 
   // Temperature Control
-  void setTargetTemp_celsius(const float, const heater_t);
+  void setTargetTemp_celsius(const float, const heater_t, bool beep = false); // @advd12
   void setTargetTemp_celsius(const float, const extruder_t);
+  void setDefaultTemp_celsius(const float, const heater_t); // @advd12
   void setTargetFan_percent(const float, const fan_t);
   void coolDown();
 
@@ -465,6 +486,8 @@ namespace ExtUI {
    * Media access routines
    * Use these to operate on files
    */
+  void mountMedia(); // @advd12
+  void releaseMedia(); // @advd12
   bool isMediaMounted();
   bool isMediaMountedSD();
   bool isMediaMountedUSB();
@@ -507,6 +530,7 @@ namespace ExtUI {
   void onMediaMounted();
   void onMediaError();
   void onMediaRemoved();
+  void onMediaOpenError(const char* filename); // @advd12
 
   void onHeatingError(const heater_id_t header_id);
   void onMinTempError(const heater_id_t header_id);
@@ -557,6 +581,12 @@ namespace ExtUI {
   void onSettingsStored(const bool success);
   void onSettingsLoaded(const bool success);
 
+  #if ENABLED(EEPROM_SETTINGS)
+  void saveSettings(); // @advd12
+  void loadSettings(); // @advd12
+  void resetSettings(); // @advd12
+  #endif
+
   #if ENABLED(PREVENT_COLD_EXTRUSION)
     void onSetMinExtrusionTemp(const celsius_t t);
   #endif
@@ -575,6 +605,17 @@ namespace ExtUI {
   #if ENABLED(PLATFORM_M997_SUPPORT)
     void onFirmwareFlash();
   #endif
+
+  // @advd12
+  void setAllAxisUnhomed();
+  void setAllAxisPositionUnknown();
+  void finishAndDisableHeaters();
+  void cancelWaitForHeatup();
+  void kill(PGM_P const lcd_error=nullptr, PGM_P const lcd_component=nullptr, const bool steppers_off=false);
+  void killRightNow(const bool steppers_off=false);
+  void watchdogReset();
+  void stopMove();
+  void setAbsoluteZAxisPosition_mm(const float position);
 };
 
 /**

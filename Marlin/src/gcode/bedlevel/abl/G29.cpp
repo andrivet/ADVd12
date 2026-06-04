@@ -445,6 +445,7 @@ G29_TYPE GcodeSuite::G29() {
       points[0].z = points[1].z = points[2].z = 0;  // Probe at 3 arbitrary points
     #endif
 
+    ::g29_cancel = false; // @advd12
     TERN_(EXTENSIBLE_UI, ExtUI::onLevelingStart());
 
     if (!faux) {
@@ -772,6 +773,12 @@ G29_TYPE GcodeSuite::G29() {
             abl.measured_z = faux ? 0.001f * random(-100, 101) : probe.probe_at_point(abl.probePos, raise_after, abl.verbose_level);
 
           #endif
+
+          // @advd12
+          if(::g29_cancel) {
+            abl.measured_z = NAN; // To break loops
+            break;
+          }
 
           if (isnan(abl.measured_z)) {
             set_bed_leveling_enabled(abl.reenable);

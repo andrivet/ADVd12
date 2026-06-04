@@ -1137,6 +1137,67 @@ namespace LanguageNarrow_en {
   LSTR MSG_PROGRESS_HOMING                = _UxGT("Homing");
   LSTR MSG_PROGRESS_MOVING_SELECTOR       = _UxGT("Moving selector");
   LSTR MSG_PROGRESS_FEED_FSENSOR          = _UxGT("Feeding to FSensor");
+
+  // advd12 These messages are specific to ADVd12
+
+  LSTR ADVD12_MSG_BOOTING                = _UxGT("Booting...");
+  LSTR ADVD12_MSG_SD_CARD_DETECTED       = _UxGT("SD card detected");
+  LSTR ADVD12_MSG_SD_CARD_REMOVED        = _UxGT("SD card removed");
+  LSTR ADVD12_MSG_SD_CARD_ERROR          = _UxGT("Error reading SD card");
+  LSTR ADVD12_MSG_BUSY                   = _UxGT("Not available when busy");
+  LSTR ADVD12_MSG_PREHEAT                = _UxGT("Preheat");
+  LSTR ADVD12_MSG_NO_BED_LEVELING        = _UxGT("Bed leveling is not active");
+  LSTR ADVD12_MSG_LEVELING_REQUIRED      = _UxGT("Please do a bed leveling");
+  LSTR ADVD12_MSG_LEVELING_FAILURE       = _UxGT("Leveling failure or aborted");
+  LSTR ADVD12_MSG_LEVELING_NO_MESH       = _UxGT("No mesh currently defined");
+  LSTR ADVD12_MSG_LEVELING_CANCEL        = _UxGT("Cancel leveling");
+  LSTR ADVD12_MSG_LEVELING_HOT           = _UxGT("Hotend is hot. Continue?");
+  LSTR ADVD12_MSG_PRINT_CONTINUE         = _UxGT("Continue printing");
+  LSTR ADVD12_MSG_PID_TUNING_START       = _UxGT("Starting PID tuning");
+  LSTR ADVD12_MSG_PID_TUNING_CANCEL      = _UxGT("Cancel PID tuning");
+  LSTR ADVD12_MSG_PID_TUNING_SUCCESS     = _UxGT("PID tuning successful");
+  LSTR ADVD12_MSG_TEMP_TOO_HIGH          = _UxGT("Temperature is too high");
+  LSTR ADVD12_MSG_TIMEOUT                = _UxGT("Timeout");
+  LSTR ADVD12_MSG_BLTOUCH_TESTING        = _UxGT("Testing BLTouch");
+  LSTR ADVD12_MSG_BLTOUCH_TRIGGER        = _UxGT("Testing BLTouch triggering");
+  LSTR ADVD12_MSG_BLTOUCH_RED_BROWN      = _UxGT("Check red and brown wires");
+  LSTR ADVD12_MSG_BLTOUCH_ORANGE         = _UxGT("Check the orange (Servo) wire");
+  LSTR ADVD12_MSG_BLTOUCH_WHITE_BLACK    = _UxGT("Check white and black wires");
+  LSTR ADVD12_MSG_BLTOUCH_PIN            = _UxGT("Check the pin of the BLTouch");
+  LSTR ADVD12_MSG_BLTOUCH_NOISE          = _UxGT("Noise detected");
+  LSTR ADVD12_MSG_BLTOUCH_3_0            = _UxGT("BLTouch V3.0 or lower detected");
+  LSTR ADVD12_MSG_BLTOUCH_3_1            = _UxGT("BLTouch 3.1 detected");
+  LSTR ADVD12_MSG_ACCESSING_SD           = _UxGT("Accessing the SD card");
+  LSTR ADVD12_MSG_ABORT_PRINT            = _UxGT("Abort print?");
+  LSTR ADVD12_STR_SENSOR_CURRENT         = _UxGT("Current Sensor");
+  LSTR ADVD12_STR_SENSOR_TEACHING_TECH   = _UxGT("Teaching Tech");
+  LSTR ADVD12_STR_SENSOR_ADVI3PP         = _UxGT("ADVi3++");
+  LSTR ADVD12_STR_SENSOR_INDIANAGIO      = _UxGT("Indianagio");
+  LSTR ADVD12_STR_SENSOR_MARKII          = _UxGT("Mark II");
+  LSTR ADVD12_MSG_RESUME_PRINT           = _UxGT("Resume last print?");
+  LSTR ADVD12_MSG_PROCESS_GCODES         = _UxGT("Not able to process GCodes");
+  LSTR ADVD12_MSG_SENSOR_RESET           = _UxGT("Sensor Reset");
+  LSTR ADVD12_MSG_VIBRATIONS_X           = _UxGT("Test X axis");
+  LSTR ADVD12_MSG_VIBRATIONS_Y           = _UxGT("Test Y axis");
+  LSTR ADVD12_MSG_VIBRATIONS_Z           = _UxGT("Test Z axis");
+  LSTR ADVD12_MSG_VIBRATIONS_XY          = _UxGT("Test X/Y axis");
+  LSTR ADVD12_MSG_VIBRATIONS_YX          = _UxGT("Test Y/X axis");
+  LSTR ADVD12_MSG_HOTEND                 = _UxGT("Hotend");
+  LSTR ADVD12_MSG_HOMED                  = _UxGT("Homed");
+  LSTR ADVD12_MSG_CANCELED               = _UxGT("Canceled");
+  LSTR ADVD12_MSG_MOTORS_DISABLED        = _UxGT("Motors disabled");
+  LSTR ADVD12_MSG_SETTINGS_RESET         = _UxGT("Settings Reset");
+  LSTR ADVD12_MSG_PROBE_ERROR            = _UxGT("Error probing the bed");
+  LSTR ADVD12_MSG_LEVELING_PROBING       = _UxGT("Probing %i/%i");
+  LSTR ADVD12_MSG_EXTRUSION_FINISHED     = _UxGT("Extrusion finished");
+  LSTR ADVD12_MSG_IN_PROGRESS            = _UxGT("In progress...");
+  LSTR ADVD12_MSG_EXTRUDER_TUNING        = _UxGT("Extruder Tuning");
+
+  LSTR ADVD12_TITLE_CONFIRM              = _UxGT("Please Confirm");
+  LSTR ADVD12_TITLE_WAIT                 = _UxGT("Please Wait");
+  LSTR ADVD12_TITLE_WARNING              = _UxGT("Warning");
+  LSTR ADVD12_TITLE_INFORMATION          = _UxGT("Information");
+  LSTR ADVD12_MSG_TITLE_PURGE            = _UxGT("Filament purge");
 }
 
 namespace LanguageWide_en {

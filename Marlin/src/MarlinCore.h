@@ -78,9 +78,11 @@ public:
 
   #if HAS_RESUME_CONTINUE
     // Global waiting for user response
-    static bool wait_for_user;
-    static void wait_start() { wait_for_user = true; }
-    static void user_resume() { wait_for_user = false; }
+    enum struct WAIT_FOR_USER { WAIT, CONTINUE, ABORT }; // @advd12
+    static WAIT_FOR_USER wait_for_user; // @advd12
+    static void wait_start() { wait_for_user = WAIT_FOR_USER::WAIT; }
+    static void user_resume() { wait_for_user = WAIT_FOR_USER::CONTINUE; }
+    static void user_abort() { wait_for_user = WAIT_FOR_USER::ABORT; }
     static void wait_for_user_response(millis_t ms=0, const bool no_sleep=false);
   #endif
 
@@ -89,7 +91,7 @@ public:
   static bool is_heating() { return wait_for_heatup; }
   static void heatup_start() { wait_for_heatup = true; }
   static void heatup_done() { wait_for_heatup = false; }
-  static void end_waiting() { TERN_(HAS_RESUME_CONTINUE, wait_for_user =) wait_for_heatup = false; }
+  static void end_waiting() { TERN_(HAS_RESUME_CONTINUE, wait_for_user = WAIT_FOR_USER::CONTINUE; ) wait_for_heatup = false; }
 
   // Shared function for M42 / M43
   static bool pin_is_protected(const pin_t pin);

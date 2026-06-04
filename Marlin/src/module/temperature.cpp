@@ -252,6 +252,11 @@ Temperature thermalManager;
 PGMSTR(str_t_thermal_runaway, STR_T_THERMAL_RUNAWAY);
 PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
 
+#define NEXT_DEFAULT_TEMP(N) ,HEATER_##N##TEMP_DEFAULT
+celsius_t Temperature::default_hotend_temp[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_TEMP_DEFAULT REPEAT_S(1, HOTENDS, NEXT_DEFAULT_TEMP));
+celsius_t Temperature::default_bed_temp = BED_TEMP_DEFAULT;
+bool Temperature::temp_bed_reached_beep = false;
+
 //
 // Initialize MAX TC objects/SPI
 //
@@ -338,6 +343,7 @@ PGMSTR(str_t_heating_failed, STR_T_HEATING_FAILED);
 #if HAS_HOTEND
   hotend_info_t Temperature::temp_hotend[HOTENDS];
   constexpr celsius_t Temperature::hotend_maxtemp[HOTENDS];
+  bool Temperature::temp_hotend_reached_beep[HOTENDS]; // @advd12
 
   #if ENABLED(MPCTEMP)
     bool MPC::e_paused; // = false
@@ -766,6 +772,14 @@ void Temperature::factory_reset() {
   #if ENABLED(PIDTEMPCHAMBER)
     temp_chamber.pid.set(DEFAULT_CHAMBER_KP, DEFAULT_CHAMBER_KI, DEFAULT_CHAMBER_KD);
   #endif
+
+  //
+  // Default temperatures @advd12
+  //
+  #define NEXT_DEFAULT_TEMP(N) ,HEATER_##N##TEMP_DEFAULT
+  const celsius_t temps[HOTENDS] = ARRAY_BY_HOTENDS(HEATER_0_TEMP_DEFAULT REPEAT_S(1, HOTENDS, NEXT_DEFAULT_TEMP));
+  HOTEND_LOOP() default_hotend_temp[e] = temps[e];
+  default_bed_temp = BED_TEMP_DEFAULT;
 
   // User-Defined Thermistors
   TERN_(HAS_USER_THERMISTORS, reset_user_thermistors());

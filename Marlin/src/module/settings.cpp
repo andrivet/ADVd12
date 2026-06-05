@@ -415,6 +415,12 @@ typedef struct SettingsDataStruct {
   raw_pid_t chamberPID;                                 // M309 PID / M303 E-2 U
 
   //
+  // Default temperature @advd12
+  //
+  celsius_t defaultHotendTemp[HOTENDS];                 // M1301 S
+  celsius_t defaultBedTemp;                             // M1302 S
+
+  //
   // User-defined Thermistors
   //
   #if HAS_USER_THERMISTORS

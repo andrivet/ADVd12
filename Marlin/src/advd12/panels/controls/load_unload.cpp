@@ -83,6 +83,7 @@ void LoadUnloadPanel::create() {
 
   advd12::Core::reset_status();
   previous_z_ = advd12::Core::ensure_z_enough_space();
+  temp_ = ExtUI::getDefaultTemp_celsius(ExtUI::H0);
 }
 
 namespace {

@@ -24,67 +24,12 @@
  */
 
 #include "panels.h"
+#include "../core/styles.h"
 #include "../core/ids.h"
 #include "../core/core.h"
 #include "../core/display.h"
 
 PanelBase *PanelBase::current_panel_ = nullptr;
-
-namespace {
-lv_style_t style_panel;
-lv_style_t style_rectangle;
-lv_style_t style_button_down;
-lv_style_t style_button_up;
-lv_style_t style_button_label;
-lv_style_t style_label_regular;
-lv_style_t style_label_extruder;
-lv_style_t style_label_bed;
-lv_style_t style_label_fan;
-lv_style_t style_label_time;
-}
-
-void advd12::Display::init_lvgl_styles() {
-  auto value_font = &lv_font_montserrat_20;
-  auto label_font = &lv_font_montserrat_16;
-
-  lv_style_init(&style_panel);
-  lv_style_set_bg_color(&style_panel, lv_color_black());
-  lv_style_set_bg_opa(&style_panel, LV_OPA_COVER);
-
-  lv_style_init(&style_rectangle);
-  lv_style_set_bg_color(&style_rectangle, lv_color_make(255, 148, 0));
-  lv_style_set_bg_opa(&style_rectangle, LV_OPA_COVER);
-
-  lv_style_init(&style_button_down);
-  lv_style_set_img_recolor(&style_button_down, lv_color_black());
-  lv_style_set_img_recolor_opa(&style_button_down, LV_OPA_40);
-
-  lv_style_init(&style_button_up);
-
-  lv_style_init(&style_button_label);
-  lv_style_set_text_color(&style_button_label, lv_color_white());
-  lv_style_set_text_font(&style_button_label, label_font);
-
-  lv_style_init(&style_label_regular);
-  lv_style_set_text_color(&style_label_regular, lv_color_white());
-  lv_style_set_text_font(&style_label_regular, value_font);
-
-  lv_style_init(&style_label_extruder);
-  lv_style_set_text_color(&style_label_extruder, lv_color_make(255, 138, 97));
-  lv_style_set_text_font(&style_label_extruder, value_font);
-
-  lv_style_init(&style_label_bed);
-  lv_style_set_text_color(&style_label_bed, lv_color_make(126, 211, 33));
-  lv_style_set_text_font(&style_label_bed, value_font);
-
-  lv_style_init(&style_label_fan);
-  lv_style_set_text_color(&style_label_fan, lv_color_make(116, 198, 255));
-  lv_style_set_text_font(&style_label_fan, value_font);
-
-  lv_style_init(&style_label_time);
-  lv_style_set_text_color(&style_label_time, lv_color_make(151, 151, 151));
-  lv_style_set_text_font(&style_label_time, value_font);
-}
 
 void PanelBase::release() {
   if(!scr_) return;

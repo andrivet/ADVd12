@@ -30,7 +30,7 @@
   #include "../../lcd/extui/mks_ui/draw_touch_calibration.h"
   #include "../../lcd/extui/mks_ui/draw_ui.h"
 #elif HAS_TFT_ADV_UI
-#include "../../advd12/core/display.h"
+#include "../../advd12/core/core.h"
 #else
   #include "../../lcd/menu/menu.h"
 #endif
@@ -44,7 +44,7 @@ void GcodeSuite::M995() {
     clear_cur_ui();
     lv_draw_touch_calibration_screen();
   #elif HAS_TFT_ADV_UI
-    advd12::Display::calibrate();
+    advd12::Core::calibrate();
   #else
     ui.goto_screen(touch_screen_calibration);
   #endif

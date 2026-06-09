@@ -24,7 +24,9 @@
  */
 
 #include <lvgl.h>
+#include "../../inc/MarlinConfig.h"
 #include "wait.h"
+#include "../core/core.h"
 #include "../core/styles.h"
 #include "../core/ids.h"
 #include "events.h"
@@ -41,24 +43,23 @@ void on_back(lv_event_t *event);
 }
 
 
-namespace Wait {
-void wait() {
+void Wait::wait() {
   wait_base("Wait", "Please wait...", nullptr);
 }
 
-void wait(const char * message) {
+void Wait::wait(const char * message) {
   wait_base("Wait", message, nullptr);
 }
 
-void wait(CALLBACK_RESULT (*cb)()) {
+void Wait::wait(CALLBACK_RESULT (*cb)()) {
   // TODO
 }
 
-void wait(const char *message, CALLBACK_RESULT (*cb)()) {
+void Wait::wait(const char *message, CALLBACK_RESULT (*cb)()) {
   // TODO
 }
 
-void wait_back(const char *title, const char *message, void (*cb)()) {
+void Wait::wait_back(const char *title, const char *message, void (*cb)()) {
   wait_base(title, message, cb);
 
   auto btn = wait_button(IMG_BACK, 4, 4);
@@ -66,7 +67,7 @@ void wait_back(const char *title, const char *message, void (*cb)()) {
   binder.bind(btn, &on_back);
 }
 
-void wait_back(const char * title, const char * message) {
+void Wait::wait_back(const char * title, const char * message) {
   wait_base(title, message, nullptr);
 
   auto btn = wait_button(IMG_BACK, 4, 4);
@@ -74,18 +75,18 @@ void wait_back(const char * title, const char * message) {
   binder.bind(btn, &on_back);
 }
 
-void wait_back_continue(const char * title, const char * message, void (*cb)()) {}
-void wait_user(const char * title, const char *message, bool awaiting) {}
-void wait_user(const char * title, FSTR_P message, bool awaiting) {}
-void homing(void (*cb)(), const FlashChar* command) {}
-void homing(const FlashChar* command) {}
-void homing_start() {}
-void homing_done() {}
-void ensure_homed(void (*cb)()) {}
-void not_busy() {}
-void set_message(const char* msg) {}
+void Wait::wait_back_continue(const char * title, const char * message, void (*cb)()) {}
+void Wait::wait_user(const char * title, const char *message, bool awaiting) {}
+void Wait::wait_user(const char * title, FSTR_P message, bool awaiting) {}
+void Wait::homing(void (*cb)(), const FlashChar* command) {}
+void Wait::homing(const FlashChar* command) {}
+void Wait::homing_start() {}
+void Wait::homing_done() {}
+void Wait::ensure_homed(void (*cb)()) {}
+void Wait::not_busy() {}
+void Wait::set_message(const char* msg) {}
 
-void close() {
+void Wait::close() {
   if(msgbox) {
     lv_obj_del(msgbox);
     msgbox = nullptr;
@@ -97,6 +98,10 @@ void close() {
   }
 }
 
+bool Wait::check_not_busy() {
+  if(!advd12::Core::is_busy()) return true;
+  wait_back(GET_TEXT(ADVD12_TITLE_WARNING), GET_TEXT(ADVD12_MSG_BUSY));
+  return false;
 }
 
 namespace {

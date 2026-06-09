@@ -37,7 +37,6 @@
 
 #include HAL_PATH(../../.., tft/xpt2046.h)
 
-namespace advd12::Display {
 namespace {
 
   void init_lvgl();
@@ -53,7 +52,7 @@ namespace {
 
 }
 
-void init() {
+void Display::init() {
   W25QXX.init(SPI_QUARTER_SPEED);
 
   MarlinHAL::watchdog_refresh();
@@ -77,16 +76,16 @@ void init() {
     MainPanel::create();
 }
 
-void task_handler() {
+void Display::task_handler() {
   // TODO: DMA
   lv_timer_handler();
 }
 
-void draw_error_message(FSTR_P msg) {
+void Display::draw_error_message(FSTR_P msg) {
   // TODO
 }
 
-void calibrate() {
+void Display::calibrate() {
   PanelBase::switch_panel<CalibrationPanel>();
 }
 
@@ -101,7 +100,7 @@ namespace {
 
     systick_attach_callback(systick);
 
-    init_lvgl_styles();
+    Display::init_lvgl_styles();
   }
 
   void init_lvgl_drivers() {
@@ -155,5 +154,4 @@ namespace {
     data->point.y = last.y;
   }
 
-}
 }

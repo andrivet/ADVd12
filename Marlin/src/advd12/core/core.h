@@ -28,18 +28,14 @@
 
 namespace advd12::Core {
 
+void init();
 void startup();
 void idle();
+void task_handler();
 void killed(const FlashChar* error, const FlashChar* component);
 void killed(const FlashChar* error, heater_id_t header_id);
-void send_lcd_zero();
-
 bool is_busy();
-bool is_printing();
-bool is_print_paused();
-
-bool check_not_busy();
-void reset_status();
-float ensure_z_enough_space();
+float ensure_z_enough_room();
+void calibrate();
 
 };

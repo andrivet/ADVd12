@@ -26,7 +26,7 @@
 #include "styles.h"
 #include "display.h"
 
-void advd12::Display::init_lvgl_styles() {
+void Display::init_lvgl_styles() {
   auto value_font = &lv_font_montserrat_20;
   auto label_font = &lv_font_montserrat_16;
 

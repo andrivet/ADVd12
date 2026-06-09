@@ -23,30 +23,108 @@
  *
  */
 
-#include "../../inc/MarlinConfigPre.h"
+#include "../../inc/MarlinConfig.h"
+#include "../../lcd/extui/ui_api.h"
 #include "core.h"
 #include "task.h"
+#include "status.h"
+#include "display.h"
+#include "reentrant.h"
+#include "progress.h"
+#include "dates.h"
 
-namespace advd12 {
+namespace {
+constexpr unsigned int Z_ROOM = 20; // mm
 
-void Core::idle() {
-  background_task.execute();
-  status_task.execute();
-  wait_task.execute();
+void send_gplv3_7b_notice();
 }
 
-void Core::reset_status() {
-  // TODO
+void advd12::Core::init() {
+  send_gplv3_7b_notice(); // You are not authorized to remove or alter this notice
+  Display::init();
+  Status::init();
+  Progress::reset();
+
+#if HAS_LEVELING
+  if(ExtUI::getLevelingIsValid()) ExtUI::setLevelingActive(true);
+#endif
+
+  Status::set(GET_TEXT_F(WELCOME_MSG), Status::STATUS_OPTIONS::RESET);
 }
 
-bool Core::check_not_busy() {
-  // TODO
-  return true;
+void advd12::Core::startup() {
+  Status::set(GET_TEXT(ADVD12_MSG_BOOTING), Status::STATUS_OPTIONS::RESET | Status::STATUS_OPTIONS::PERSISTENT);
 }
 
-float Core::ensure_z_enough_space() {
-  // TODO
-  return 0;
+void advd12::Core::idle() {
+  static Reentrant reentrant;
+  ReentrantScope scope{reentrant};
+
+  if(!scope.reentrant()) {
+    background_task.execute();
+    status_task.execute();
+    wait_task.execute();
+  }
+}
+
+float advd12::Core::ensure_z_enough_room() {
+  auto previous_z = ExtUI::getAxisPosition_mm(ExtUI::Z);
+  // If the Z position is low and the Z axis position is known, raise it
+  if(previous_z < 20 && ExtUI::isAxisPositionKnown(ExtUI::Z))
+    ExtUI::setAxisPosition_mm(Z_ROOM, ExtUI::Z, 20);
+  return previous_z;
+}
+
+bool advd12::Core::is_busy() {
+  return
+      ExtUI::isPrinting() ||
+      ExtUI::isMoving() ||
+      ExtUI::getHostKeepaliveState() == GcodeSuite::MarlinBusyState::IN_HANDLER ||
+      ExtUI::getHostKeepaliveState() == GcodeSuite::MarlinBusyState::IN_PROCESS;
+}
+
+void advd12::Core::task_handler() {
+  Display::task_handler();
+}
+
+void advd12::Core::calibrate() {
+  Display::calibrate();
+}
+
+namespace {
+
+void send_gplv3_7b_notice() {
+  static constexpr char version[] = {
+    '0' + ADVD12_VERSION / 0x0100,
+    '.',
+    '0' + (ADVD12_VERSION % 0x0100) / 0x10,
+    '.',
+    '0' + (ADVD12_VERSION % 0x10),
+    0
+  };
+
+  static constexpr char build[] = {
+    '0' + (YEAR__ - 2000) / 10,
+    '0' + (YEAR__ - 2000) % 10,
+    '0' + MONTH__ / 10,
+    '0' + MONTH__ % 10,
+    '0' + DAY__ / 10,
+    '0' + DAY__ % 10,
+    '0' + HOUR__ / 10,
+    '0' + HOUR__ % 10,
+    '0' + MIN__ / 10,
+    '0' + MIN__ % 10,
+    '0' + SEC__ / 10,
+    '0' + SEC__ % 10,
+    0
+  };
+
+  SERIAL_ECHO_START();
+  //! Note to forks author:
+  //! Under GPLv3 provision 7(b), you are not authorized to remove or alter this notice.
+  SERIAL_ECHOLNPGM("Based on ADVd12, Copyright (C) 2026 Sebastien Andrivet");
+  SERIAL_ECHO_START();
+  SERIAL_ECHOLNPGM("ADVd12 version: ", version, ", build: ", build, ", flavor: ", F(ADVD12_NAME));
 }
 
 }

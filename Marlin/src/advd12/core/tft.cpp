@@ -31,8 +31,6 @@
 #include "src/libs/W25Qxx.h"
 #include <SPI.h>
 
-namespace advd12 {
-
 void Tft::init() {
   TFT_IO::init();
   TFT_IO::initTFT();
@@ -88,6 +86,4 @@ void Tft::set_point(uint16_t x, uint16_t y, uint16_t point) {
 
 void Tft::set_window(uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
   TFT_IO::set_window(x, y, x + width - 1, y + height - 1);
-}
-
 }

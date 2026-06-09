@@ -25,6 +25,7 @@
 
 #pragma once
 #include "../marlin/types.h"
+#include "../libs/ADVstd/bitmasks.h"
 
 namespace Status {
 
@@ -37,3 +38,5 @@ void reset();
 void init();
 
 }
+
+ENABLE_BITMASK_OPERATOR(Status::STATUS_OPTIONS);

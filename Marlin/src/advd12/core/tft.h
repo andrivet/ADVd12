@@ -26,8 +26,6 @@
 #pragma once
 #include <cstdint>
 
-namespace advd12 {
-
 struct Tft {
   static void init();
   static void clear(uint16_t color);
@@ -38,5 +36,3 @@ private:
   static void set_point(uint16_t x, uint16_t y, uint16_t point);
   static void set_window(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 };
-
-}

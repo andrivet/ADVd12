@@ -45,4 +45,5 @@ void ensure_homed(void (*cb)());
 void not_busy();
 void set_message(const char* msg);
 void close();
+bool check_not_busy();
 };

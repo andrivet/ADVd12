@@ -41,6 +41,8 @@
 //=============================== Wanhao D12 ================================
 //===========================================================================
 
+constexpr uint16_t ADVD12_VERSION = 0x0100;
+
 // Marlin's development mode
 //#define MARLIN_DEV_MODE
 //#define PINS_DEBUGGING

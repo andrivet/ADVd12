@@ -26,7 +26,7 @@
 
 #include "../marlin/types.h"
 
-namespace advd12::Display {
+namespace Display {
 
 void init();
 void init_lvgl_styles();

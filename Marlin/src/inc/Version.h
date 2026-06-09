@@ -21,6 +21,18 @@
  */
 #pragma once
 
+#if defined(D12_230_v1_2)
+  #define ADVD12_NAME "D12-230-1.2"
+#elif defined(D12_230_v1_3)
+  #define ADVD12_NAME "D12-230-1.3"
+#elif defined(D12_500_Pro)
+  #define ADVD12_NAME "D12-500-Pro"
+#elif defined(D12_300_Pro)
+  #define ADVD12_NAME "D12-530-Pro"
+#elif defined(D12_SIMULATOR)
+  #define ADVD12_NAME "D12-Simulator"
+#endif
+
 /**
  * Release version. Leave the Marlin version or apply a custom scheme.
  */
@@ -33,7 +45,7 @@
  * vendor name, download location, GitHub account, etc.
  */
 #ifndef DETAILED_BUILD_VERSION
-  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION
+  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " (" ADVD12_NAME ")"
 #endif
 
 /**

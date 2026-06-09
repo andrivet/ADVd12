@@ -56,7 +56,7 @@ void extrude();
 }
 
 bool LoadUnloadPanel::can_switch() {
-  return advd12::Core::check_not_busy();
+  return Wait::check_not_busy();
 }
 
 void LoadUnloadPanel::create() {
@@ -81,8 +81,8 @@ void LoadUnloadPanel::create() {
   temp_text_ = load_unload_panel.text("", 144, 101, LABEL::REGULAR);
   show_temp();
 
-  advd12::Core::reset_status();
-  previous_z_ = advd12::Core::ensure_z_enough_space();
+  Status::reset();
+  previous_z_ = advd12::Core::ensure_z_enough_room();
   temp_ = ExtUI::getDefaultTemp_celsius(ExtUI::H0);
 }
 

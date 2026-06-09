@@ -29,14 +29,14 @@
 
 namespace Wait {
 void wait();
-void wait(FSTR_P message);
+void wait(const char* message);
 void wait(CALLBACK_RESULT (*cb)());
-void wait(FSTR_P message, CALLBACK_RESULT (*cb)());
-void wait_back(FSTR_P title, FSTR_P message, void (*cb)());
-void wait_back(FSTR_P title, FSTR_P message);
-void wait_back_continue(FSTR_P title, FSTR_P message, void (*cb)());
-void wait_user(FSTR_P title, const char *message, bool awaiting);
-void wait_user(FSTR_P title, FSTR_P message, bool awaiting);
+void wait(const char* message, CALLBACK_RESULT (*cb)());
+void wait_back(const char *title, const char *message, void (*cb)());
+void wait_back(const char* title, const char* message);
+void wait_back_continue(const char* title, const char* message, void (*cb)());
+void wait_user(const char* title, const char *message, bool awaiting);
+void wait_user(const char* title, FSTR_P message, bool awaiting);
 void homing(void (*cb)(), const FlashChar* command = nullptr);
 void homing(const FlashChar* command = nullptr);
 void homing_start();
@@ -44,5 +44,5 @@ void homing_done();
 void ensure_homed(void (*cb)());
 void not_busy();
 void set_message(const char* msg);
-void set_message(FSTR_P msg);
+void close();
 };

@@ -25,9 +25,15 @@
 
 #include "../../inc/MarlinConfigPre.h"
 #include "core.h"
-
+#include "task.h"
 
 namespace advd12 {
+
+void Core::idle() {
+  background_task.execute();
+  status_task.execute();
+  wait_task.execute();
+}
 
 void Core::reset_status() {
   // TODO

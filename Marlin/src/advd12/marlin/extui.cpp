@@ -36,7 +36,7 @@ namespace ExtUI {
   }
 
   void onIdle() {
-    //Core::idle();
+    Core::idle();
   }
 
   void onMediaMounted() {

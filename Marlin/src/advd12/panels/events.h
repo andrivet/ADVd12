@@ -41,7 +41,7 @@ template<unsigned N>
 struct EventBinder {
   using Handler = void(*)(lv_event_t *);
 
-  void bind(lv_obj_t *obj, Handler handler, EventType type) {
+  void bind(lv_obj_t *obj, Handler handler, EventType type = EventType::PRESSED) {
     auto binding = &bindings_[binding_count_++];
     binding->handler = handler;
 

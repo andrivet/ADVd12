@@ -23,13 +23,25 @@
  *
  */
 
+#include "../../../lcd/extui/ui_api.h"
 #include "panels.h"
 #include "../core/styles.h"
 #include "../core/ids.h"
-#include "../core/core.h"
-#include "../core/display.h"
+#include "../core/task.h"
 
 PanelBase *PanelBase::current_panel_ = nullptr;
+
+namespace {
+lv_obj_t *extruder_temp_var = nullptr;
+lv_obj_t *extruder_target_var = nullptr;
+lv_obj_t *bed_temp_var = nullptr;
+lv_obj_t *bed_target_var = nullptr;
+lv_obj_t *fan_var = nullptr;
+lv_obj_t *et_var = nullptr;
+lv_obj_t *tc_var = nullptr;
+lv_obj_t *progress_var = nullptr;
+Elapse elapse{500}; // Every 500ms
+}
 
 void PanelBase::release() {
   if(!scr_) return;
@@ -151,6 +163,19 @@ lv_obj_t* PanelBase::text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord
   return label;
 }
 
+lv_obj_t* PanelBase::text(double value, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind) {
+  char buffer[32];
+  auto rounded = lround(value * 10);
+  snprintf(buffer, 32, "%ld.%ld", rounded / 10, rounded % 10);
+  return text(buffer, x, y, width, align, kind);
+}
+
+lv_obj_t* PanelBase::text(int value, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind) {
+  char buffer[32];
+  snprintf(buffer, 32, "%d", value);
+  return text(buffer, x, y, width, align, kind);
+}
+
 void PanelBase::layout_main() {
   rectangle(344, 0, 3, 284);
   rectangle(0, 284, 480, 3);
@@ -169,24 +194,69 @@ void PanelBase::layout_menu(const char *title) {
 
 void PanelBase::variables_time() {
   icon(IMG_EXTRUDER, 363, 19);
-  text("198.0", 398, 11, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
-  text("200", 398, 31, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
+  auto extruder_temp = ExtUI::getActualTemp_celsius(ExtUI::E0);
+  auto extruder_target = ExtUI::getTargetTemp_celsius(ExtUI::E0);
+  extruder_temp_var = text(extruder_temp, 398, 11, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
+  extruder_target_var = text(extruder_target, 398, 31, 64, ALIGN::RIGHT, LABEL::EXTRUDER);
 
   icon(IMG_BED, 363, 73);
-  text("100.6", 398, 65, 64, ALIGN::RIGHT, LABEL::BED);
-  text("100", 398, 85, 64, ALIGN::RIGHT, LABEL::BED);
+  auto bed_temp =  ExtUI::getActualTemp_celsius(ExtUI::BED);
+  auto bed_target = ExtUI::getTargetTemp_celsius(ExtUI::BED);
+  bed_temp_var = text(bed_temp, 398, 65, 64, ALIGN::RIGHT, LABEL::BED);
+  bed_target_var = text(bed_target, 398, 85, 64, ALIGN::RIGHT, LABEL::BED);
 
   icon(IMG_FAN, 363, 118);
-  text("100", 398, 118 + 4, 64, ALIGN::RIGHT, LABEL::FAN);
+  auto fan = ExtUI::getActualFan_percent(ExtUI::FAN0);
+  fan_var = text(fan, 398, 118 + 4, 64, ALIGN::RIGHT, LABEL::FAN);
 
   icon(IMG_ET, 363, 179);
-  text("00:32", 398, 179 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+  et_var = text("-", 398, 179 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
   icon(IMG_TC, 363, 211);
-  text("12:34", 398, 211 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+  tc_var = text("-", 398, 211 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
   icon(IMG_PERCENT, 363, 243);
-  text("40", 398, 243 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+  progress_var = text("-", 398, 243 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
 }
 
 void PanelBase::variables_xyz() {
   // TODO
+}
+
+void update_variable(lv_obj_t *text, double value) {
+  if(!text) return;
+  char buffer[32];
+  auto rounded = lround(value * 10);
+  snprintf(buffer, 32, "%ld.%ld", rounded / 10, rounded % 10);
+  lv_label_set_text(text, buffer);
+}
+
+void update_variable(lv_obj_t *text, int value) {
+  if(!text) return;
+  char buffer[32];
+  snprintf(buffer, 32, "%d", value);
+  lv_label_set_text(text, buffer);
+}
+
+void PanelBase::update_variables() {
+  if(!elapse.is_elapsed()) return;
+
+  if(extruder_temp_var)
+    update_variable(extruder_temp_var, ExtUI::getActualTemp_celsius(ExtUI::E0));
+  if(extruder_target_var)
+    update_variable(extruder_target_var, ExtUI::getTargetTemp_celsius(ExtUI::E0));
+  if(bed_temp_var)
+    update_variable(bed_temp_var, ExtUI::getActualTemp_celsius(ExtUI::BED));
+  if(bed_target_var)
+    update_variable(bed_target_var, ExtUI::getTargetTemp_celsius(ExtUI::BED));
+  if(fan_var)
+    update_variable(fan_var, ExtUI::getActualFan_percent(ExtUI::FAN0));
+
+  if(ExtUI::isPrinting()) {
+    // TODO
+  }
+  else {
+    if(et_var) lv_label_set_text(et_var, "-");
+    if(tc_var) lv_label_set_text(tc_var, "-");
+    if(progress_var) lv_label_set_text(progress_var, "-");
+  }
+
 }

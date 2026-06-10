@@ -32,6 +32,7 @@
 #include "reentrant.h"
 #include "progress.h"
 #include "dates.h"
+#include "../panels/panels.h"
 
 namespace {
 constexpr unsigned int Z_ROOM = 20; // mm
@@ -61,6 +62,7 @@ void advd12::Core::idle() {
   ReentrantScope scope{reentrant};
 
   if(!scope.reentrant()) {
+    PanelBase::update_variables();
     background_task.execute();
     status_task.execute();
     wait_task.execute();

@@ -62,11 +62,14 @@ struct PanelBase {
   lv_obj_t* icon(const char *img, lv_coord_t x, lv_coord_t y);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, LABEL label);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind);
+  lv_obj_t* text(double value, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind);
+  lv_obj_t* text(int value, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind);
 
   void layout_main();
   void layout_menu(const char *title);
   void variables_time();
   void variables_xyz();
+  static void update_variables();
 
 private:
   lv_obj_t* button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_coord_t label_y_offset);

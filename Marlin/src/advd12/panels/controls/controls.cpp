@@ -26,10 +26,13 @@
 #include <lvgl.h>
 #include "controls.h"
 #include "load_unload.h"
+#include "move.h"
 #include "preheat.h"
 #include "../main.h"
 #include "../panels.h"
 #include "../../core/ids.h"
+#include "../../../lcd/extui/ui_api.h"
+#include "src/advd12/core/core.h"
 
 namespace {
 Panel<6> controls_panel;
@@ -87,11 +90,11 @@ void on_cooldown(lv_event_t *e) {
 }
 
 void on_move(lv_event_t *e) {
-
+  PanelBase::switch_panel<MovePanel>();
 }
 
 void on_disable_motors(lv_event_t *e) {
-
+  advd12::Core::disable_motors();
 }
 
 }

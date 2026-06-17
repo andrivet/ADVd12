@@ -26,6 +26,7 @@
 #include "../../inc/MarlinConfig.h"
 #include "../../lcd/extui/ui_api.h"
 #include "../core/core.h"
+#include "../panels/wait.h"
 
 namespace ExtUI {
 
@@ -120,11 +121,11 @@ namespace ExtUI {
   }
 
   void onHomingStart() {
-    //Wait::homing_start();
+    Wait::homing_start();
   }
 
   void onHomingDone() {
-    //Wait::homing_done();
+    Wait::homing_done();
   }
 
   void onFactoryReset() {

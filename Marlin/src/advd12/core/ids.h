@@ -88,3 +88,8 @@ inline constexpr char IMG_SAVE[7]         = "I:0048";
 inline constexpr char IMG_PREVIOUS[7]     = "I:0049";
 inline constexpr char IMG_NEXT[7]         = "I:0050";
 inline constexpr char IMG_COOLDOWN[7]     = "I:0051";
+
+inline constexpr char IMG_DISABLE[7]      = "I:0052";
+inline constexpr char IMG_HOME[7]         = "I:0053";
+inline constexpr char IMG_DOWN[7]         = "I:0054";
+inline constexpr char IMG_UP[7]           = "I:0055";

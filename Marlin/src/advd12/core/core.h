@@ -37,5 +37,6 @@ void killed(const FlashChar* error, heater_id_t header_id);
 bool is_busy();
 float ensure_z_enough_room();
 void calibrate();
+void disable_motors();
 
 };

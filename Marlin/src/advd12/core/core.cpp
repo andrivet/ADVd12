@@ -93,6 +93,20 @@ void advd12::Core::calibrate() {
   Display::calibrate();
 }
 
+void advd12::Core::disable_motors() {
+  // If busy, do nothing
+  if(is_busy()) {
+    Status::set(GET_TEXT_F(ADVD12_MSG_BUSY));
+    return;
+  }
+
+  ExtUI::stopMove(); // Warning: will call idle() and thus is reentrant
+  ExtUI::injectCommands_P("M84"); // Disable steppers
+  ExtUI::setAllAxisUnhomed();
+  ExtUI::setAllAxisPositionUnknown();
+  Status::set(GET_TEXT_F(ADVD12_MSG_MOTORS_DISABLED), Status::STATUS_OPTIONS::RESET);
+}
+
 namespace {
 
 void send_gplv3_7b_notice() {

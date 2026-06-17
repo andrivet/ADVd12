@@ -25,8 +25,10 @@
 
 #include <lvgl.h>
 #include "../../inc/MarlinConfig.h"
+#include "../../lcd/extui/ui_api.h"
 #include "wait.h"
 #include "../core/core.h"
+#include "../core/status.h"
 #include "../core/styles.h"
 #include "../core/ids.h"
 #include "events.h"
@@ -36,6 +38,7 @@ lv_obj_t *modal = nullptr;
 lv_obj_t *msgbox = nullptr;
 EventBinder<1> binder{};
 void (*wait_cb)() = nullptr;
+void (*homing_cb)() = nullptr;
 
 void wait_base(const char *title, const char *message, void (*cb)());
 lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y);
@@ -51,12 +54,12 @@ void Wait::wait(const char * message) {
   wait_base("Wait", message, nullptr);
 }
 
-void Wait::wait(CALLBACK_RESULT (*cb)()) {
-  // TODO
+void Wait::wait(void (*cb)()) {
+  wait_base("Wait", "Please wait...", cb);
 }
 
-void Wait::wait(const char *message, CALLBACK_RESULT (*cb)()) {
-  // TODO
+void Wait::wait(const char *message, void (*cb)()) {
+  wait_base("Wait", message, cb);
 }
 
 void Wait::wait_back(const char *title, const char *message, void (*cb)()) {
@@ -78,13 +81,47 @@ void Wait::wait_back(const char * title, const char * message) {
 void Wait::wait_back_continue(const char * title, const char * message, void (*cb)()) {}
 void Wait::wait_user(const char * title, const char *message, bool awaiting) {}
 void Wait::wait_user(const char * title, FSTR_P message, bool awaiting) {}
-void Wait::homing(void (*cb)(), const FlashChar* command) {}
-void Wait::homing(const FlashChar* command) {}
-void Wait::homing_start() {}
-void Wait::homing_done() {}
-void Wait::ensure_homed(void (*cb)()) {}
-void Wait::not_busy() {}
-void Wait::set_message(const char* msg) {}
+
+void Wait::homing(void (*cb)(), const FlashChar* command) {
+  homing_cb = cb;
+  wait_base("Homing", "Please wait...", nullptr);
+  ExtUI::injectCommands(command == nullptr ? F("G28") : command);
+}
+
+void Wait::homing(const FlashChar* command) {
+  homing_cb = nullptr;
+  wait_base("Homing", "Please wait...", nullptr);
+  ExtUI::injectCommands(command == nullptr ? F("G28") : command);
+}
+
+void Wait::homing_start() {
+  Status::set(GET_TEXT_F(MSG_HOMING), Status::STATUS_OPTIONS::RESET);
+}
+
+void Wait::homing_done() {
+  close();
+  if(homing_cb) {
+    homing_cb();
+    homing_cb = nullptr;
+  }
+}
+
+void Wait::ensure_homed(void (*cb)()) {
+  if(
+    ExtUI::isAxisPositionKnown(ExtUI::X) &&
+    ExtUI::isAxisPositionKnown(ExtUI::Y) &&
+    ExtUI::isAxisPositionKnown(ExtUI::Z)
+  ) {
+    cb();
+    return;
+  }
+
+  homing(cb);
+}
+
+void Wait::not_busy() {
+  // TODO
+}
 
 void Wait::close() {
   if(msgbox) {

@@ -30,8 +30,8 @@
 namespace Wait {
 void wait();
 void wait(const char* message);
-void wait(CALLBACK_RESULT (*cb)());
-void wait(const char* message, CALLBACK_RESULT (*cb)());
+void wait(void (*cb)());
+void wait(const char* message, void (*cb)());
 void wait_back(const char *title, const char *message, void (*cb)());
 void wait_back(const char* title, const char* message);
 void wait_back_continue(const char* title, const char* message, void (*cb)());
@@ -43,7 +43,6 @@ void homing_start();
 void homing_done();
 void ensure_homed(void (*cb)());
 void not_busy();
-void set_message(const char* msg);
 void close();
 bool check_not_busy();
 };

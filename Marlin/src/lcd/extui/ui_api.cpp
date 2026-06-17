@@ -1298,11 +1298,19 @@ namespace ExtUI {
     return ui8_to_percent(ui.material_preset[index].fan_speed);
   }
 
-  void setMaterialPreset(unsigned int index, int16_t hotend_celcius, int16_t bed_celcius, uint8_t fan_percent)
+  void setMaterialPresetHotendTemp_celsius(unsigned int index, int16_t hotend_celcius)
   {
-    ui.material_preset[index].hotend_temp = hotend_celcius;
-    ui.material_preset[index].bed_temp    = bed_celcius;
-    ui.material_preset[index].fan_speed   = map(constrain(fan_percent, 0, 100), 0, 100, 0, 255);
+      ui.material_preset[index].hotend_temp = hotend_celcius;
+  }
+
+  void setMaterialPresetBedTemp_celsius(unsigned int index, int16_t bed_celcius)
+  {
+      ui.material_preset[index].bed_temp = bed_celcius;
+  }
+
+  void setMaterialPresetFanSpeed_percent(unsigned int index, uint8_t fan_percent)
+  {
+      ui.material_preset[index].fan_speed = map(constrain(fan_percent, 0, 100), 0, 100, 0, 255);
   }
   #endif
 

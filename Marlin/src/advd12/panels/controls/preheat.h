@@ -25,12 +25,6 @@
 
 #pragma once
 
-struct Preheat {
-  unsigned extruder;
-  unsigned bed;
-  unsigned fan;
-};
-
 struct PreheatPanel {
   static bool can_switch();
   static void create();

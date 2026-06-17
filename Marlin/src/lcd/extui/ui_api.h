@@ -466,6 +466,18 @@ namespace ExtUI {
     void startBedPIDTune(const celsius_t);
   #endif
 
+  // @advi3++
+  #if PREHEAT_COUNT
+    uint8_t getNbMaterialPresets();
+    int16_t getMaterialPresetHotendTemp_celsius(unsigned int index);
+    int16_t getMaterialPresetBedTemp_celsius(unsigned int index);
+    uint8_t getMaterialPresetFanSpeed_percent(unsigned int index);
+    void setMaterialPresetHotendTemp_celsius(unsigned int index, int16_t hotend_celcius);
+    void setMaterialPresetBedTemp_celsius(unsigned int index, int16_t bed_celcius);
+    void setMaterialPresetFanSpeed_percent(unsigned int index, uint8_t fan_percent);
+    void setMaterialPreset(unsigned int index, int16_t hotend_celcius, int16_t bed_celcius, uint8_t fan_percent);
+  #endif
+
   /**
    * Delay and timing routines
    * Should be used by the EXTENSIBLE_UI to safely pause or measure time

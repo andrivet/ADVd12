@@ -26,20 +26,26 @@
 #include <cstdio>
 #include <array>
 #include <lvgl.h>
-#include "preheat.h"
-#include "../panels.h"
-#include "controls.h"
+#include "../../../inc/MarlinConfig.h"
+#include "../../../lcd/extui/ui_api.h"
 #include "../../core/ids.h"
+#include "../../core/status.h"
+#include "../panels.h"
+#include "preheat.h"
+#include "controls.h"
 
 namespace {
 constexpr unsigned NB_PREHEAT = 5;
 
 unsigned index_ = 0;
-std::array<Preheat, NB_PREHEAT> preheats_{};
 lv_obj_t *index_text_ = nullptr;
 lv_obj_t *ext_text_ = nullptr;
 lv_obj_t *bed_text_ = nullptr;
 lv_obj_t *fan_text_ = nullptr;
+
+celsius_t ext_ = 0;
+celsius_t bed_ = 0;
+uint8_t fan_ = 0;
 
 Panel<11> preheat_panel;
 
@@ -55,6 +61,7 @@ void on_fan_minus(lv_event_t *e);
 void on_fan_plus(lv_event_t *e);
 void on_cooldown(lv_event_t *e);
 
+void show();
 void show_index();
 void show_ext();
 void show_bed();
@@ -72,6 +79,10 @@ void PreheatPanel::create() {
 
   auto back = preheat_panel.control(IMG_BACK, 7, 2);
   auto save = preheat_panel.control(IMG_SAVE, 289, 2);
+
+  preheat_panel.icon(IMG_EXTRUDER, 14, 128);
+  preheat_panel.icon(IMG_BED, 14, 180);
+  preheat_panel.icon(IMG_FAN, 14, 232);
 
   auto previous = preheat_panel.small_control(IMG_PREVIOUS, 53, 71);
   auto next = preheat_panel.small_control(IMG_NEXT, 173, 71);
@@ -100,13 +111,22 @@ void PreheatPanel::create() {
   ext_text_ = preheat_panel.text("", 108, 131, LABEL::REGULAR);
   bed_text_ = preheat_panel.text("", 108, 183, LABEL::REGULAR);
   fan_text_ = preheat_panel.text("", 108, 235, LABEL::REGULAR);
+
+  show();
+}
+
+namespace {
+
+void show() {
+  ext_ = ExtUI::getMaterialPresetHotendTemp_celsius(index_);
+  bed_ = ExtUI::getMaterialPresetBedTemp_celsius(index_);
+  fan_ = ExtUI::getMaterialPresetFanSpeed_percent(index_);
+
   show_index();
   show_ext();
   show_bed();
   show_fan();
 }
-
-namespace {
 
 void show_index() {
   if(!index_text_) return;
@@ -117,22 +137,22 @@ void show_index() {
 
 void show_ext() {
   if(!ext_text_) return;
-  char text[8];
-  sprintf(text, "%d°C", preheats_[index_].extruder);
+  char text[12];
+  sprintf(text, "%d°C", ext_);
   lv_label_set_text(ext_text_, text);
 }
 
 void show_bed() {
   if(!bed_text_) return;
-  char text[8];
-  sprintf(text, "%d°C", preheats_[index_].bed);
+  char text[12];
+  sprintf(text, "%d°C", bed_);
   lv_label_set_text(bed_text_, text);
 }
 
 void show_fan() {
   if(!fan_text_) return;
-  char text[8];
-  sprintf(text, "%d%%", preheats_[index_].fan);
+  char text[12];
+  sprintf(text, "%d%%", fan_);
   lv_label_set_text(fan_text_, text);
 }
 
@@ -141,46 +161,75 @@ void on_back(lv_event_t *e) {
 }
 
 void on_save(lv_event_t *e) {
-  // TODO: Preheat
+  if(ext_ < HEATER_0_MINTEMP) ext_ = HEATER_0_MINTEMP;
+  if(bed_ < BED_MINTEMP) bed_ = BED_MINTEMP;
+
+  ExtUI::setMaterialPresetHotendTemp_celsius(index_, ext_);
+  ExtUI::setMaterialPresetBedTemp_celsius(index_, bed_);
+  ExtUI::setMaterialPresetFanSpeed_percent(index_, fan_);
+
+  ExtUI::setTargetTemp_celsius(ext_, ExtUI::H0, true);
+  ExtUI::setTargetTemp_celsius(bed_, ExtUI::BED, true);
+  ExtUI::setTargetFan_percent(fan_, ExtUI::FAN0);
+  ExtUI::saveSettings();
+
+  Status::set(GET_TEXT_F(ADVD12_MSG_PREHEAT), Status::STATUS_OPTIONS::RESET);
   PanelBase::switch_panel<ControlsPanel>();
 }
 
 void on_previous(lv_event_t *e) {
   if(index_ <= 0) index_ = NB_PREHEAT - 1; else index_--;
-  show_index();
+  show();
 }
 
 void on_next(lv_event_t *e) {
   if(index_ >= NB_PREHEAT - 1) index_ = 0; else index_++;
-  show_index();
+  show();
 }
 
 void on_ext_minus(lv_event_t *e) {
-
+  if(ext_ <= 0) return;
+  ext_ -= 1;
+  show_ext();
 }
 
 void on_ext_plus(lv_event_t *e) {
-
+  if(ext_ >= HEATER_0_MAXTEMP) return;
+  ext_ += 1;
+  show_ext();
 }
 
 void on_bed_minus(lv_event_t *e) {
-
+  if(bed_ <= 0) return;
+  bed_ -= 1;
+  show_bed();
 }
 
 void on_bed_plus(lv_event_t *e) {
-
+  if(bed_ >= BED_MAXTEMP) return;
+  bed_ += 1;
+  show_bed();
 }
 
 void on_fan_minus(lv_event_t *e) {
-
+  if(fan_ <= 0) return;
+  fan_ -= 1;
+  show_fan();
 }
 
 void on_fan_plus(lv_event_t *e) {
-
+  if(fan_ >= 100) return;
+  fan_ += 1;
+  show_fan();
 }
 
 void on_cooldown(lv_event_t *e) {
-
+  // If printing, do nothing
+  if(ExtUI::isPrinting()) return;
+  ExtUI::setTargetTemp_celsius(0, ExtUI::BED);
+  ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
+  ExtUI::setTargetFan_percent(0, ExtUI::FAN0);
+  Status::set(GET_TEXT_F(MSG_COOLDOWN), Status::STATUS_OPTIONS::RESET);
 }
 
 }

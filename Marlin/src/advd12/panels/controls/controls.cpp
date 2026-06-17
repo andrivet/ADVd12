@@ -83,7 +83,7 @@ void on_preheat(lv_event_t *e) {
 }
 
 void on_cooldown(lv_event_t *e) {
-
+  ExtUI::coolDown();
 }
 
 void on_move(lv_event_t *e) {

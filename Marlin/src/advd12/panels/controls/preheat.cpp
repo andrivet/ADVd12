@@ -24,7 +24,6 @@
  */
 
 #include <cstdio>
-#include <array>
 #include <lvgl.h>
 #include "../../../inc/MarlinConfig.h"
 #include "../../../lcd/extui/ui_api.h"
@@ -35,7 +34,6 @@
 #include "controls.h"
 
 namespace {
-constexpr unsigned NB_PREHEAT = 5;
 
 unsigned index_ = 0;
 lv_obj_t *index_text_ = nullptr;
@@ -178,12 +176,14 @@ void on_save(lv_event_t *e) {
 }
 
 void on_previous(lv_event_t *e) {
-  if(index_ <= 0) index_ = NB_PREHEAT - 1; else index_--;
+  uint8_t max_index = ExtUI::getNbMaterialPresets() - 1;
+  if(index_ <= 0) index_ = max_index; else index_--;
   show();
 }
 
 void on_next(lv_event_t *e) {
-  if(index_ >= NB_PREHEAT - 1) index_ = 0; else index_++;
+  uint8_t max_index = ExtUI::getNbMaterialPresets() - 1;
+  if(index_ >= max_index) index_ = 0; else index_++;
   show();
 }
 
@@ -224,12 +224,7 @@ void on_fan_plus(lv_event_t *e) {
 }
 
 void on_cooldown(lv_event_t *e) {
-  // If printing, do nothing
-  if(ExtUI::isPrinting()) return;
-  ExtUI::setTargetTemp_celsius(0, ExtUI::BED);
-  ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
-  ExtUI::setTargetFan_percent(0, ExtUI::FAN0);
-  Status::set(GET_TEXT_F(MSG_COOLDOWN), Status::STATUS_OPTIONS::RESET);
+  ExtUI::coolDown();
 }
 
 }

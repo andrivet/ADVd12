@@ -40,6 +40,9 @@ lv_obj_t *fan_var = nullptr;
 lv_obj_t *et_var = nullptr;
 lv_obj_t *tc_var = nullptr;
 lv_obj_t *progress_var = nullptr;
+lv_obj_t *x_var = nullptr;
+lv_obj_t *y_var = nullptr;
+lv_obj_t *z_var = nullptr;
 Elapse elapse{500}; // Every 500ms
 }
 
@@ -179,6 +182,8 @@ lv_obj_t* PanelBase::text(int value, lv_coord_t x, lv_coord_t y, lv_coord_t widt
 void PanelBase::layout_main() {
   rectangle(344, 0, 3, 284);
   rectangle(0, 284, 480, 3);
+
+  variables();
 }
 
 void PanelBase::layout_menu(const char *title) {
@@ -190,9 +195,11 @@ void PanelBase::layout_menu(const char *title) {
   lv_label_set_text(label, title);
   lv_obj_align_to(label, rect, LV_ALIGN_TOP_MID, 0, -36);
   lv_obj_add_style(label, &style_label_regular, LV_PART_MAIN | LV_STATE_DEFAULT);
+
+  variables();
 }
 
-void PanelBase::variables_time() {
+void PanelBase::variables() {
   icon(IMG_EXTRUDER, 363, 19);
   auto extruder_temp = ExtUI::getActualTemp_celsius(ExtUI::E0);
   auto extruder_target = ExtUI::getTargetTemp_celsius(ExtUI::E0);
@@ -209,16 +216,23 @@ void PanelBase::variables_time() {
   auto fan = ExtUI::getActualFan_percent(ExtUI::FAN0);
   fan_var = text(fan, 398, 118 + 4, 64, ALIGN::RIGHT, LABEL::FAN);
 
-  icon(IMG_ET, 363, 179);
-  et_var = text("-", 398, 179 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
-  icon(IMG_TC, 363, 211);
-  tc_var = text("-", 398, 211 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
-  icon(IMG_PERCENT, 363, 243);
-  progress_var = text("-", 398, 243 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
-}
+  if(ExtUI::isPrinting()) {
+    icon(IMG_ET, 363, 179);
+    et_var = text("-", 398, 179 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+    icon(IMG_TC, 363, 211);
+    tc_var = text("-", 398, 211 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+    icon(IMG_PERCENT, 363, 243);
+    progress_var = text("-", 398, 243 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+  }
+  else {
+    text("X", 363, 179, 28, ALIGN::CENTER, LABEL::X);
+    text("Y", 363, 211, 28, ALIGN::CENTER, LABEL::Y);
+    text("Z", 363, 243, 28, ALIGN::CENTER, LABEL::Z);
 
-void PanelBase::variables_xyz() {
-  // TODO
+    x_var = text("0.0", 398, 179, 64, ALIGN::RIGHT, LABEL::X);
+    y_var = text("0.0", 398, 211, 64, ALIGN::RIGHT, LABEL::Y);
+    z_var = text("0.0", 398, 243, 64, ALIGN::RIGHT, LABEL::Z);
+  }
 }
 
 void update_variable(lv_obj_t *text, double value) {
@@ -250,13 +264,19 @@ void PanelBase::update_variables() {
   if(fan_var)
     update_variable(fan_var, ExtUI::getActualFan_percent(ExtUI::FAN0));
 
-  if(ExtUI::isPrinting()) {
-    // TODO
-  }
-  else {
-    if(et_var) lv_label_set_text(et_var, "-");
-    if(tc_var) lv_label_set_text(tc_var, "-");
-    if(progress_var) lv_label_set_text(progress_var, "-");
+  if(et_var)
+    lv_label_set_text(et_var, "-");
+  if(tc_var)
+    lv_label_set_text(tc_var, "-");
+  if(progress_var)
+    lv_label_set_text(progress_var, "-");
+
+  if(!ExtUI::isPrinting()) {
+    xyz_pos_t xyz;
+    ExtUI::getRealtimeAxisPositions_mm(xyz);
+    if(x_var) update_variable(x_var, xyz.X);
+    if(y_var) update_variable(y_var, xyz.Y);
+    if(z_var) update_variable(z_var, xyz.Z);
   }
 
 }

@@ -51,7 +51,6 @@ bool MainPanel::can_switch() {
 void MainPanel::create() {
   if(!main_panel.create()) return;
   main_panel.layout_main();
-  main_panel.variables_time();
 
   auto controls = main_panel.big_button(IMG_CONTROLS, "Controls", 36, 34);
   auto leveling = main_panel.big_button(IMG_LEVELING, "Leveling", 140, 34);

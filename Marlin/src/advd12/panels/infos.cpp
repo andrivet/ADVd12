@@ -47,7 +47,6 @@ bool InfosPanel::can_switch() {
 void InfosPanel::create() {
   if(!infos_panel.create()) return;
   infos_panel.layout_menu("Infos");
-  infos_panel.variables_time();
 
   auto back = infos_panel.control(IMG_BACK, 7, 2);
 

@@ -73,7 +73,6 @@ bool PreheatPanel::can_switch() {
 void PreheatPanel::create() {
   if(!preheat_panel.create()) return;
   preheat_panel.layout_menu("Preheat");
-  preheat_panel.variables_time();
 
   auto back = preheat_panel.control(IMG_BACK, 7, 2);
   auto save = preheat_panel.control(IMG_SAVE, 289, 2);

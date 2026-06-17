@@ -52,7 +52,6 @@ bool ControlsPanel::can_switch() {
 void ControlsPanel::create() {
   if(!controls_panel.create()) return;
   controls_panel.layout_menu("Controls");
-  controls_panel.variables_time();
 
   auto back = controls_panel.control(IMG_BACK, 7, 2);
 

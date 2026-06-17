@@ -49,7 +49,6 @@ bool TuningPanel::can_switch() {
 void TuningPanel::create() {
   if(!tuning_panel.create()) return;
   tuning_panel.layout_menu("Tuning");
-  tuning_panel.variables_time();
 
   auto back = tuning_panel.control(IMG_BACK, 7, 2);
 

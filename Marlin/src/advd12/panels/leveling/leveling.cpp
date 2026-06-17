@@ -49,7 +49,6 @@ bool LevelingPanel::can_switch() {
 void LevelingPanel::create() {
   if(!leveling_panel.create()) return;
   leveling_panel.layout_menu("Leveling");
-  leveling_panel.variables_time();
 
   auto back = leveling_panel.control(IMG_BACK, 7, 2);
   auto rough = leveling_panel.medium_button(IMG_ROUGH, "Rough", 19, 76);

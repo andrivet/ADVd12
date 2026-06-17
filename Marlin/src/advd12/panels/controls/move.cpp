@@ -90,7 +90,6 @@ bool MovePanel::can_switch() {
 void MovePanel::create() {
   if(!panel.create()) return;
   panel.layout_menu("Move");
-  panel.variables_time();
 
   auto back = panel.control(IMG_BACK, 7, 2);
   auto disable = panel.control(IMG_DISABLE, 289, 2);

@@ -46,7 +46,6 @@ bool MotorsPanel::can_switch() {
 void MotorsPanel::create() {
   if(!motors_panel.create()) return;
   motors_panel.layout_menu("Motors");
-  motors_panel.variables_time();
 
   auto back = motors_panel.control(IMG_BACK, 7, 2);
 

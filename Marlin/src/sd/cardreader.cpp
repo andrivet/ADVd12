@@ -275,7 +275,7 @@ void CardReader::selectByIndex(MediaFile dir, const int16_t index) {
 //
 void CardReader::selectByName(MediaFile dir, const char * const match) {
   dir_t p;
-  for (uint8_t cnt = 0; dir.readDir(&p, longFilename) > 0; cnt++) {
+  for (; dir.readDir(&p, longFilename) > 0; ) {
     if (is_visible_entity(p)) {
       createFilename(filename, p);
       if (strcasecmp(match, filename) == 0) return;

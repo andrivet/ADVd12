@@ -57,7 +57,7 @@
 //#define SAVE_EACH_CMD_MODE
 //#define SAVE_INFO_INTERVAL_MS 0
 
-typedef struct {
+struct job_recovery_info_t {
   uint8_t valid_head;
 
   // Machine state
@@ -149,7 +149,7 @@ typedef struct {
 
   bool valid() { return valid_head && valid_head == valid_foot; }
 
-} job_recovery_info_t;
+};
 
 class PrintJobRecovery {
   public:

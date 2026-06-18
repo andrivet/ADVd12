@@ -37,12 +37,14 @@ namespace {
 lv_obj_t *modal = nullptr;
 lv_obj_t *msgbox = nullptr;
 EventBinder<1> binder{};
-void (*wait_cb)() = nullptr;
+void (*wait_cb)(CALLBACK_SOURCE) = nullptr;
 void (*homing_cb)() = nullptr;
 
-void wait_base(const char *title, const char *message, void (*cb)());
+void wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE));
 lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y);
 void on_back(lv_event_t *event);
+void on_continue(lv_event_t *event);
+void on_confirm(lv_event_t *event);
 }
 
 
@@ -54,15 +56,15 @@ void Wait::wait(const char * message) {
   wait_base("Wait", message, nullptr);
 }
 
-void Wait::wait(void (*cb)()) {
+void Wait::wait(void (*cb)(CALLBACK_SOURCE)) {
   wait_base("Wait", "Please wait...", cb);
 }
 
-void Wait::wait(const char *message, void (*cb)()) {
+void Wait::wait(const char *message, void (*cb)(CALLBACK_SOURCE)) {
   wait_base("Wait", message, cb);
 }
 
-void Wait::wait_back(const char *title, const char *message, void (*cb)()) {
+void Wait::wait_back(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE)) {
   wait_base(title, message, cb);
 
   auto btn = wait_button(IMG_BACK, 4, 4);
@@ -78,11 +80,27 @@ void Wait::wait_back(const char * title, const char * message) {
   binder.bind(btn, &on_back);
 }
 
-void Wait::wait_back_continue(const char * title, const char * message, void (*cb)()) {}
-void Wait::wait_user(const char * title, const char *message, bool awaiting) {}
-void Wait::wait_user(const char * title, FSTR_P message, bool awaiting) {}
+void Wait::wait_back_continue(const char * title, const char * message, void (*cb)(CALLBACK_SOURCE)) {
+  wait_base(title, message, cb);
 
-void Wait::homing(void (*cb)(), const FlashChar* command) {
+  auto back = wait_button(IMG_BACK, 4, 4);
+  auto cont = wait_button(IMG_CONTINUE, 276, 4);
+  binder.reset();
+  binder.bind(back, &on_back);
+  binder.bind(cont, &on_continue);
+}
+
+void Wait::wait_user(const char * title, const char *message, bool awaiting) {
+  wait_base(title, message, nullptr);
+
+  if(awaiting) {
+    auto confirm = wait_button(IMG_CONFIRM, 140, 173);
+    binder.reset();
+    binder.bind(confirm, &on_confirm);
+  }
+}
+
+void Wait::homing(const FlashChar* command, void (*cb)()) {
   homing_cb = cb;
   wait_base("Homing", "Please wait...", nullptr);
   ExtUI::injectCommands(command == nullptr ? F("G28") : command);
@@ -116,11 +134,17 @@ void Wait::ensure_homed(void (*cb)()) {
     return;
   }
 
-  homing(cb);
+  homing(nullptr, cb);
 }
 
-void Wait::not_busy() {
-  // TODO
+void Wait::not_busy(void (*cb)(CALLBACK_SOURCE)) {
+  wait_task.set([]() -> CALLBACK_RESULT {
+    if(advd12::Core::is_busy()) return CALLBACK_RESULT::CONTINUE;
+    close();
+    if(wait_cb) wait_cb(CALLBACK_SOURCE::CONTINUE);
+    return CALLBACK_RESULT::STOP;
+  });
+  wait(cb);
 }
 
 void Wait::close() {
@@ -143,7 +167,7 @@ bool Wait::check_not_busy() {
 
 namespace {
 
-void wait_base(const char *title, const char *message, void (*cb)()) {
+void wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE)) {
   if(modal || msgbox) Wait::close();
 
   wait_cb = cb;
@@ -183,7 +207,7 @@ void wait_base(const char *title, const char *message, void (*cb)()) {
 
 lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y) {
   lv_obj_t * btn = lv_imgbtn_create(msgbox);
-  lv_obj_set_pos(btn, y, y);
+  lv_obj_set_pos(btn, x, y);
   lv_obj_set_width(btn, 48);
   lv_obj_set_height(btn, 48);
 
@@ -199,7 +223,17 @@ lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y) {
 
 void on_back(lv_event_t *) {
   Wait::close();
-  if(wait_cb) wait_cb();
+  if(wait_cb) wait_cb(CALLBACK_SOURCE::BACK);
+}
+
+void on_continue(lv_event_t *) {
+  Wait::close();
+  if(wait_cb) wait_cb(CALLBACK_SOURCE::CONTINUE);
+}
+
+void on_confirm(lv_event_t *event) {
+  Wait::close();
+  ExtUI::setUserConfirmed(false);
 }
 
 }

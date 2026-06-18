@@ -30,19 +30,18 @@
 namespace Wait {
 void wait();
 void wait(const char* message);
-void wait(void (*cb)());
-void wait(const char* message, void (*cb)());
-void wait_back(const char *title, const char *message, void (*cb)());
+void wait(void (*cb)(CALLBACK_SOURCE));
+void wait(const char* message, void (*cb)(CALLBACK_SOURCE));
+void wait_back(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE));
 void wait_back(const char* title, const char* message);
-void wait_back_continue(const char* title, const char* message, void (*cb)());
+void wait_back_continue(const char* title, const char* message, void (*cb)(CALLBACK_SOURCE));
 void wait_user(const char* title, const char *message, bool awaiting);
-void wait_user(const char* title, FSTR_P message, bool awaiting);
-void homing(void (*cb)(), const FlashChar* command = nullptr);
+void homing(const FlashChar* command, void (*cb)());
 void homing(const FlashChar* command = nullptr);
 void homing_start();
 void homing_done();
 void ensure_homed(void (*cb)());
-void not_busy();
+void not_busy(void (*cb)(CALLBACK_SOURCE));
 void close();
 bool check_not_busy();
 };

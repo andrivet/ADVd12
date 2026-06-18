@@ -96,8 +96,8 @@ namespace ExtUI {
   }
 
   void onUserConfirmRequired(const char * const msg) {
-    //const auto awaiting = ExtUI::awaitingUserConfirm();
-    //Wait::wait_user(GET_TEXT_F(ADVI3PP_TITLE_CONFIRM), msg, awaiting);
+    const auto awaiting = ExtUI::awaitingUserConfirm();
+    Wait::wait_user(GET_TEXT(ADVD12_TITLE_CONFIRM), msg, awaiting);
   }
 
   void onChangeFilamentConfirmRequired() {

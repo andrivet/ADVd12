@@ -27,6 +27,7 @@
 
 constexpr unsigned DEFAULT_TASK_DELAY = 100; // ms
 
+enum struct CALLBACK_SOURCE: uint8_t { BACK, CONTINUE };
 enum struct CALLBACK_RESULT: uint8_t { STOP, CONTINUE };
 
 //! Measure elapsed time

@@ -319,6 +319,7 @@ namespace ExtUI {
   // Motion Control
   void setAxisPosition_mm(const float, const axis_t, const feedRate_t=0);
   void setAxisPosition_mm(const float, const extruder_t, const feedRate_t=0);
+  void setMultipleAxisPosition_mm(std::size_t nb_axis, const float *, const axis_t *, const feedRate_t); // @advd12
 
   // Planner Control
   #if ENABLED(EDITABLE_STEPS_PER_UNIT)
@@ -340,7 +341,7 @@ namespace ExtUI {
 
   // Waiting for User Interaction
   bool awaitingUserConfirm();
-  void setUserConfirmed();
+  void setUserConfirmed(bool abort); // @advd12 abort
 
   #if ENABLED(ADVANCED_PAUSE_FEATURE)
     // "Purge More" has a control screen

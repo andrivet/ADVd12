@@ -93,3 +93,7 @@ inline constexpr char IMG_DISABLE[7]      = "I:0052";
 inline constexpr char IMG_HOME[7]         = "I:0053";
 inline constexpr char IMG_DOWN[7]         = "I:0054";
 inline constexpr char IMG_UP[7]           = "I:0055";
+
+inline constexpr char IMG_NUM[7]          = "I:0056";
+inline constexpr char IMG_CONTINUE[7]     = "I:0057";
+inline constexpr char IMG_CONFIRM[7]      = "I:0058";

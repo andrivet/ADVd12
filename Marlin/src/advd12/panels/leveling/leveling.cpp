@@ -25,10 +25,10 @@
 
 #include <lvgl.h>
 #include "leveling.h"
+#include "rough.h"
 #include "../panels.h"
 #include "../main.h"
 #include "../../core/ids.h"
-#include "src/advd12/panels/panels.h"
 
 namespace {
 Panel<7> leveling_panel;
@@ -56,7 +56,7 @@ void LevelingPanel::create() {
   auto reset = leveling_panel.medium_button(IMG_RESET, " Reset", 183, 76);
   auto z_height = leveling_panel.medium_button(IMG_Z_HEIGHT, "Z-Height", 265, 76);
   auto x_twist = leveling_panel.medium_button(IMG_X_TWIST, "X Twist", 19, 188);
-  auto grid = leveling_panel.medium_button(IMG_GRID, "Grid", 19, 188);
+  auto grid = leveling_panel.medium_button(IMG_GRID, "Grid", 101, 188);
 
   leveling_panel.reset_bindings();
   leveling_panel.bind(back, &on_back);
@@ -75,7 +75,7 @@ void on_back(lv_event_t *e) {
 }
 
 void on_rough_leveling(lv_event_t *e) {
-
+  PanelBase::switch_panel<RoughPanel>();
 }
 
 void on_automatic_leveling(lv_event_t *e) {

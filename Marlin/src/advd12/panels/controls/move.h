@@ -28,5 +28,4 @@
 struct MovePanel {
   static bool can_switch();
   static void create();
-  static void disable();
 };

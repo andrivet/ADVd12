@@ -84,7 +84,7 @@ void on_home_a(lv_event_t *e);
 ENABLE_BITMASK_OPERATOR(Direction);
 
 bool MovePanel::can_switch() {
-  return true;
+  return Wait::check_not_busy();
 }
 
 void MovePanel::create() {

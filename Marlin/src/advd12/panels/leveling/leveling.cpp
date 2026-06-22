@@ -52,20 +52,25 @@ void LevelingPanel::create() {
 
   auto back = leveling_panel.control(IMG_BACK, 7, 2);
   auto rough = leveling_panel.medium_button(IMG_ROUGH, "Rough", 19, 76);
+
+#if HAS_LEVELING
   auto automatic = leveling_panel.medium_button(IMG_AUTOMATIC, "Automatic", 101, 76);
   auto reset = leveling_panel.medium_button(IMG_RESET, " Reset", 183, 76);
   auto z_height = leveling_panel.medium_button(IMG_Z_HEIGHT, "Z-Height", 265, 76);
   auto x_twist = leveling_panel.medium_button(IMG_X_TWIST, "X Twist", 19, 188);
   auto grid = leveling_panel.medium_button(IMG_GRID, "Grid", 101, 188);
+#endif
 
   leveling_panel.reset_bindings();
   leveling_panel.bind(back, &on_back);
   leveling_panel.bind(rough, &on_rough_leveling);
+#if HAS_LEVELING
   leveling_panel.bind(automatic, &on_automatic_leveling);
   leveling_panel.bind(reset, &on_reset_leveling);
   leveling_panel.bind(z_height, &on_z_height);
   leveling_panel.bind(x_twist, &on_x_twist);
   leveling_panel.bind(grid, &on_leveling_grid);
+#endif
 }
 
 namespace {

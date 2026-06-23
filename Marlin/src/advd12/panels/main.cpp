@@ -28,10 +28,13 @@
 #include "panels.h"
 #include "controls/controls.h"
 #include "leveling/leveling.h"
+#include "print/sd.h"
+#include "print/print.h"
 #include "tuning/tuning.h"
 #include "settings/settings.h"
 #include "infos.h"
 #include "../core/ids.h"
+#include "src/lcd/extui/ui_api.h"
 
 namespace {
 Panel<6> main_panel;
@@ -79,7 +82,10 @@ void on_leveling(lv_event_t *e) {
 }
 
 void on_print(lv_event_t *e) {
-
+  if(ExtUI::isPrinting())
+    PanelBase::switch_panel<PrintPanel>();
+  else
+    PanelBase::switch_panel<SdPanel>();
 }
 
 void on_tuning(lv_event_t *e) {

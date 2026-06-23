@@ -1159,6 +1159,8 @@ namespace ExtUI {
     return isPrintingFromMedia() || marlin.printJobOngoing();
   }
 
+  void mountMedia()        { card.mount(); } // @advd12
+  void releaseMedia()      { card.release(); } // @advd12
   bool isMediaMounted()    { return card.isMounted(); }
   bool isMediaMountedSD()  { return card.isSDCardMounted(); }
   bool isMediaMountedUSB() { return card.isFlashDriveMounted(); }

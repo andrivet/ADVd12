@@ -83,6 +83,8 @@ void on_rough_leveling(lv_event_t *e) {
   PanelBase::switch_panel<RoughPanel>();
 }
 
+#if HAS_LEVELING
+
 void on_automatic_leveling(lv_event_t *e) {
 
 }
@@ -102,4 +104,7 @@ void on_x_twist(lv_event_t *e) {
 void on_leveling_grid(lv_event_t *e) {
 
 }
+
+#endif
+
 }

@@ -112,7 +112,7 @@ void Images::update_assets() {
   lv_refr_now(nullptr);
   write_addresses(addresses);
 
-  //dir.rename(&root, "_assets");
+  dir.rename(&root, "_assets");
   dir.close();
 
   lv_label_set_text(label1, "Assets updated");

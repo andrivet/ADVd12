@@ -121,6 +121,17 @@ lv_obj_t* PanelBase::small_control(const char *img, lv_coord_t x, lv_coord_t y) 
   return button(img, nullptr, x, y, 38, 38, 0);
 }
 
+lv_obj_t *PanelBase::circle_button(lv_coord_t x, lv_coord_t y, const char *text) {
+  auto button = small_control(IMG_CIRCLE, x, y);
+
+  auto label = lv_label_create(button);
+  lv_label_set_text(label, text);
+  lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+
+  return button;
+}
+
 lv_obj_t* PanelBase::icon(const char *img, lv_coord_t x, lv_coord_t y) {
   auto icon = lv_img_create(scr_);
   lv_img_set_src(icon, img);

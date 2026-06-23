@@ -44,7 +44,6 @@ constexpr float FEEDRATE_Z = MMM_TO_MMS(homing_feedrate_mm_m.z);
 
 Panel<10> panel;
 
-lv_obj_t *level_button(lv_coord_t x, lv_coord_t y, const char *text);
 void prepare(CALLBACK_SOURCE src);
 
 void on_back(lv_event_t *e);
@@ -69,15 +68,15 @@ void RoughPanel::create() {
   panel.layout_menu("Rough");
 
   auto back = panel.control(IMG_BACK, 7, 2);
-  auto level_1 = level_button(19, 199, "1");
-  auto level_2 = level_button(135, 199, "2");
-  auto level_3 = level_button(135, 83, "3");
-  auto level_4 = level_button(19, 83, "4");
-  auto level_5 = level_button(77, 141, "5");
-  auto level_a = level_button(77, 199, "A");
-  auto level_b = level_button(19, 141, "B");
-  auto level_c = level_button(77, 83, "C");
-  auto level_d = level_button(135, 141, "D");
+  auto level_1 = panel.circle_button(19, 199, "1");
+  auto level_2 = panel.circle_button(135, 199, "2");
+  auto level_3 = panel.circle_button(135, 83, "3");
+  auto level_4 = panel.circle_button(19, 83, "4");
+  auto level_5 = panel.circle_button(77, 141, "5");
+  auto level_a = panel.circle_button(77, 199, "A");
+  auto level_b = panel.circle_button(19, 141, "B");
+  auto level_c = panel.circle_button(77, 83, "C");
+  auto level_d = panel.circle_button(135, 141, "D");
 
   panel.reset_bindings();
   panel.bind(back, on_back);
@@ -106,17 +105,6 @@ void RoughPanel::create() {
 }
 
 namespace {
-
-lv_obj_t *level_button(lv_coord_t x, lv_coord_t y, const char *text) {
-  auto button = panel.small_control(IMG_NUM, x, y);
-
-  auto label = lv_label_create(button);
-  lv_label_set_text(label, text);
-  lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
-  lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
-
-  return button;
-}
 
 void prepare(CALLBACK_SOURCE src) {
   if(src == CALLBACK_SOURCE::BACK) {

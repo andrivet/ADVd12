@@ -59,6 +59,7 @@ struct PanelBase {
   lv_obj_t* medium_button(const char *img, const char *text, lv_coord_t x, lv_coord_t y);
   lv_obj_t* control(const char *img, lv_coord_t x, lv_coord_t y, const char *text = nullptr);
   lv_obj_t* small_control(const char *img, lv_coord_t x, lv_coord_t y);
+  lv_obj_t* circle_button(lv_coord_t x, lv_coord_t y, const char *text);
   lv_obj_t* icon(const char *img, lv_coord_t x, lv_coord_t y);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, LABEL label);
   lv_obj_t* text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind);

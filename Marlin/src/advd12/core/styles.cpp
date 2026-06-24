@@ -29,13 +29,14 @@
 void Display::init_lvgl_styles() {
   auto value_font = &lv_font_montserrat_20;
   auto label_font = &lv_font_montserrat_16;
+  auto orange = lv_color_make(255, 148, 0);
 
   lv_style_init(&style_panel);
   lv_style_set_bg_color(&style_panel, lv_color_black());
   lv_style_set_bg_opa(&style_panel, LV_OPA_COVER);
 
   lv_style_init(&style_rectangle);
-  lv_style_set_bg_color(&style_rectangle, lv_color_make(255, 148, 0));
+  lv_style_set_bg_color(&style_rectangle, orange);
   lv_style_set_bg_opa(&style_rectangle, LV_OPA_COVER);
 
   lv_style_init(&style_button_down);
@@ -43,6 +44,15 @@ void Display::init_lvgl_styles() {
   lv_style_set_img_recolor_opa(&style_button_down, LV_OPA_40);
 
   lv_style_init(&style_button_up);
+
+  lv_style_init(&style_dropdown);
+  lv_style_set_bg_color(&style_dropdown, lv_color_black());
+  lv_style_set_bg_opa(&style_dropdown, LV_OPA_COVER);
+  lv_style_set_border_color(&style_dropdown, orange);
+  lv_style_set_border_width(&style_dropdown, 2);
+  lv_style_set_text_color(&style_dropdown, orange);
+  lv_style_set_pad_all(&style_dropdown, 8);
+  lv_style_set_text_line_space(&style_dropdown, 16);
 
   lv_style_init(&style_button_label);
   lv_style_set_text_color(&style_button_label, lv_color_white());

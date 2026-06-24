@@ -31,6 +31,7 @@ inline lv_style_t style_rectangle;
 inline lv_style_t style_button_down;
 inline lv_style_t style_button_up;
 inline lv_style_t style_button_label;
+inline lv_style_t style_dropdown;
 inline lv_style_t style_label_regular;
 inline lv_style_t style_label_extruder;
 inline lv_style_t style_label_bed;

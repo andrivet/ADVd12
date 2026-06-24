@@ -35,11 +35,13 @@ Panel<7> leveling_panel;
 
 void on_back(lv_event_t *e);
 void on_rough_leveling(lv_event_t *e);
+#if HAS_LEVELING
 void on_automatic_leveling(lv_event_t *e);
 void on_reset_leveling(lv_event_t *e);
 void on_z_height(lv_event_t *e);
 void on_x_twist(lv_event_t *e);
 void on_leveling_grid(lv_event_t *e);
+#endif
 }
 
 bool LevelingPanel::can_switch() {

@@ -369,8 +369,8 @@ void lv_obj_allocate_spec_attr(lv_obj_t * obj)
     LV_ASSERT_OBJ(obj, MY_CLASS);
 
     if(obj->spec_attr == NULL) {
-        static uint32_t x = 0;
-        x++;
+        //static uint32_t x = 0; @advd12
+        //x++; @advd12
         obj->spec_attr = lv_mem_alloc(sizeof(_lv_obj_spec_attr_t));
         LV_ASSERT_MALLOC(obj->spec_attr);
         if(obj->spec_attr == NULL) return;

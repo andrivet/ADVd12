@@ -211,6 +211,13 @@ void PanelBase::layout_menu(const char *title) {
 }
 
 void PanelBase::variables() {
+  et_var = nullptr;
+  tc_var = nullptr;
+  progress_var = nullptr;
+  x_var = nullptr;
+  y_var = nullptr;
+  z_var = nullptr;
+
   icon(IMG_EXTRUDER, 363, 19);
   auto extruder_temp = ExtUI::getActualTemp_celsius(ExtUI::E0);
   auto extruder_target = ExtUI::getTargetTemp_celsius(ExtUI::E0);

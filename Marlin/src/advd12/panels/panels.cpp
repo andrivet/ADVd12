@@ -142,11 +142,11 @@ lv_obj_t* PanelBase::icon(const char *img, lv_coord_t x, lv_coord_t y) {
 
 static lv_style_t *label_style(LABEL kind) {
   switch(kind) {
-    case LABEL::EXTRUDER: return &style_label_extruder;
-    case LABEL::BED: return &style_label_bed;
-    case LABEL::FAN: return &style_label_fan;
-    case LABEL::TIME: return &style_label_time;
-    default: return &style_label_regular;
+    case LABEL::EXTRUDER: return &style_extruder;
+    case LABEL::BED: return &style_bed;
+    case LABEL::FAN: return &style_fan;
+    case LABEL::TIME: return &style_time;
+    default: return &style_regular;
   }
 }
 
@@ -206,7 +206,7 @@ void PanelBase::layout_menu(const char *title) {
   auto label = lv_label_create(scr_);
   lv_label_set_text(label, title);
   lv_obj_align_to(label, rect, LV_ALIGN_TOP_MID, 0, -36);
-  lv_obj_add_style(label, &style_label_regular, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_add_style(label, &style_regular, LV_PART_MAIN | LV_STATE_DEFAULT);
 
   variables();
 }

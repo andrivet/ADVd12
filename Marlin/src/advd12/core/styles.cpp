@@ -30,6 +30,10 @@ void Display::init_lvgl_styles() {
   auto value_font = &lv_font_montserrat_20;
   auto label_font = &lv_font_montserrat_16;
   auto orange = lv_color_make(255, 148, 0);
+  auto red = lv_color_make(255, 138, 97);
+  auto green = lv_color_make(126, 211, 33);
+  auto blue = lv_color_make(116, 198, 255);
+  auto gray = lv_color_make(151, 151, 151);
 
   lv_style_init(&style_panel);
   lv_style_set_bg_color(&style_panel, lv_color_black());
@@ -58,23 +62,31 @@ void Display::init_lvgl_styles() {
   lv_style_set_text_color(&style_button_label, lv_color_white());
   lv_style_set_text_font(&style_button_label, label_font);
 
-  lv_style_init(&style_label_regular);
-  lv_style_set_text_color(&style_label_regular, lv_color_white());
-  lv_style_set_text_font(&style_label_regular, value_font);
+  lv_style_init(&style_regular);
+  lv_style_set_text_color(&style_regular, lv_color_white());
+  lv_style_set_text_font(&style_regular, value_font);
 
-  lv_style_init(&style_label_extruder);
-  lv_style_set_text_color(&style_label_extruder, lv_color_make(255, 138, 97));
-  lv_style_set_text_font(&style_label_extruder, value_font);
+  lv_style_init(&style_extruder);
+  lv_style_set_text_color(&style_extruder, red);
+  lv_style_set_text_font(&style_extruder, value_font);
+  lv_style_set_line_color(&style_extruder, red);
+  lv_style_set_line_width(&style_extruder, 3);
+  lv_style_set_line_rounded(&style_extruder, false);
 
-  lv_style_init(&style_label_bed);
-  lv_style_set_text_color(&style_label_bed, lv_color_make(126, 211, 33));
-  lv_style_set_text_font(&style_label_bed, value_font);
+  lv_style_init(&style_bed);
+  lv_style_set_text_color(&style_bed, green);
+  lv_style_set_text_font(&style_bed, value_font);
+  lv_style_set_line_color(&style_bed, green);
+  lv_style_set_line_width(&style_bed, 3);
+  lv_style_set_line_rounded(&style_bed, false);
 
-  lv_style_init(&style_label_fan);
-  lv_style_set_text_color(&style_label_fan, lv_color_make(116, 198, 255));
-  lv_style_set_text_font(&style_label_fan, value_font);
+  lv_style_init(&style_fan);
+  lv_style_set_text_color(&style_fan, blue);
+  lv_style_set_text_font(&style_fan, value_font);
 
-  lv_style_init(&style_label_time);
-  lv_style_set_text_color(&style_label_time, lv_color_make(151, 151, 151));
-  lv_style_set_text_font(&style_label_time, value_font);
+  lv_style_init(&style_time);
+  lv_style_set_text_color(&style_time, gray);
+  lv_style_set_text_font(&style_time, value_font);
+  lv_style_set_bg_color(&style_time, gray);
+  lv_style_set_bg_opa(&style_time, LV_OPA_COVER);
 }

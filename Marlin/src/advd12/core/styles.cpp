@@ -87,6 +87,4 @@ void Display::init_lvgl_styles() {
   lv_style_init(&style_time);
   lv_style_set_text_color(&style_time, gray);
   lv_style_set_text_font(&style_time, value_font);
-  lv_style_set_bg_color(&style_time, gray);
-  lv_style_set_bg_opa(&style_time, LV_OPA_COVER);
 }

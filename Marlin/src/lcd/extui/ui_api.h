@@ -629,6 +629,7 @@ namespace ExtUI {
   void watchdogReset();
   void stopMove();
   void setAbsoluteZAxisPosition_mm(const float position);
+  void resetStatus();
 };
 
 /**

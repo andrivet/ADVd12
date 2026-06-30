@@ -170,7 +170,7 @@ void on_save(lv_event_t *e) {
   ExtUI::setTargetFan_percent(fan_, ExtUI::FAN0);
   ExtUI::saveSettings();
 
-  Status::set(GET_TEXT_F(ADVD12_MSG_PREHEAT), Status::STATUS_OPTIONS::RESET);
+  Status::set(GET_TEXT(ADVD12_MSG_PREHEAT), Status::STATUS_OPTIONS::RESET);
   PanelBase::switch_panel<ControlsPanel>();
 }
 

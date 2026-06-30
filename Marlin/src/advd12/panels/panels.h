@@ -70,6 +70,7 @@ struct PanelBase {
   void layout_menu(const char *title);
   void variables();
   static void update_variables();
+  static void set_status(const char *status);
 
 private:
   lv_obj_t* button(const char *img, const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t w, lv_coord_t h, lv_coord_t label_y_offset);

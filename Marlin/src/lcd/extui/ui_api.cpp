@@ -1382,7 +1382,11 @@ namespace ExtUI {
     sync_plan_position();
   }
 
-  #if ENABLED(SKEW_CORRECTION)
+  void resetStatus() {
+    ui.reset_status();
+  }
+
+#if ENABLED(SKEW_CORRECTION)
   #if ENABLED(SKEW_CORRECTION_FOR_Z)
   void setSkewFactors(float xy, float xz, float yz) {
     planner.skew_factor.xy = xy;

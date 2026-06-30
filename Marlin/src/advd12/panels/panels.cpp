@@ -43,6 +43,7 @@ lv_obj_t *progress_var = nullptr;
 lv_obj_t *x_var = nullptr;
 lv_obj_t *y_var = nullptr;
 lv_obj_t *z_var = nullptr;
+lv_obj_t *status_var = nullptr;
 Elapse elapse{500}; // Every 500ms
 }
 
@@ -211,12 +212,15 @@ void PanelBase::layout_menu(const char *title) {
 }
 
 void PanelBase::variables() {
+  status_var = nullptr;
   et_var = nullptr;
   tc_var = nullptr;
   progress_var = nullptr;
   x_var = nullptr;
   y_var = nullptr;
   z_var = nullptr;
+
+  status_var = text("", 0, 292, 480, ALIGN::CENTER, LABEL::REGULAR);
 
   icon(IMG_EXTRUDER, 363, 19);
   auto extruder_temp = ExtUI::getActualTemp_celsius(ExtUI::E0);
@@ -296,5 +300,9 @@ void PanelBase::update_variables() {
     if(y_var) update_variable(y_var, xyz.Y);
     if(z_var) update_variable(z_var, xyz.Z);
   }
+}
 
+void PanelBase::set_status(const char *status) {
+  if(!status_var) return;
+  lv_label_set_text(status_var, status);
 }

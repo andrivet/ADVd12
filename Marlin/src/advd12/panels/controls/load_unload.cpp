@@ -134,7 +134,7 @@ void prepare(bool load) {
   auto title = load ? GET_TEXT(MSG_FILAMENT_CHANGE_LOAD) : GET_TEXT(MSG_FILAMENT_CHANGE_UNLOAD);
   Wait::wait_back(title, GET_TEXT(MSG_HEATING), [] (CALLBACK_SOURCE) -> void {
     background_task.clear();
-    Status::set(GET_TEXT_F(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+    Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
     ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
     ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
   });
@@ -156,7 +156,7 @@ void extrude() {
   auto title = load_ ? GET_TEXT(MSG_FILAMENT_CHANGE_LOAD) : GET_TEXT(MSG_FILAMENT_CHANGE_UNLOAD);
   Wait::wait_back(title, GET_TEXT(ADVD12_MSG_IN_PROGRESS), [] (CALLBACK_SOURCE) -> void {
     background_task.clear();
-    Status::set(GET_TEXT_F(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+    Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
     ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
     ExtUI::stopMove();
   });

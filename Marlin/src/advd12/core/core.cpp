@@ -50,7 +50,7 @@ void advd12::Core::init() {
   if(ExtUI::getLevelingIsValid()) ExtUI::setLevelingActive(true);
 #endif
 
-  Status::set(GET_TEXT_F(WELCOME_MSG), Status::STATUS_OPTIONS::RESET);
+  Status::set(GET_TEXT(WELCOME_MSG), Status::STATUS_OPTIONS::RESET);
 }
 
 void advd12::Core::startup() {
@@ -96,7 +96,7 @@ void advd12::Core::calibrate() {
 void advd12::Core::disable_motors() {
   // If busy, do nothing
   if(is_busy()) {
-    Status::set(GET_TEXT_F(ADVD12_MSG_BUSY));
+    Status::set(GET_TEXT(ADVD12_MSG_BUSY));
     return;
   }
 
@@ -104,7 +104,7 @@ void advd12::Core::disable_motors() {
   ExtUI::injectCommands_P("M84"); // Disable steppers
   ExtUI::setAllAxisUnhomed();
   ExtUI::setAllAxisPositionUnknown();
-  Status::set(GET_TEXT_F(ADVD12_MSG_MOTORS_DISABLED), Status::STATUS_OPTIONS::RESET);
+  Status::set(GET_TEXT(ADVD12_MSG_MOTORS_DISABLED), Status::STATUS_OPTIONS::RESET);
 }
 
 namespace {

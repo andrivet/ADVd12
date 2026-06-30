@@ -109,7 +109,7 @@ namespace {
 void prepare(CALLBACK_SOURCE src) {
   if(src == CALLBACK_SOURCE::BACK) {
     ExtUI::setTargetTemp_celsius(0, ExtUI::BED);
-    Status::set(GET_TEXT_F(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+    Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
     PanelBase::switch_panel<MainPanel>();
     return;
   }

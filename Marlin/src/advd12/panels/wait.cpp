@@ -113,7 +113,7 @@ void Wait::homing(const FlashChar* command) {
 }
 
 void Wait::homing_start() {
-  Status::set(GET_TEXT_F(MSG_HOMING), Status::STATUS_OPTIONS::RESET);
+  Status::set(GET_TEXT(MSG_HOMING), Status::STATUS_OPTIONS::RESET);
 }
 
 void Wait::homing_done() {

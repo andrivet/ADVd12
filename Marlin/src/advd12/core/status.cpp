@@ -23,28 +23,43 @@
  *
  */
 
+#include "../../inc/MarlinConfig.h"
+#include "../../lcd/extui/ui_api.h"
 #include "status.h"
+#include "task.h"
+#include "../panels/panels.h"
+
+namespace {
+
+millis_t status_message_expire_ms = 0;
+
+}
 
 namespace Status {
 
 void set(const char* message, STATUS_OPTIONS options) {
-  // TODO
-}
-
-void set(FSTR_P message, STATUS_OPTIONS options) {
-  // TODO
+  if(test_one_bit(options, STATUS_OPTIONS::RESET)) reset();
+  bool persistent = test_one_bit(options, STATUS_OPTIONS::PERSISTENT);
+  // If a persistent message is already displayed, do not override it my a non-persistent one
+  if(status_message_expire_ms == 0 && !persistent) return;
+  status_message_expire_ms = persistent ? 0 : millis() + (STATUS_MESSAGE_TIMEOUT_SEC) * 1000UL;
+  PanelBase::set_status(message);
 }
 
 void set_default() {
-  // TODO
+  set(GET_TEXT(WELCOME_MSG), Status::STATUS_OPTIONS::RESET);
 }
 
 void reset() {
-  // TODO
+  status_message_expire_ms = millis() + (STATUS_MESSAGE_TIMEOUT_SEC) * 1000UL;
 }
 
 void init() {
-  // TODO
+  status_task.set([] () -> CALLBACK_RESULT {
+      if(status_message_expire_ms && ELAPSED(millis(), status_message_expire_ms))
+        ExtUI::resetStatus();
+      return CALLBACK_RESULT::CONTINUE;
+    });
 }
 
 }

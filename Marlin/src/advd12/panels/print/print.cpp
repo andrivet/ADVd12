@@ -45,11 +45,20 @@ constexpr unsigned EXT_TEMP_MIN = 40;
 lv_obj_t *chart = nullptr;
 lv_chart_series_t *bed_series = nullptr;
 lv_chart_series_t *ext_series = nullptr;
+lv_obj_t *dropdown = nullptr;
+#if HAS_BED_PROBE
+lv_obj_t *z_offset_var = nullptr;
+#endif
+float increment = 0.02;
 
 Panel<8> panel;
 
 void draw_graduations();
 void next_point();
+#if HAS_BED_PROBE
+void display_z_offset();
+#endif
+float get_multiplier(uint16_t index);
 
 void on_back(lv_event_t *e);
 void on_stop(lv_event_t *e);
@@ -81,14 +90,16 @@ void PrintPanel::create() {
   panel.icon(IMG_STEPS2, 8, 58);
   auto down = panel.small_control(IMG_DOWN, 77, 60);
   auto up = panel.small_control(IMG_UP, 194, 60);
-  auto baby_steps = panel.text("0.00", 115, 68, 87, ALIGN::CENTER, LABEL::REGULAR);
+#if HAS_BED_PROBE
+  z_offset_var = panel.text("0.00", 115, 68, 87, ALIGN::CENTER, LABEL::REGULAR);
+#endif
 
-  auto drop = lv_dropdown_create(panel.scr());
-  lv_dropdown_set_options(drop, "0.02\n0.08\n0.16");
-  lv_obj_set_pos(drop, 249, 60);
-  lv_obj_set_size(drop, 87, 38);
-  lv_obj_add_style(drop, &style_dropdown, LV_PART_MAIN);
-  auto drop_list = lv_dropdown_get_list(drop);
+  dropdown = lv_dropdown_create(panel.scr());
+  lv_dropdown_set_options(dropdown, "0.01\n0.05\n0.25");
+  lv_obj_set_pos(dropdown, 249, 60);
+  lv_obj_set_size(dropdown, 87, 38);
+  lv_obj_add_style(dropdown, &style_dropdown, LV_PART_MAIN);
+  auto drop_list = lv_dropdown_get_list(dropdown);
   if(drop_list) lv_obj_add_style(drop_list, &style_dropdown, LV_PART_MAIN);
 
   draw_graduations();
@@ -109,8 +120,6 @@ void PrintPanel::create() {
   lv_chart_set_all_value(chart, bed_series, static_cast<lv_coord_t>(ExtUI::getActualTemp_celsius(ExtUI::BED)));
   lv_chart_set_all_value(chart, ext_series, static_cast<lv_coord_t>(ExtUI::getActualTemp_celsius(ExtUI::E0)));
 
-  //lv_obj_set_style_bg_color(chart, lv_color_black(), LV_PART_MAIN);
-  //lv_obj_set_style_bg_opa(chart, LV_OPA_COVER, LV_PART_MAIN);
   lv_obj_set_style_border_width(chart, 0, LV_PART_MAIN);
   lv_obj_set_style_line_color(chart, lv_color_white(), LV_PART_ITEMS);
   lv_obj_set_style_line_width(chart, 2, LV_PART_ITEMS);
@@ -123,10 +132,13 @@ void PrintPanel::create() {
   panel.bind(options, &on_options);
   panel.bind(down, &on_down);
   panel.bind(up, &on_up);
-  panel.bind(drop, &on_increment_selected);
+  panel.bind(dropdown, &on_increment_selected, EventType::CHANGED);
 
   background_task.set([]() -> CALLBACK_RESULT {
     next_point();
+#if HAS_BED_PROBE
+    display_z_offset();
+#endif
     return CALLBACK_RESULT::CONTINUE;
   }, 1000);
 }
@@ -169,15 +181,27 @@ void on_options(lv_event_t *e) {
 }
 
 void on_down(lv_event_t *e) {
-
+  auto steps = ExtUI::mmToWholeSteps(increment, ExtUI::Z);
+  ExtUI::smartAdjustAxis_steps(static_cast<int16_t>(-steps), ExtUI::Z, true);
 }
 
 void on_up(lv_event_t *e) {
-
+  auto steps = ExtUI::mmToWholeSteps(increment, ExtUI::Z);
+  ExtUI::smartAdjustAxis_steps(steps, ExtUI::Z, true);
 }
 
 void on_increment_selected(lv_event_t *e) {
+  auto index = lv_dropdown_get_selected(dropdown);
+  increment = get_multiplier(index);
+}
 
+float get_multiplier(uint16_t index) {
+  switch(index) {
+    case 0: return 0.01;
+    case 1: return 0.05;
+    case 2: return 0.25;
+    default: return 0.01;
+  }
 }
 
 void draw_graduations() {
@@ -201,5 +225,13 @@ void next_point() {
   lv_chart_set_next_value(chart, ext_series, static_cast<lv_coord_t>(ExtUI::getActualTemp_celsius(ExtUI::E0)));
   lv_chart_set_next_value(chart, bed_series, static_cast<lv_coord_t>(ExtUI::getActualTemp_celsius(ExtUI::BED)));
 }
+
+#if HAS_BED_PROBE
+void display_z_offset() {
+  char text[8];
+  sprintf(text, "%.2f", ExtUI::getZOffset_mm());
+  lv_label_set_text(z_offset_var, text);
+}
+#endif
 
 }

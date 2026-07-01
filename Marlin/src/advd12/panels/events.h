@@ -27,7 +27,7 @@
 #include <lvgl.h>
 #include <array>
 
-enum struct EventType { PRESSED = 0x01, LONG = 0x02, REPEAT = 0x04 };
+enum struct EventType { PRESSED = 0x01, LONG = 0x02, REPEAT = 0x04, CHANGED = 0x08 };
 
 inline bool operator&(EventType lhs, EventType rhs) {
   return (static_cast<unsigned>(lhs) & static_cast<unsigned>(rhs)) != 0;
@@ -51,6 +51,8 @@ struct EventBinder {
       lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_LONG_PRESSED, binding);
     if(type & EventType::REPEAT)
       lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_LONG_PRESSED_REPEAT, binding);
+    if(type & EventType::CHANGED)
+      lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_VALUE_CHANGED, binding);
   }
 
   void reset() {

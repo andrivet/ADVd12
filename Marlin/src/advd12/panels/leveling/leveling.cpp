@@ -23,6 +23,7 @@
  *
  */
 
+#include "../../../inc/MarlinConfig.h"
 #include <lvgl.h>
 #include "leveling.h"
 #include "rough.h"

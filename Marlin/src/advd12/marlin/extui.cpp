@@ -27,6 +27,7 @@
 #include "../../lcd/extui/ui_api.h"
 #include "../core/core.h"
 #include "../panels/wait.h"
+#include "../core/progress.h"
 
 namespace ExtUI {
 
@@ -77,19 +78,19 @@ namespace ExtUI {
   }
 
   void onPrintTimerStarted() {
-    //Core::print_started();
+    Progress::start();
   }
 
   void onPrintTimerPaused() {
-    //Core::print_paused();
+    // Nothing to do;
   }
 
   void onPrintTimerStopped() {
-    //Core::print_done();
+    Progress::finish();
   }
 
   void onPrintDone() {
-    //Core::print_done();
+    Progress::finish();
   }
 
   void onFilamentRunout(const extruder_t extruder) {

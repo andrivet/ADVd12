@@ -28,6 +28,7 @@
 #include "../core/styles.h"
 #include "../core/ids.h"
 #include "../core/task.h"
+#include "../core/progress.h"
 
 PanelBase *PanelBase::current_panel_ = nullptr;
 
@@ -286,14 +287,9 @@ void PanelBase::update_variables() {
   if(fan_var)
     update_variable(fan_var, ExtUI::getActualFan_percent(ExtUI::FAN0));
 
-  if(et_var)
-    lv_label_set_text(et_var, "-");
-  if(tc_var)
-    lv_label_set_text(tc_var, "-");
-  if(progress_var)
-    lv_label_set_text(progress_var, "-");
-
-  if(!ExtUI::isPrinting()) {
+  if(ExtUI::isPrinting())
+    Progress::set(et_var, tc_var, progress_var);
+  else {
     xyz_pos_t xyz;
     ExtUI::getRealtimeAxisPositions_mm(xyz);
     if(x_var) update_variable(x_var, xyz.X);

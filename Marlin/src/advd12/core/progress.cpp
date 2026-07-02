@@ -23,8 +23,101 @@
  *
  */
 
+#include "../../inc/MarlinConfig.h"
+#include "../../lcd/extui/ui_api.h"
 #include "progress.h"
+#include "task.h"
+
+namespace {
+
+constexpr uint8_t WAIT_DELAY = 1; //!< Delay in minutes before displaying TC
+enum struct STATE: uint8_t { IDLE, HEATING, WAITING, DISPLAYING }; //< Small state machine
+
+uint8_t progress_at_wait_ = 0;
+uint32_t elapsed_at_wait_ = 0;
+unsigned previous_et_ = 0;
+unsigned previous_progress_ = 0;
+STATE state_ = STATE::IDLE;
+
+void heating();
+void waiting();
+void displaying(lv_obj_t *et, lv_obj_t *tc, lv_obj_t *progress);
+
+}
+
+void Progress::set(lv_obj_t *et, lv_obj_t *tc, lv_obj_t *progress) {
+  switch(state_) {
+    case STATE::IDLE: break;
+    case STATE::HEATING: heating(); break;
+    case STATE::WAITING: waiting(); break;
+    default: displaying(et, tc, progress); break;
+  }
+}
 
 void Progress::reset() {
-  // TODO
+  start();
+}
+
+void Progress::start() {
+  state_ = STATE::HEATING;
+  previous_et_ = 0;
+  previous_progress_ = 0;
+}
+
+void Progress::finish() {
+  state_ = STATE::IDLE;
+}
+
+namespace {
+
+void heating() {
+  auto actual = ExtUI::getActualTemp_celsius(ExtUI::BED);
+  auto target =  ExtUI::getTargetTemp_celsius(ExtUI::BED);
+  if(target <= 0 || actual < static_cast<celsius_float_t>(target)) return;
+  state_ = STATE::WAITING;
+  elapsed_at_wait_ = ExtUI::getProgress_seconds_elapsed();
+  progress_at_wait_ = ExtUI::getProgress_percent();
+}
+
+void waiting() {
+  auto elapsed = ExtUI::getProgress_seconds_elapsed();
+  if(elapsed - elapsed_at_wait_ < WAIT_DELAY * 60) return;
+  state_ = STATE::DISPLAYING;
+}
+
+void displaying(lv_obj_t *et_label, lv_obj_t *tc_label, lv_obj_t *progress_label) {
+  auto elapsed = ExtUI::getProgress_seconds_elapsed();
+  auto progress = ExtUI::getProgress_percent();
+  auto adjusted_progress = progress <= progress_at_wait_ ? 0 : progress - progress_at_wait_;
+  auto adjusted_elapsed = elapsed <= elapsed_at_wait_ ? 0 : elapsed - elapsed_at_wait_;
+  auto tc_sec = adjusted_progress <= 0 ? 0 : (adjusted_elapsed * (100 - adjusted_progress) / adjusted_progress);
+  auto et_min = elapsed / 60;
+
+  char text[24];
+
+  // Update only when the ET (in minutes) change
+  if(tc_label && et_min != previous_et_) {
+    auto hours   = tc_sec / 3600;
+    auto minutes = (tc_sec % 3600) / 60;
+    sprintf(text, "%02u:%02u", hours, minutes);
+    lv_label_set_text(tc_label, text);
+  }
+
+  if(et_label && et_min != previous_et_) {
+    auto hours   = elapsed / 3600;
+    auto minutes = (elapsed % 3600) / 60;
+    sprintf(text, "%02u:%02u", hours, minutes);
+    lv_label_set_text(et_label, text);
+  }
+
+  previous_et_ = et_min;
+
+  if(progress_label && previous_progress_ != progress) {
+    sprintf(text, "%d", progress);
+    lv_label_set_text(progress_label, text);
+    previous_progress_ = progress;
+  }
+}
+
+
 }

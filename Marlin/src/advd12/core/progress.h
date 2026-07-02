@@ -24,9 +24,10 @@
  */
 #pragma once
 #include <cstdint>
+#include <lvgl.h>
 
 namespace Progress {
-void set(uint8_t percent);
+void set(lv_obj_t *et, lv_obj_t *tc, lv_obj_t *progress);
 void reset();
 void start();
 void finish();

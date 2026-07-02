@@ -41,16 +41,16 @@ STATE state_ = STATE::IDLE;
 
 void heating();
 void waiting();
-void displaying(lv_obj_t *et, lv_obj_t *tc, lv_obj_t *progress);
+void displaying(lv_obj_t *et, lv_obj_t *tc, lv_obj_t *progress, bool force);
 
 }
 
-void Progress::set(lv_obj_t *et, lv_obj_t *tc, lv_obj_t *progress) {
+void Progress::set(lv_obj_t *et, lv_obj_t *tc, lv_obj_t *progress, bool force) {
   switch(state_) {
     case STATE::IDLE: break;
     case STATE::HEATING: heating(); break;
     case STATE::WAITING: waiting(); break;
-    default: displaying(et, tc, progress); break;
+    default: displaying(et, tc, progress, force); break;
   }
 }
 
@@ -85,7 +85,7 @@ void waiting() {
   state_ = STATE::DISPLAYING;
 }
 
-void displaying(lv_obj_t *et_label, lv_obj_t *tc_label, lv_obj_t *progress_label) {
+void displaying(lv_obj_t *et_label, lv_obj_t *tc_label, lv_obj_t *progress_label, bool force) {
   auto elapsed = ExtUI::getProgress_seconds_elapsed();
   auto progress = ExtUI::getProgress_percent();
   auto adjusted_progress = progress <= progress_at_wait_ ? 0 : progress - progress_at_wait_;
@@ -96,14 +96,14 @@ void displaying(lv_obj_t *et_label, lv_obj_t *tc_label, lv_obj_t *progress_label
   char text[24];
 
   // Update only when the ET (in minutes) change
-  if(tc_label && et_min != previous_et_) {
+  if(tc_label && (force || et_min != previous_et_)) {
     auto hours   = tc_sec / 3600;
     auto minutes = (tc_sec % 3600) / 60;
     sprintf(text, "%02u:%02u", hours, minutes);
     lv_label_set_text(tc_label, text);
   }
 
-  if(et_label && et_min != previous_et_) {
+  if(et_label && (force || et_min != previous_et_)) {
     auto hours   = elapsed / 3600;
     auto minutes = (elapsed % 3600) / 60;
     sprintf(text, "%02u:%02u", hours, minutes);
@@ -112,7 +112,7 @@ void displaying(lv_obj_t *et_label, lv_obj_t *tc_label, lv_obj_t *progress_label
 
   previous_et_ = et_min;
 
-  if(progress_label && previous_progress_ != progress) {
+  if(progress_label && (force || previous_progress_ != progress)) {
     sprintf(text, "%d", progress);
     lv_label_set_text(progress_label, text);
     previous_progress_ = progress;

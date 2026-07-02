@@ -69,7 +69,7 @@ struct PanelBase {
   void layout_main();
   void layout_menu(const char *title);
   void variables();
-  static void update_variables();
+  static void update_variables(bool force = false);
   static void set_status(const char *status);
 
 private:

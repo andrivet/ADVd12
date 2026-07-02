@@ -27,7 +27,7 @@
 #include <lvgl.h>
 
 namespace Progress {
-void set(lv_obj_t *et, lv_obj_t *tc, lv_obj_t *progress);
+void set(lv_obj_t *et, lv_obj_t *tc, lv_obj_t *progress, bool force);
 void reset();
 void start();
 void finish();

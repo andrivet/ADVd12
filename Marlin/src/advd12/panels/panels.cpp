@@ -256,6 +256,8 @@ void PanelBase::variables() {
     y_var = text("0.0", 398, 211, 64, ALIGN::RIGHT, LABEL::Y);
     z_var = text("0.0", 398, 243, 64, ALIGN::RIGHT, LABEL::Z);
   }
+
+  update_variables(true);
 }
 
 void update_variable(lv_obj_t *text, double value) {
@@ -273,8 +275,8 @@ void update_variable(lv_obj_t *text, int value) {
   lv_label_set_text(text, buffer);
 }
 
-void PanelBase::update_variables() {
-  if(!elapse.is_elapsed()) return;
+void PanelBase::update_variables(bool force) {
+  if(!force && !elapse.is_elapsed()) return;
 
   if(extruder_temp_var)
     update_variable(extruder_temp_var, ExtUI::getActualTemp_celsius(ExtUI::E0));
@@ -288,7 +290,7 @@ void PanelBase::update_variables() {
     update_variable(fan_var, ExtUI::getActualFan_percent(ExtUI::FAN0));
 
   if(ExtUI::isPrinting())
-    Progress::set(et_var, tc_var, progress_var);
+    Progress::set(et_var, tc_var, progress_var, force);
   else {
     xyz_pos_t xyz;
     ExtUI::getRealtimeAxisPositions_mm(xyz);

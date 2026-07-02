@@ -1192,6 +1192,7 @@ namespace LanguageNarrow_en {
   LSTR ADVD12_MSG_EXTRUSION_FINISHED     = _UxGT("Extrusion finished");
   LSTR ADVD12_MSG_IN_PROGRESS            = _UxGT("In progress...");
   LSTR ADVD12_MSG_EXTRUDER_TUNING        = _UxGT("Extruder Tuning");
+  LSTR ADVD12_MSG_ALREADY_STOPPED        = _UxGT("Already stopped");
 
   LSTR ADVD12_TITLE_CONFIRM              = _UxGT("Please Confirm");
   LSTR ADVD12_TITLE_WAIT                 = _UxGT("Please Wait");

@@ -151,7 +151,10 @@ void on_back(lv_event_t *e) {
 }
 
 void on_stop(lv_event_t *e) {
-  if(!ExtUI::isPrinting()) return;
+  if(!ExtUI::isPrinting()) {
+    Status::set(GET_TEXT(ADVD12_MSG_ALREADY_STOPPED));
+    return;
+  }
 
   Wait::wait_back_continue(GET_TEXT(ADVD12_TITLE_CONFIRM), GET_TEXT(ADVD12_MSG_ABORT_PRINT), [] (CALLBACK_SOURCE src) -> void {
    if(src == CALLBACK_SOURCE::BACK) { // Cancel abort print

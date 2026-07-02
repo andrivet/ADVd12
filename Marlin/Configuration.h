@@ -46,10 +46,9 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Marlin's development mode
 //#define MARLIN_DEV_MODE
 //#define PINS_DEBUGGING
-// SDIO write has issues, so for the moment, avoid writing
-//#define SDCARD_READONLY
 
 // Model of printer
+// Typically defined in the environment
 // Change also the default environment in platformio.ini
 //#define D12_230_v1_2
 //#define D12_230_v1_3
@@ -61,11 +60,9 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //#define D12_FULL_TMC2209
 
 // BLTouch
-//#define D12_BL_TOUCH
+#define BLTOUCH // eventually defined in the environment
 
 // Kind of display
-//#define TFT_COLOR_UI
-//#define TFT_LVGL_UI
 #define TFT_ADV_UI
 #if defined(D12_SIMULATOR)
 // Set to 0 to avoid long delay when showing the logo
@@ -1407,7 +1404,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 #define W_MIN_ENDSTOP_HIT_STATE HIGH
 #define W_MAX_ENDSTOP_HIT_STATE HIGH
 
-#if defined(D12_BL_TOUCH)
+#if defined(BLTOUCH)
 #define Z_MIN_ENDSTOP_HIT_STATE HIGH
 #define Z_MIN_PROBE_ENDSTOP_HIT_STATE HIGH
 #else
@@ -1580,12 +1577,12 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * The probe replaces the Z-MIN endstop and is used for Z homing.
  * (Automatically enables USE_PROBE_FOR_Z_HOMING.)
  */
-#if defined(D12_BL_TOUCH)
+#if defined(BLTOUCH)
 #define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN
 #endif
 
 // Force the use of the probe for Z-axis homing
-#if defined(D12_BL_TOUCH)
+#if defined(BLTOUCH)
 #define USE_PROBE_FOR_Z_HOMING
 #endif
 
@@ -1644,9 +1641,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 /**
  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
  */
-#if defined(D12_BL_TOUCH)
-#define BLTOUCH
-#endif
+//#define BLTOUCH @advd12 eventually defined in the environment
 
 /**
  * MagLev V4 probe by MDD
@@ -2341,7 +2336,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  */
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
-#if defined(D12_BL_TOUCH)
+#if defined(BLTOUCH)
 #define AUTO_BED_LEVELING_BILINEAR
 #endif
 //#define AUTO_BED_LEVELING_UBL
@@ -2579,7 +2574,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * - Allows Z homing only when XY positions are known and trusted.
  * - If stepper drivers sleep, XY homing may be required again before Z homing.
  */
-#if defined(D12_BL_TOUCH)
+#if defined(BLTOUCH)
 #define Z_SAFE_HOMING
 #endif
 

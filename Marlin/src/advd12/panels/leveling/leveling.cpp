@@ -24,6 +24,9 @@
  */
 
 #include "../../../inc/MarlinConfig.h"
+#if HAS_LEVELING
+#include "../../../feature/bltouch.h"
+#endif
 #include <lvgl.h>
 #include "leveling.h"
 #include "rough.h"
@@ -42,7 +45,6 @@ void on_rough_leveling(lv_event_t *e);
 void on_automatic_leveling(lv_event_t *e);
 void on_reset_leveling(lv_event_t *e);
 void on_z_height(lv_event_t *e);
-void on_x_twist(lv_event_t *e);
 void on_leveling_grid(lv_event_t *e);
 #endif
 }
@@ -62,8 +64,7 @@ void LevelingPanel::create() {
   auto automatic = leveling_panel.medium_button(IMG_AUTOMATIC, "Automatic", 101, 76);
   auto reset = leveling_panel.medium_button(IMG_RESET, " Reset", 183, 76);
   auto z_height = leveling_panel.medium_button(IMG_Z_HEIGHT, "Z-Height", 265, 76);
-  auto x_twist = leveling_panel.medium_button(IMG_X_TWIST, "X Twist", 19, 188);
-  auto grid = leveling_panel.medium_button(IMG_GRID, "Grid", 101, 188);
+  auto grid = leveling_panel.medium_button(IMG_GRID, "Grid", 19, 188);
 #endif
 
   leveling_panel.reset_bindings();
@@ -73,7 +74,6 @@ void LevelingPanel::create() {
   leveling_panel.bind(automatic, &on_automatic_leveling);
   leveling_panel.bind(reset, &on_reset_leveling);
   leveling_panel.bind(z_height, &on_z_height);
-  leveling_panel.bind(x_twist, &on_x_twist);
   leveling_panel.bind(grid, &on_leveling_grid);
 #endif
 }
@@ -95,14 +95,10 @@ void on_automatic_leveling(lv_event_t *e) {
 }
 
 void on_reset_leveling(lv_event_t *e) {
-
+  BLTouch::_reset();
 }
 
 void on_z_height(lv_event_t *e) {
-
-}
-
-void on_x_twist(lv_event_t *e) {
 
 }
 

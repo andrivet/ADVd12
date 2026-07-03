@@ -289,15 +289,13 @@ void PanelBase::update_variables(bool force) {
   if(fan_var)
     update_variable(fan_var, ExtUI::getActualFan_percent(ExtUI::FAN0));
 
-  if(ExtUI::isPrinting())
-    Progress::set(et_var, tc_var, progress_var, force);
-  else {
-    xyz_pos_t xyz;
-    ExtUI::getRealtimeAxisPositions_mm(xyz);
-    if(x_var) update_variable(x_var, xyz.X);
-    if(y_var) update_variable(y_var, xyz.Y);
-    if(z_var) update_variable(z_var, xyz.Z);
-  }
+  Progress::set(et_var, tc_var, progress_var, force);
+
+  xyz_pos_t xyz;
+  ExtUI::getRealtimeAxisPositions_mm(xyz);
+  if(x_var) update_variable(x_var, xyz.X);
+  if(y_var) update_variable(y_var, xyz.Y);
+  if(z_var) update_variable(z_var, xyz.Z);
 }
 
 void PanelBase::set_status(const char *status) {

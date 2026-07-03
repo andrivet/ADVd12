@@ -243,7 +243,7 @@ namespace ExtUI {
     bool getLevelingIsValid();
     void onLevelingStart();
     void onLevelingDone(bool success = true); // @advd12
-    void onLevelingProgress(const int8_t index, const int8_t xpos, const int8_t ypos); // @advd12
+    void onLevelingProgress(const uint8_t index, const int8_t xpos, const int8_t ypos); // @advd12
     void cancelLeveling(); // @advd12
 
     #if ENABLED(BLTOUCH)

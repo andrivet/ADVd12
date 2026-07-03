@@ -94,3 +94,4 @@ inline constexpr char IMG_PAUSE[7]        = "I:0063";
 inline constexpr char IMG_CHANGE[7]       = "I:0064";
 inline constexpr char IMG_OPTIONS[7]      = "I:0065";
 inline constexpr char IMG_STEPS2[7]       = "I:0066";
+inline constexpr char IMG_PROBE[7]        = "I:0067";

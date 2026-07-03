@@ -27,6 +27,7 @@
 #include <lvgl.h>
 #include "leveling.h"
 #include "rough.h"
+#include "automatic.h"
 #include "../panels.h"
 #include "../main.h"
 #include "../../core/ids.h"
@@ -89,7 +90,7 @@ void on_rough_leveling(lv_event_t *e) {
 #if HAS_LEVELING
 
 void on_automatic_leveling(lv_event_t *e) {
-
+  PanelBase::switch_panel<AutomaticPanel>();
 }
 
 void on_reset_leveling(lv_event_t *e) {

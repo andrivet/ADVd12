@@ -28,13 +28,13 @@
 #include "../core/core.h"
 #include "../panels/wait.h"
 #include "../core/progress.h"
+#include "src/advd12/panels/leveling/automatic.h"
 
 namespace ExtUI {
 
   using namespace advd12;
 
   void onStartup() {
-    //Core::startup();
   }
 
   void onIdle() {
@@ -94,6 +94,7 @@ namespace ExtUI {
   }
 
   void onFilamentRunout(const extruder_t extruder) {
+    // TODO
   }
 
   void onUserConfirmRequired(const char * const msg) {
@@ -158,15 +159,15 @@ namespace ExtUI {
   }
 
   void onLevelingStart() {
-    //Mesh::start();
+    AutomaticPanel::on_leveling_start();
   }
 
-  void onLevelingProgress(const int8_t index, const int8_t xpos, const int8_t ypos) {
-    //Mesh::progress(index);
+  void onLevelingProgress(const uint8_t index, const int8_t xpos, const int8_t ypos) {
+    AutomaticPanel::on_leveling_progress(index);
   }
 
   void onLevelingDone(bool success) {
-    //Mesh::done(success);
+    AutomaticPanel::on_leveling_done(success);
   }
 
   void onMeshUpdate(const int8_t xpos, const int8_t ypos, const float zval) {
@@ -179,11 +180,11 @@ namespace ExtUI {
   #endif
 
 #if ENABLED(POWER_LOSS_RECOVERY)
-void onSetPowerLoss(const bool onoff) {
+  void onSetPowerLoss(const bool onoff) {
     //Core::on_power_loss_set(onoff);
   }
 
-void onPowerLoss() {
+  void onPowerLoss() {
     //Core::on_power_loss();
   }
 

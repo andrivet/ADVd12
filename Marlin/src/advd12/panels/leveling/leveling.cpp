@@ -28,6 +28,7 @@
 #include "leveling.h"
 #include "rough.h"
 #include "automatic.h"
+#include "grid.h"
 #include "../panels.h"
 #include "../main.h"
 #include "../../core/ids.h"
@@ -106,7 +107,7 @@ void on_x_twist(lv_event_t *e) {
 }
 
 void on_leveling_grid(lv_event_t *e) {
-
+  PanelBase::switch_panel<GridPanel>();
 }
 
 #endif

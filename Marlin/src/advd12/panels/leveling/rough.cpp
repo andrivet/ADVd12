@@ -27,13 +27,12 @@
 #include "../../../inc/MarlinConfig.h"
 #include "../../../lcd/extui/ui_api.h"
 #include "rough.h"
+#include "bed.h"
 #include "../panels.h"
 #include "../main.h"
 #include "../wait.h"
 #include "../../core/ids.h"
-#include "../../core/styles.h"
 #include "../../core/status.h"
-#include "src/advd12/core/core.h"
 
 namespace {
 
@@ -52,10 +51,10 @@ void on_2(lv_event_t *e);
 void on_3(lv_event_t *e);
 void on_4(lv_event_t *e);
 void on_5(lv_event_t *e);
-void on_a(lv_event_t *e);
-void on_b(lv_event_t *e);
-void on_c(lv_event_t *e);
-void on_d(lv_event_t *e);
+void on_6(lv_event_t *e);
+void on_7(lv_event_t *e);
+void on_8(lv_event_t *e);
+void on_9(lv_event_t *e);
 
 }
 
@@ -66,17 +65,18 @@ bool RoughPanel::can_switch() {
 void RoughPanel::create() {
   if(!panel.create()) return;
   panel.layout_menu("Rough");
+  Bed::create(panel.scr());
 
   auto back = panel.control(IMG_BACK, 7, 2);
-  auto level_1 = panel.circle_button(19, 199, "1");
-  auto level_2 = panel.circle_button(135, 199, "2");
-  auto level_3 = panel.circle_button(135, 83, "3");
-  auto level_4 = panel.circle_button(19, 83, "4");
-  auto level_5 = panel.circle_button(77, 141, "5");
-  auto level_a = panel.circle_button(77, 199, "A");
-  auto level_b = panel.circle_button(19, 141, "B");
-  auto level_c = panel.circle_button(77, 83, "C");
-  auto level_d = panel.circle_button(135, 141, "D");
+  auto level_1 = panel.circle_button(57, 181, "1");
+  auto level_2 = panel.circle_button(155, 181, "2");
+  auto level_3 = panel.circle_button(253, 181, "3");
+  auto level_4 = panel.circle_button(241, 130, "4");
+  auto level_5 = panel.circle_button(155, 130, "5");
+  auto level_6 = panel.circle_button(69, 130, "6");
+  auto level_7 = panel.circle_button(81, 79, "7");
+  auto level_8 = panel.circle_button(155, 79, "8");
+  auto level_9 = panel.circle_button(229, 79, "9");
 
   panel.reset_bindings();
   panel.bind(back, on_back);
@@ -85,18 +85,10 @@ void RoughPanel::create() {
   panel.bind(level_3, on_3);
   panel.bind(level_4, on_4);
   panel.bind(level_5, on_5);
-  panel.bind(level_a, on_a);
-  panel.bind(level_b, on_b);
-  panel.bind(level_c, on_c);
-  panel.bind(level_d, on_d);
-
-  auto label = lv_label_create(panel.scr());
-  lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
-  lv_label_set_text(label, "Press the buttons, adjust the thumb nuts and use a feeler gauge. It should move with a tiny bit of friction.");
-  lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
-  lv_obj_set_pos(label, 193, 83);
-  lv_obj_set_width(label, 134);
-  lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
+  panel.bind(level_6, on_6);
+  panel.bind(level_7, on_7);
+  panel.bind(level_8, on_8);
+  panel.bind(level_9, on_9);
 
   if(ExtUI::getActualTemp_celsius(ExtUI::E0) > 50)
     Wait::wait_back_continue(GET_TEXT(ADVD12_TITLE_WARNING), GET_TEXT(ADVD12_MSG_LEVELING_HOT), &prepare);
@@ -145,35 +137,35 @@ void on_1(lv_event_t *e) {
 }
 
 void on_2(lv_event_t *e) {
-  move(X_BED_SIZE - MARGIN, MARGIN);
+  move(X_BED_SIZE / 2., MARGIN);
 }
 
 void on_3(lv_event_t *e) {
-  move(X_BED_SIZE - MARGIN, Y_BED_SIZE - MARGIN);
+  move(X_BED_SIZE - MARGIN, MARGIN);
 }
 
 void on_4(lv_event_t *e) {
-  move(MARGIN, Y_BED_SIZE - MARGIN);
+  move(X_BED_SIZE - MARGIN, X_BED_SIZE / 2.);
 }
 
 void on_5(lv_event_t *e) {
   move(X_BED_SIZE / 2., Y_BED_SIZE / 2.);
 }
 
-void on_a(lv_event_t *e) {
-  move(X_BED_SIZE / 2., 30);
-}
-
-void on_b(lv_event_t *e) {
+void on_6(lv_event_t *e) {
   move(MARGIN, X_BED_SIZE / 2.);
 }
 
-void on_c(lv_event_t *e) {
+void on_7(lv_event_t *e) {
+  move(MARGIN, Y_BED_SIZE - MARGIN);
+}
+
+void on_8(lv_event_t *e) {
   move(X_BED_SIZE / 2., Y_BED_SIZE - MARGIN);
 }
 
-void on_d(lv_event_t *e) {
-  move(X_BED_SIZE - MARGIN, X_BED_SIZE / 2.);
+void on_9(lv_event_t *e) {
+  move(X_BED_SIZE - MARGIN, Y_BED_SIZE - MARGIN);
 }
 
 

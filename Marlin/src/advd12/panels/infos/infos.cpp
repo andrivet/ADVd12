@@ -26,6 +26,7 @@
 #include <lvgl.h>
 #include "infos.h"
 #include "versions.h"
+#include "copyrights.h"
 #include "../panels.h"
 #include "../main.h"
 #include "../../core/ids.h"
@@ -79,7 +80,7 @@ void on_versions(lv_event_t *e) {
 }
 
 void on_copyrights(lv_event_t *e) {
-
+  PanelBase::switch_panel<CopyrightsPanel>();
 }
 
 void on_io(lv_event_t *e) {

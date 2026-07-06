@@ -23,6 +23,7 @@
  *
  */
 
+#include "../../../inc/MarlinConfig.h"
 #include <lvgl.h>
 #include "infos.h"
 #include "versions.h"
@@ -30,6 +31,7 @@
 #include "../panels.h"
 #include "../main.h"
 #include "../../core/ids.h"
+#include "../../core/status.h"
 
 namespace {
 
@@ -72,7 +74,7 @@ void on_back(lv_event_t *e) {
 }
 
 void on_stats(lv_event_t *e) {
-
+  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
 }
 
 void on_versions(lv_event_t *e) {
@@ -84,7 +86,7 @@ void on_copyrights(lv_event_t *e) {
 }
 
 void on_io(lv_event_t *e) {
-
+  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
 }
 
 }

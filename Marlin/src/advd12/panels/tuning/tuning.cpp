@@ -23,11 +23,13 @@
  *
  */
 
+#include "../../../inc/MarlinConfig.h"
 #include <lvgl.h>
 #include "tuning.h"
 #include "../main.h"
 #include "../../core/ids.h"
-#include "src/advd12/panels/panels.h"
+#include "../../core/status.h"
+#include "../panels.h"
 
 namespace {
 Panel<8> tuning_panel;
@@ -57,8 +59,8 @@ void TuningPanel::create() {
   auto pid = tuning_panel.medium_button(IMG_PID, " PID", 183, 76);
   auto vibrations = tuning_panel.medium_button(IMG_VIBRATIONS, "Vibrations", 265, 76);
   auto shaping = tuning_panel.medium_button(IMG_SHAPING, "X Shaping", 19, 188);
-  auto skew = tuning_panel.medium_button(IMG_SKEW, "Skew", 19, 188);
-  auto linear_adv = tuning_panel.medium_button(IMG_LINEAR_ADV, "Linear Adv", 101, 188);
+  auto skew = tuning_panel.medium_button(IMG_SKEW, "Skew", 101, 188);
+  auto linear_adv = tuning_panel.medium_button(IMG_LINEAR_ADV, "Linear Adv", 183, 188);
 
   tuning_panel.reset_bindings();
   tuning_panel.bind(back, &on_back);
@@ -78,31 +80,31 @@ void on_back(lv_event_t *e) {
 }
 
 void on_bltouch(lv_event_t *e) {
-
+  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
 }
 
 void on_extruder(lv_event_t *e) {
-
+  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
 }
 
 void on_pid(lv_event_t *e) {
-
+  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
 }
 
 void on_vibrations(lv_event_t *e) {
-
+  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
 }
 
 void on_shaping(lv_event_t *e) {
-
+  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
 }
 
 void on_skew(lv_event_t *e) {
-
+  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
 }
 
 void on_linear_advance(lv_event_t *e) {
-
+  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
 }
 
 }

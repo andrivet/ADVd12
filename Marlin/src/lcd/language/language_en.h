@@ -1194,6 +1194,7 @@ namespace LanguageNarrow_en {
   LSTR ADVD12_MSG_EXTRUDER_TUNING        = _UxGT("Extruder Tuning");
   LSTR ADVD12_MSG_ALREADY_STOPPED        = _UxGT("Already stopped");
   LSTR ADVD12_MSG_Z_OFFSET_SAVED         = _UxGT("Z offset saved");
+  LSTR ADVD12_MSG_NOT_IMPLEMENTED        = _UxGT("Not yet implemented");
 
   LSTR ADVD12_TITLE_CONFIRM              = _UxGT("Please Confirm");
   LSTR ADVD12_TITLE_WAIT                 = _UxGT("Please Wait");

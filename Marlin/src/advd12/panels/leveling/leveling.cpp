@@ -32,6 +32,7 @@
 #include "rough.h"
 #include "automatic.h"
 #include "grid.h"
+#include "zheight.h"
 #include "../panels.h"
 #include "../main.h"
 #include "../../core/ids.h"
@@ -99,7 +100,7 @@ void on_reset_leveling(lv_event_t *e) {
 }
 
 void on_z_height(lv_event_t *e) {
-
+  PanelBase::switch_panel<ZHeightPanel>();
 }
 
 void on_leveling_grid(lv_event_t *e) {

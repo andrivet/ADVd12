@@ -38,5 +38,7 @@ bool is_busy();
 float ensure_z_enough_room();
 void calibrate();
 void disable_motors();
+const char *version();
+const char *build();
 
 };

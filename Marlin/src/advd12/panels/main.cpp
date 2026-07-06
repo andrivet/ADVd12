@@ -32,7 +32,7 @@
 #include "print/print.h"
 #include "tuning/tuning.h"
 #include "settings/settings.h"
-#include "infos.h"
+#include "infos/infos.h"
 #include "../core/ids.h"
 #include "src/lcd/extui/ui_api.h"
 

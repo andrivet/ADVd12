@@ -36,4 +36,4 @@ inline lv_style_t style_regular;
 inline lv_style_t style_extruder;
 inline lv_style_t style_bed;
 inline lv_style_t style_fan;
-inline lv_style_t style_time;
+inline lv_style_t style_gray;

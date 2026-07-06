@@ -36,7 +36,7 @@ enum struct LABEL {
   X = EXTRUDER,
   Y = BED,
   Z = FAN,
-  TIME
+  GRAY
 };
 
 enum struct ALIGN {

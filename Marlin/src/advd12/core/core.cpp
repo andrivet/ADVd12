@@ -107,9 +107,7 @@ void advd12::Core::disable_motors() {
   Status::set(GET_TEXT(ADVD12_MSG_MOTORS_DISABLED), Status::STATUS_OPTIONS::RESET);
 }
 
-namespace {
-
-void send_gplv3_7b_notice() {
+const char *advd12::Core::version() {
   static constexpr char version[] = {
     '0' + ADVD12_VERSION / 0x0100,
     '.',
@@ -118,7 +116,10 @@ void send_gplv3_7b_notice() {
     '0' + (ADVD12_VERSION % 0x10),
     0
   };
+  return version;
+}
 
+const char *advd12::Core::build() {
   static constexpr char build[] = {
     '0' + (YEAR__ - 2000) / 10,
     '0' + (YEAR__ - 2000) % 10,
@@ -134,13 +135,18 @@ void send_gplv3_7b_notice() {
     '0' + SEC__ % 10,
     0
   };
+  return build;
+}
 
+namespace {
+
+void send_gplv3_7b_notice() {
   SERIAL_ECHO_START();
   //! Note to forks author:
   //! Under GPLv3 provision 7(b), you are not authorized to remove or alter this notice.
   SERIAL_ECHOLNPGM("Based on ADVd12, Copyright (C) 2026 Sebastien Andrivet");
   SERIAL_ECHO_START();
-  SERIAL_ECHOLNPGM("ADVd12 version: ", version, ", build: ", build, ", flavor: ", F(ADVD12_NAME));
+  SERIAL_ECHOLNPGM("ADVd12 version: ", advd12::Core::version(), ", build: ", advd12::Core::build(), ", flavor: ", F(ADVD12_NAME));
 }
 
 }

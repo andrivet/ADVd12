@@ -146,7 +146,7 @@ static lv_style_t *label_style(LABEL kind) {
     case LABEL::EXTRUDER: return &style_extruder;
     case LABEL::BED: return &style_bed;
     case LABEL::FAN: return &style_fan;
-    case LABEL::TIME: return &style_time;
+    case LABEL::GRAY: return &style_gray;
     default: return &style_regular;
   }
 }
@@ -241,11 +241,11 @@ void PanelBase::variables() {
 
   if(ExtUI::isPrinting()) {
     icon(IMG_ET, 363, 179);
-    et_var = text("-", 398, 179 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+    et_var = text("-", 398, 179 + 2, 64, ALIGN::RIGHT, LABEL::GRAY);
     icon(IMG_TC, 363, 211);
-    tc_var = text("-", 398, 211 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+    tc_var = text("-", 398, 211 + 2, 64, ALIGN::RIGHT, LABEL::GRAY);
     icon(IMG_PERCENT, 363, 243);
-    progress_var = text("-", 398, 243 + 2, 64, ALIGN::RIGHT, LABEL::TIME);
+    progress_var = text("-", 398, 243 + 2, 64, ALIGN::RIGHT, LABEL::GRAY);
   }
   else {
     text("X", 363, 179, 28, ALIGN::CENTER, LABEL::X);

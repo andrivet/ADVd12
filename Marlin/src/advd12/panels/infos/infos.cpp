@@ -24,10 +24,11 @@
  */
 
 #include <lvgl.h>
-#include "panels.h"
 #include "infos.h"
-#include "main.h"
-#include "../core/ids.h"
+#include "versions.h"
+#include "../panels.h"
+#include "../main.h"
+#include "../../core/ids.h"
 
 namespace {
 
@@ -74,7 +75,7 @@ void on_stats(lv_event_t *e) {
 }
 
 void on_versions(lv_event_t *e) {
-
+  PanelBase::switch_panel<VersionsPanel>();
 }
 
 void on_copyrights(lv_event_t *e) {

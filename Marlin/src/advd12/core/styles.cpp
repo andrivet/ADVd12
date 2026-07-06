@@ -84,7 +84,7 @@ void Display::init_lvgl_styles() {
   lv_style_set_text_color(&style_fan, blue);
   lv_style_set_text_font(&style_fan, value_font);
 
-  lv_style_init(&style_time);
-  lv_style_set_text_color(&style_time, gray);
-  lv_style_set_text_font(&style_time, value_font);
+  lv_style_init(&style_gray);
+  lv_style_set_text_color(&style_gray, gray);
+  lv_style_set_text_font(&style_gray, value_font);
 }

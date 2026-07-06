@@ -1,8 +1,8 @@
-# ADVd12++, an advanced firmware for Wanhao D12 printers
+# ADVd12, an advanced firmware for Wanhao D12 printers
 
 ## Introduction
 
-**ADVd12++** is a fork of the [Marlin Firmware](http://marlinfw.org/) for Wanhao D12 printers.
+**ADVd12** is a fork of the [Marlin Firmware](http://marlinfw.org/) for Wanhao D12 printers.
 
 ## Become a Sponsor of This Project
 

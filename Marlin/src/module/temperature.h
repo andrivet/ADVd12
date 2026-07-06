@@ -1126,7 +1126,7 @@ class Temperature {
         static raw_adc_t rawBedTemp()  { return temp_bed.getraw(); }
       #endif
       static celsius_float_t degBed()  { return temp_bed.celsius; }
-      static celsius_float_t degDefaultBed()  { return default_bed_temp; } // @advi3++
+      static celsius_float_t degDefaultBed()  { return default_bed_temp; } // @advd12
       static celsius_t wholeDegBed()   { return static_cast<celsius_t>(degBed() + 0.5f); }
       static celsius_t degTargetBed()  { return temp_bed.target; }
       static bool isHeatingBed()       { return temp_bed.target > temp_bed.celsius; }

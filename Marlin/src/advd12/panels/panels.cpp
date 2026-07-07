@@ -264,7 +264,14 @@ void update_variable(lv_obj_t *text, double value) {
   if(!text) return;
   char buffer[32];
   auto rounded = lround(value * 10);
-  snprintf(buffer, 32, "%ld.%ld", rounded / 10, rounded % 10);
+  auto negative = rounded < 0;
+  if(negative) rounded = -rounded;
+  auto whole = rounded / 10;
+  auto fract = rounded % 10;
+  if(negative)
+    snprintf(buffer, 32, "-%ld.%ld", whole, fract);
+  else
+    snprintf(buffer, 32, "%ld.%ld", whole, fract);
   lv_label_set_text(text, buffer);
 }
 

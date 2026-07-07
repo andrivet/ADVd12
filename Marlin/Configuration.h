@@ -60,7 +60,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //#define D12_FULL_TMC2209
 
 // BLTouch
-#define BLTOUCH // eventually defined in the environment
+//#define BLTOUCH // eventually defined in the environment
 
 // Kind of display
 #define TFT_ADV_UI
@@ -112,36 +112,29 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-//#define STRING_CONFIG_H_AUTHOR "(none, default config)" // Original author or contributor.
+#define STRING_CONFIG_H_AUTHOR "(Sebastien Andrivet)" // Who made the changes. @advi3++
 //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
-
-#if defined(D12_SIMULATOR)
-#define STRING_CONFIG_H_AUTHOR "(Andrivet, 130 1.2 Simulator)"
-#elif defined(D12_230_v1_2)
-#define STRING_CONFIG_H_AUTHOR "(Andrivet, 230 1.2)"
-#elif defined(D12_230_v1_3)
-#define STRING_CONFIG_H_AUTHOR "(Andrivet, 230 1.3)"
-#elif defined(D12_500_Pro)
-#define STRING_CONFIG_H_AUTHOR "(Andrivet, 500 Pro Max)"
-#elif defined(D12_300_Pro)
-#define STRING_CONFIG_H_AUTHOR "(Andrivet, 300 Pro Max)"
-#else
-#error Please define one of D12_230_v1_2, D12_230_v1_3, D12_500_Pro, D12_300_Pro, D12_SIMULATOR
-#endif
 
 // @section machine
 
 // Choose the name from boards.h that matches your setup
 #if defined(D12_SIMULATOR)
   #define MOTHERBOARD BOARD_SIMULATED
+  #define PRINTER_MODEL "D12-230 Simulator"
 #elif defined(D12_230_v1_3)
   #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V1_3_F4
+  #define PRINTER_MODEL "D12-230 Robin Nano V1.3"
 #elif defined(D12_230_v1_2)
   #define MOTHERBOARD BOARD_MKS_ROBIN_NANO
-#elif defined(D12_300_Pro) || defined(D12_500_Pro)
+  #define PRINTER_MODEL "D12-230 Robin Nano V1.2"
+#elif defined(D12_300_Pro)
   #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V3
+  #define PRINTER_MODEL "D12-300 Pro Robin Nano V3"
+#elif defined(D12_500_Pro)
+  #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V3
+  #define PRINTER_MODEL "D12-500 Pro Robin Nano V3"
 #else
-  #error Please define a MOTHERBOARD
+  #error Please define one of D12_230_v1_2, D12_230_v1_3, D12_500_Pro, D12_300_Pro, D12_SIMULATOR
 #endif
 
 // @section serial
@@ -824,7 +817,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
   #else
     #define DEFAULT_KP  22.77
     #define DEFAULT_KI   1.36
-    #define DEFAULT_KD 95.62
+    #define DEFAULT_KD  95.62
   #endif
 #else
   #define BANG_MAX 255    // Limit hotend current while in bang-bang mode; 255=full current
@@ -1934,7 +1927,11 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //#define PROBE_OFFSET_ZMAX  20   // (mm)
 
 // Enable the M48 repeatability test to test probe accuracy
-//#define Z_MIN_PROBE_REPEATABILITY_TEST
+// @advd12: Enable M48 when BLTouch is enabled
+#define Z_MIN_PROBE_REPEATABILITY_TEST
+#if ENABLED(BLTOUCH)
+#define Z_MIN_PROBE_REPEATABILITY_TEST
+#endif
 
 // Before deploy/stow pause for user confirmation
 //#define PAUSE_BEFORE_DEPLOY_STOW
@@ -2043,7 +2040,8 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  */
 //#define Z_IDLE_HEIGHT Z_HOME_POS
 
-//#define Z_CLEARANCE_FOR_HOMING  4   // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
+// @advd12: Be sure the Z axis has 4mm (min) before homing
+#define Z_CLEARANCE_FOR_HOMING    4   // (mm) Minimal Z height before homing (G28) for Z clearance above the bed, clamps, ...
                                       // You'll need this much clearance above Z_MAX_POS to avoid grinding.
 
 #define Z_AFTER_HOMING           10   // (mm) Height to move to after homing (if Z was homed)
@@ -2190,7 +2188,8 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * RAMPS-based boards use SERVO3_PIN for the first runout sensor.
  * For other boards you may need to define FIL_RUNOUT_PIN, FIL_RUNOUT2_PIN, etc.
  */
-//#define FILAMENT_RUNOUT_SENSOR
+ // @advd12: Runout sensor.
+#define FILAMENT_RUNOUT_SENSOR
 #if ENABLED(FILAMENT_RUNOUT_SENSOR)
   #define FIL_RUNOUT_ENABLED_DEFAULT true // Enable the sensor on startup. Override with M412 followed by M500.
   #define NUM_RUNOUT_SENSORS   1          // Number of sensors, up to one per extruder. Define a FIL_RUNOUT#_PIN for each.
@@ -2359,7 +2358,8 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * these options to restore the prior leveling state or to always enable
  * leveling immediately after G28.
  */
-//#define RESTORE_LEVELING_AFTER_G28
+// @advd12: Restore leveling after G28
+#define RESTORE_LEVELING_AFTER_G28
 //#define ENABLE_LEVELING_AFTER_G28
 
 /**
@@ -2623,7 +2623,8 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *    +-------------->X     +-------------->X     +-------------->Y
  *     XY_SKEW_FACTOR        XZ_SKEW_FACTOR        YZ_SKEW_FACTOR
  */
-//#define SKEW_CORRECTION
+// @advd12 
+#define SKEW_CORRECTION
 
 #if ENABLED(SKEW_CORRECTION)
   // Input all length measurements here:
@@ -2634,7 +2635,8 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
   // Or, set the XY skew factor directly:
   //#define XY_SKEW_FACTOR 0.0
 
-  //#define SKEW_CORRECTION_FOR_Z
+  // @advd12 
+  #define SKEW_CORRECTION_FOR_Z
   #if ENABLED(SKEW_CORRECTION_FOR_Z)
     #define XZ_DIAG_AC 282.8427124746
     #define XZ_DIAG_BD 282.8427124746
@@ -2648,7 +2650,8 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
   #endif
 
   // Enable this option for M852 to set skew at runtime
-  //#define SKEW_CORRECTION_GCODE
+  // @advd12
+  #define SKEW_CORRECTION_GCODE
 #endif
 
 //=============================================================================
@@ -2883,7 +2886,8 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *
  * View the current statistics with M78.
  */
-//#define PRINTCOUNTER
+// @advd12
+#define PRINTCOUNTER
 #if ENABLED(PRINTCOUNTER)
   #define PRINTCOUNTER_SAVE_INTERVAL 60 // (minutes) EEPROM save interval during print. A value of 0 will save stats at end of print.
 #endif
@@ -3564,7 +3568,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Third-party or vendor-customized controller interfaces.
 // Sources should be installed in 'src/lcd/extui'.
 //
-#define EXTENSIBLE_UI
+#define EXTENSIBLE_UI // @advd12
 
 #if ENABLED(EXTENSIBLE_UI)
   //#define EXTUI_LOCAL_BEEPER // Enables use of local Beeper pin with external display

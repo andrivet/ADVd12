@@ -696,8 +696,8 @@ namespace LanguageNarrow_en {
   LSTR MSG_ERR_THERMAL_RUNAWAY            = _UxGT("THERMAL RUNAWAY");
   LSTR MSG_ERR_TEMP_MALFUNCTION           = _UxGT("TEMP MALFUNCTION");
   LSTR MSG_ERR_COOLING_FAILED             = _UxGT("Cooling Failed");
-  LSTR MSG_ERR_MAXTEMP                    = _UxGT("Err: MAXTEMP");
-  LSTR MSG_ERR_MINTEMP                    = _UxGT("Err: MINTEMP");
+  LSTR MSG_ERR_MAXTEMP                    = _UxGT("The temperature is too high");
+  LSTR MSG_ERR_MINTEMP                    = _UxGT("The temperature is too low");
   LSTR MSG_HALTED                         = _UxGT("PRINTER HALTED");
   LSTR MSG_PLEASE_WAIT                    = _UxGT("Please wait...");
   LSTR MSG_PLEASE_RESET                   = _UxGT("Please Reset");

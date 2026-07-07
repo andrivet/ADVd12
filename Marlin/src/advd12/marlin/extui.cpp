@@ -27,6 +27,7 @@
 #include "../../lcd/extui/ui_api.h"
 #include "../core/core.h"
 #include "../panels/wait.h"
+#include "../panels/kill.h"
 #include "../core/progress.h"
 #include "src/advd12/panels/leveling/automatic.h"
 
@@ -58,15 +59,15 @@ namespace ExtUI {
   }
 
   void onHeatingError(const heater_id_t header_id) {
-    //Core::killed(GET_TEXT_F(MSG_ERR_HEATING_FAILED), header_id);
+    // Nothing to do, the printer will call onPrinterKilled just after
   }
 
   void onMinTempError(const heater_id_t header_id) {
-    //Core::killed(GET_TEXT_F(MSG_ERR_MINTEMP), header_id);
+    // Nothing to do, the printer will call onPrinterKilled just after
   }
 
   void onMaxTempError(const heater_id_t header_id) {
-    //Core::killed(GET_TEXT_F(MSG_ERR_MAXTEMP), header_id);
+    // Nothing to do, the printer will call onPrinterKilled just after
   }
 
   void onPlayTone(const uint16_t frequency, const uint16_t duration) {
@@ -74,7 +75,7 @@ namespace ExtUI {
   }
 
   void onPrinterKilled(FSTR_P const error, FSTR_P const component) {
-    //Core::killed(error, component);
+    Kill::killed(FTOP(error), FTOP(component));
   }
 
   void onPrintTimerStarted() {

@@ -24,16 +24,12 @@
  */
 #pragma once
 
-#include "../marlin/types.h"
-
 namespace advd12::Core {
 
 void init();
 void startup();
 void idle();
 void task_handler();
-void killed(const FlashChar* error, const FlashChar* component);
-void killed(const FlashChar* error, heater_id_t header_id);
 bool is_busy();
 float ensure_z_enough_room();
 void calibrate();

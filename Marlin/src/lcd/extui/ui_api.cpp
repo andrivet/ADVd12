@@ -1405,7 +1405,7 @@ namespace ExtUI {
   #endif
 
   #if HAS_ZV_SHAPING
-    void setShapingDampingRatio(const AxisEnum axis, const_float_t zeta) {
+    void setShapingDampingRatio(const AxisEnum axis, const float zeta) {
     stepper.set_shaping_damping_ratio(axis, zeta);
   }
 
@@ -1413,7 +1413,7 @@ namespace ExtUI {
     return stepper.get_shaping_damping_ratio(axis);
   }
 
-  void setShapingFrequency(const AxisEnum axis, const_float_t freq) {
+  void setShapingFrequency(const AxisEnum axis, const float freq) {
     stepper.set_shaping_frequency(axis, freq);
   }
 

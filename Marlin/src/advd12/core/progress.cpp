@@ -97,15 +97,15 @@ void displaying(lv_obj_t *et_label, lv_obj_t *tc_label, lv_obj_t *progress_label
 
   // Update only when the ET (in minutes) change
   if(tc_label && (force || et_min != previous_et_)) {
-    auto hours   = tc_sec / 3600;
-    auto minutes = (tc_sec % 3600) / 60;
+    unsigned hours   = tc_sec / 3600;
+    unsigned minutes = (tc_sec % 3600) / 60;
     sprintf(text, "%02u:%02u", hours, minutes);
     lv_label_set_text(tc_label, text);
   }
 
   if(et_label && (force || et_min != previous_et_)) {
-    auto hours   = elapsed / 3600;
-    auto minutes = (elapsed % 3600) / 60;
+    unsigned hours   = elapsed / 3600;
+    unsigned minutes = (elapsed % 3600) / 60;
     sprintf(text, "%02u:%02u", hours, minutes);
     lv_label_set_text(et_label, text);
   }

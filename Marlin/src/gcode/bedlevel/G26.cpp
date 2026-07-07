@@ -197,7 +197,7 @@ void move_to(const float rx, const float ry, const float z, const float e_delta)
 
 void move_to(const xyz_pos_t &where, const float de) { move_to(where.x, where.y, where.z, de); }
 
-typedef struct {
+struct g26_helper_t {
   float extrusion_multiplier  = EXTRUSION_MULTIPLIER,
         retraction_multiplier = G26_RETRACT_MULTIPLIER,
         layer_height          = MESH_TEST_LAYER_HEIGHT,
@@ -468,7 +468,7 @@ typedef struct {
     return out_point;
   }
 
-} g26_helper_t;
+};
 
 /**
  * G26: Mesh Validation Pattern generation.

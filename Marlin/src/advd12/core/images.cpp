@@ -27,12 +27,9 @@
 #include "images.h"
 
 #include <cassert>
-#include <cstdint>
-
 #include "assets.h"
-#include "src/feature/powerloss.h"
-#include "src/libs/W25Qxx.h"
-#include "src/sd/cardreader.h"
+#include "../../libs/W25Qxx.h"
+#include "../../sd/cardreader.h"
 
 struct __attribute__((__packed__)) Header {
   uint32_t magic;

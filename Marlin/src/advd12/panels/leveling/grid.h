@@ -25,7 +25,9 @@
 
 #pragma once
 
+#ifdef BLTOUCH
 struct GridPanel {
   static bool can_switch();
   static void create();
 };
+#endif

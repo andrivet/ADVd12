@@ -22,7 +22,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  *
  */
-
+#ifdef BLTOUCH
 #include <lvgl.h>
 #include "../../../inc/MarlinConfig.h"
 #include "../../../lcd/extui/ui_api.h"
@@ -91,3 +91,4 @@ void on_back(lv_event_t *e) {
 }
 
 }
+#endif

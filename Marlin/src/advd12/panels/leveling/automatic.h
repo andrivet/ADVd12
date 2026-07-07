@@ -25,6 +25,7 @@
 
 #pragma once
 
+#ifdef BLTOUCH
 struct AutomaticPanel {
   static bool can_switch();
   static void create();
@@ -32,3 +33,4 @@ struct AutomaticPanel {
   static void on_leveling_progress(uint8_t progress);
   static void on_leveling_done(bool success);
 };
+#endif

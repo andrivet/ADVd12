@@ -160,15 +160,21 @@ namespace ExtUI {
   }
 
   void onLevelingStart() {
+#ifdef BLTOUCH
     AutomaticPanel::on_leveling_start();
+#endif
   }
 
   void onLevelingProgress(const uint8_t index, const int8_t xpos, const int8_t ypos) {
+#ifdef BLTOUCH
     AutomaticPanel::on_leveling_progress(index);
+#endif
   }
 
   void onLevelingDone(bool success) {
+#ifdef BLTOUCH
     AutomaticPanel::on_leveling_done(success);
+#endif
   }
 
   void onMeshUpdate(const int8_t xpos, const int8_t ypos, const float zval) {

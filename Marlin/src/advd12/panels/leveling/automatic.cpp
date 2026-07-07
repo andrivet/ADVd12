@@ -23,6 +23,8 @@
  *
  */
 
+#ifdef BLTOUCH
+
 #include <lvgl.h>
 #include "../../../inc/MarlinConfig.h"
 #include "../../../lcd/extui/ui_api.h"
@@ -113,5 +115,6 @@ void on_back(lv_event_t *e) {
   Wait::not_busy([](CALLBACK_SOURCE) { PanelBase::switch_panel<LevelingPanel>(); } );
 }
 
-
 }
+
+#endif

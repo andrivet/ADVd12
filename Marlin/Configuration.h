@@ -46,6 +46,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Marlin's development mode
 //#define MARLIN_DEV_MODE
 //#define PINS_DEBUGGING
+#define ADVD12_LOG 5
 
 // Model of printer
 // Typically defined in the environment

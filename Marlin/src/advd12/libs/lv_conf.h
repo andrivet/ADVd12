@@ -52,7 +52,7 @@
 #if defined(__PLAT_NATIVE_SIM__)
     #define LV_MEM_SIZE (42U * 1024U)          /*[bytes]*/
 #else
-    #define LV_MEM_SIZE (24U * 1024U)          /*[bytes]*/
+    #define LV_MEM_SIZE (20U * 1024U)          /*[bytes]*/
 #endif
 
     /*Set an address for the memory pool instead of allocating it as a normal array. Can be in external SRAM too.*/
@@ -140,7 +140,7 @@
  * "Transformed layers" (where transform_angle/zoom properties are used) use larger buffers
  * and can't be drawn in chunks. So these settings affects only widgets with opacity.
  */
-#define LV_LAYER_SIMPLE_BUF_SIZE          (24 * 1024)
+#define LV_LAYER_SIMPLE_BUF_SIZE          (12 * 1024)
 #define LV_LAYER_SIMPLE_FALLBACK_BUF_SIZE (3 * 1024)
 
 /*Default image cache size. Image caching keeps the images opened.

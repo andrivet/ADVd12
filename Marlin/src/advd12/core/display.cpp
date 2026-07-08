@@ -48,7 +48,7 @@ namespace {
   lv_disp_drv_t disp_drv;
   lv_indev_drv_t indev_drv;
   lv_disp_draw_buf_t draw_buffer;
-  lv_color_t draw_data[TFT_WIDTH * 16];
+  lv_color_t draw_data[TFT_WIDTH * 8];
 
 }
 
@@ -69,7 +69,6 @@ void Display::init() {
   // TODO: init Wi-Fi
   // TODO: init servo and probe
 
-  // TODO: draw main screen
   if(TouchCalibration::need_calibration())
     CalibrationPanel::create();
   else

@@ -78,6 +78,11 @@ void Tft::draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t
   TFT_IO::writeSequence(color_p, width * height);
 }
 
+void Tft::draw_dma(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t * color_p, void(*cb)()) {
+  set_window(x, y, width, height);
+  TFT_IO::writeSequenceIT(color_p, width * height, cb);
+}
+
 void Tft::set_point(uint16_t x, uint16_t y, uint16_t point) {
   if(x >= TFT_WIDTH || y >= TFT_HEIGHT) return;
   set_window(x, y, 1, 1);

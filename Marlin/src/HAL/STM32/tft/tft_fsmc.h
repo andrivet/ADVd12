@@ -68,6 +68,7 @@ class TFT_FSMC {
     static void transmit(tft_data_t data) { LCD->RAM = data; __DSB(); }
     static void transmit(uint32_t memoryIncrease, uint16_t *data, uint16_t count);
     static void transmitDMA(uint32_t memoryIncrease, uint16_t *data, uint16_t count);
+    static void transmitIT(uint32_t memoryIncrease, uint16_t *data, uint16_t count, void(*cb)());
 
   public:
     static void init();
@@ -91,6 +92,9 @@ class TFT_FSMC {
         count = count > DMA_MAX_WORDS ? count - DMA_MAX_WORDS : 0;
       }
     }
+
+    static void DMA_IRQHandler() { HAL_DMA_IRQHandler(&TFT_FSMC::DMAtx); }
+    static void writeSequenceIT(uint16_t *data, uint16_t count, void(*cb)()) { transmitIT(DMA_PINC_ENABLE, data, count, cb); }
 };
 
 #ifdef STM32F1xx

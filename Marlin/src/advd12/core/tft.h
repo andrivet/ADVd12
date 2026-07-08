@@ -31,6 +31,7 @@ struct Tft {
   static void clear(uint16_t color);
   static void draw_logo();
   static void draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t *color_p);
+  static void draw_dma(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t *color_p, void(*cb)());
 
 private:
   static void set_point(uint16_t x, uint16_t y, uint16_t point);

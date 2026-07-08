@@ -31,7 +31,6 @@ namespace Display {
 void init();
 void init_lvgl_styles();
 void task_handler();
-void draw_error_message(FSTR_P msg);
 void calibrate();
 
 }

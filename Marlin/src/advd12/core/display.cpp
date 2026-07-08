@@ -76,12 +76,7 @@ void Display::init() {
 }
 
 void Display::task_handler() {
-  // TODO: DMA
   lv_timer_handler();
-}
-
-void Display::draw_error_message(FSTR_P msg) {
-  // TODO
 }
 
 void Display::calibrate() {
@@ -123,12 +118,22 @@ namespace {
     // TODO: filament loading time
   }
 
+  void flush_ready_callback() {
+    lv_disp_flush_ready(&disp_drv);
+  }
+
   void flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
     auto width = area->x2 - area->x1 + 1;
     auto height = area->y2 - area->y1 + 1;
 
-    Tft::draw(area->x1, area->y1, width, height, reinterpret_cast<uint16_t*>(color_p));
-    lv_disp_flush_ready(disp);
+    Tft::draw_dma(
+      area->x1,
+      area->y1,
+      width,
+      height,
+      reinterpret_cast<uint16_t*>(color_p),
+      flush_ready_callback
+    );
   }
 
   bool get_touch(int16_t * const x, int16_t * const y) {

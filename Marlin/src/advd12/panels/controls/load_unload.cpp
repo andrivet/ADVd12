@@ -41,17 +41,20 @@ namespace {
 float previous_z_ = 0;
 celsius_t temp_ = 200;
 bool load_ = true;
+unsigned extrude_length_ = 0;
 lv_obj_t *temp_text_ = nullptr;
 
-Panel<5> load_unload_panel;
+Panel<7> panel;
 
 void on_back(lv_event_t *e);
 void on_minus(lv_event_t *e);
 void on_plus(lv_event_t *e);
-void on_unload(lv_event_t *e);
-void on_load(lv_event_t *e);
+void on_partial_unload(lv_event_t *e);
+void on_full_unload(lv_event_t *e);
+void on_partial_load(lv_event_t *e);
+void on_full_load(lv_event_t *e);
 void show_temp();
-void prepare(bool load);
+void prepare(unsigned length, bool load);
 void extrude();
 }
 
@@ -60,24 +63,31 @@ bool LoadUnloadPanel::can_switch() {
 }
 
 void LoadUnloadPanel::create() {
-  if(!load_unload_panel.create()) return;
-  load_unload_panel.layout_menu("Load & Unload");
+  if(!panel.create()) return;
+  panel.layout_menu("Load & Unload");
 
-  auto back = load_unload_panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_BACK, 7, 2);
 
-  auto minus = load_unload_panel.small_control(IMG_MINUS, 93, 93);
-  auto plus = load_unload_panel.small_control(IMG_PLUS, 213, 93);
-  auto unload = load_unload_panel.control(IMG_UNLOAD, 89, 181, "Unload");
-  auto load = load_unload_panel.control(IMG_LOAD2, 209, 181, "Load");
+  auto minus = panel.small_control(IMG_MINUS, 93, 85);
+  auto plus = panel.small_control(IMG_PLUS, 213, 85);
+  auto partial_unload = panel.control(IMG_UNLOAD, 24, 189, "Partial");
+  auto full_unload = panel.control(IMG_LOAD2, 108, 189, "Full");
+  auto partial_load = panel.control(IMG_UNLOAD, 192, 189, "Partial");
+  auto full_load = panel.control(IMG_LOAD2, 276, 189, "Full");
 
-  load_unload_panel.reset_bindings();
-  load_unload_panel.bind(back, &on_back);
-  load_unload_panel.bind(minus, &on_minus, EventType::PRESSED | EventType::REPEAT);
-  load_unload_panel.bind(plus, &on_plus, EventType::PRESSED | EventType::REPEAT);
-  load_unload_panel.bind(unload, &on_unload);
-  load_unload_panel.bind(load, &on_load);
+  temp_text_ = panel.text("", 144, 93, LABEL::REGULAR);
+  panel.text("Unload", 8, 152, 164, ALIGN::CENTER, LABEL::REGULAR);
+  panel.text("Load", 176, 152, 164, ALIGN::CENTER, LABEL::REGULAR);
 
-  temp_text_ = load_unload_panel.text("", 144, 101, LABEL::REGULAR);
+  panel.reset_bindings();
+  panel.bind(back, &on_back);
+  panel.bind(minus, &on_minus, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(plus, &on_plus, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(partial_unload, &on_partial_unload);
+  panel.bind(full_unload, &on_full_unload);
+  panel.bind(partial_load, &on_partial_load);
+  panel.bind(full_load, &on_full_load);
+
   show_temp();
 
   Status::reset();
@@ -112,17 +122,26 @@ void on_plus(lv_event_t *e) {
   show_temp();
 }
 
-void on_unload(lv_event_t *e) {
-  prepare(false);
+void on_partial_unload(lv_event_t *e) {
+  prepare(65, false);
 }
 
-void on_load(lv_event_t *e) {
-  prepare(true);
+void on_full_unload(lv_event_t *e) {
+  prepare(650, false);
+}
+
+void on_partial_load(lv_event_t *e) {
+  prepare(65, true);
+}
+
+void on_full_load(lv_event_t *e) {
+  prepare(650, true);
 }
 
 //! Prepare Load or Unload step #1: set the target temperature, setup the next step and display a wait message
-void prepare(bool load) {
+void prepare(unsigned length, bool load) {
   load_ = load;
+  extrude_length_ = length;
 
   ExtUI::setTargetTemp_celsius(temp_, ExtUI::H0, true);
   if(ExtUI::getDefaultTemp_celsius(ExtUI::H0) != temp_) {
@@ -140,7 +159,7 @@ void prepare(bool load) {
   });
 
   background_task.set([] () -> CALLBACK_RESULT {
-    if(ExtUI::getActualTemp_celsius(ExtUI::E0) < ExtUI::getTargetTemp_celsius(ExtUI::E0)) return CALLBACK_RESULT::CONTINUE;
+    if(ExtUI::getActualTemp_celsius(ExtUI::E0) < static_cast<float>(ExtUI::getTargetTemp_celsius(ExtUI::E0))) return CALLBACK_RESULT::CONTINUE;
     extrude();
     return CALLBACK_RESULT::STOP;
   });
@@ -148,7 +167,7 @@ void prepare(bool load) {
 
 void extrude() {
   ExtUI::setAxisPosition_mm(
-    ExtUI::getAxisPosition_mm(ExtUI::E0) + (load_ ? FILAMENT_CHANGE_SLOW_LOAD_LENGTH : -FILAMENT_CHANGE_SLOW_LOAD_LENGTH),
+    ExtUI::getAxisPosition_mm(ExtUI::E0) + static_cast<float>(load_ ? extrude_length_ : -extrude_length_),
     ExtUI::E0,
     load_ ? FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE : FILAMENT_CHANGE_UNLOAD_FEEDRATE
   );

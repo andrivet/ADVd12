@@ -89,7 +89,7 @@ void PreheatPanel::create() {
   auto bed_plus = preheat_panel.small_control(IMG_PLUS, 173, 175);
   auto fan_minus = preheat_panel.small_control(IMG_MINUS, 53, 227);
   auto fan_plus = preheat_panel.small_control(IMG_PLUS, 173, 227);
-  auto cooldown = preheat_panel.control(IMG_COOLDOWN, 262, 123, "Cooldown");
+  auto cooldown = preheat_panel.control(IMG_COOLDOWN, 262, 123, "Cool");
 
   preheat_panel.reset_bindings();
   preheat_panel.bind(back, &on_back);

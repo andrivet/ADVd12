@@ -26,29 +26,36 @@
 #include "../../inc/MarlinConfig.h"
 #include <lvgl.h>
 #include "display.h"
-#include "tft.h"
+#include "assets.h"
 #include "images.h"
 #include "../panels/main.h"
 #include "../panels/calibration.h"
-
 #include "../../HAL/HAL.h"
 #include "../../lcd/marlinui.h"
+#include "../../lcd/tft_io/tft_io.h"
 #include "../../libs/W25Qxx.h"
 
 #include HAL_PATH(../../.., tft/xpt2046.h)
 
 namespace {
+  constexpr uint8_t NB_LINES = 8; // Takes 960 bytes per line
 
   void init_lvgl();
   void init_lvgl_drivers();
   void flush(lv_disp_drv_t * disp, const lv_area_t * area, lv_color_t * color_p);
   void input_read(lv_indev_drv_t * indev, lv_indev_data_t * data);
   void systick();
+  void clear(uint16_t color);
+  void draw_logo();
+  void draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t *color_p);
+  void draw_dma(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t *color_p, void(*cb)());
+  void set_point(uint16_t x, uint16_t y, uint16_t point);
+  void set_window(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 
   lv_disp_drv_t disp_drv;
   lv_indev_drv_t indev_drv;
   lv_disp_draw_buf_t draw_buffer;
-  lv_color_t draw_data[TFT_WIDTH * 8];
+  lv_color_t draw_data[TFT_WIDTH * NB_LINES];
 
 }
 
@@ -56,7 +63,10 @@ void Display::init() {
   W25QXX.init(SPI_QUARTER_SPEED);
 
   MarlinHAL::watchdog_refresh();
-  Tft::init();
+  TFT_IO::init();
+  TFT_IO::initTFT();
+  delay(100);
+  draw_logo();
   MarlinHAL::watchdog_refresh();
 
   XPT2046::init();
@@ -87,7 +97,7 @@ namespace {
 
   void init_lvgl() {
     lv_init();
-    lv_disp_draw_buf_init(&draw_buffer, draw_data, nullptr, sizeof(draw_data) / sizeof(uint16_t));
+    lv_disp_draw_buf_init(&draw_buffer, draw_data, nullptr, TFT_WIDTH * NB_LINES);
 
     init_lvgl_drivers();
     Images::init();
@@ -126,7 +136,7 @@ namespace {
     auto width = area->x2 - area->x1 + 1;
     auto height = area->y2 - area->y1 + 1;
 
-    Tft::draw_dma(
+    draw_dma(
       area->x1,
       area->y1,
       width,
@@ -157,5 +167,61 @@ namespace {
     data->point.x = last.x;
     data->point.y = last.y;
   }
+
+  void clear(uint16_t color) {
+    set_window(0, 0, TFT_WIDTH, TFT_HEIGHT);
+    TFT_IO::writeMultiple(color, TFT_WIDTH * TFT_HEIGHT);
+  }
+
+  void draw_logo() {
+#if HAS_LOGO_IN_FLASH
+    W25QXX.init(SPI_QUARTER_SPEED);
+
+    // Be sure there is a logo, do not display garbage (from a previous firmware)
+    uint32_t signature = 0;
+    W25QXXFlash::SPI_FLASH_BufferRead(reinterpret_cast<uint8_t*>(&signature), ADDR_SIGNATURE, sizeof(signature));
+    if(signature != SIGNATURE) {
+      clear(0);
+      return;
+    }
+
+    set_window(0, 0, TFT_WIDTH, TFT_HEIGHT);
+
+    uint32_t offset = 0;
+    for(uint16_t y = 0; y < TFT_HEIGHT; y += NB_LINES) {
+      auto lines = std::min(static_cast<int>(NB_LINES), TFT_HEIGHT - y);
+      auto pixels = TFT_WIDTH * lines;
+      auto bytes = pixels * sizeof(lv_color_t);
+      W25QXXFlash::SPI_FLASH_BufferRead(reinterpret_cast<uint8_t*>(draw_data), ADDR_LOGO + offset, bytes);
+      TFT_IO::writeSequence(reinterpret_cast<uint16_t*>(draw_data), pixels);
+      offset += bytes;
+    }
+
+    delay(2000);
+#else
+    clear(0);
+#endif
+  }
+
+  [[maybe_unused]] void draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t * color_p) {
+    set_window(x, y, width, height);
+    TFT_IO::writeSequence(color_p, width * height);
+  }
+
+  void draw_dma(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t * color_p, void(*cb)()) {
+    set_window(x, y, width, height);
+    TFT_IO::writeSequenceIT(color_p, width * height, cb);
+  }
+
+  [[maybe_unused]] void set_point(uint16_t x, uint16_t y, uint16_t point) {
+    if(x >= TFT_WIDTH || y >= TFT_HEIGHT) return;
+    set_window(x, y, 1, 1);
+    TFT_IO::writeMultiple(point, 1);
+  }
+
+  void set_window(uint16_t x, uint16_t y, uint16_t width, uint16_t height) {
+    TFT_IO::set_window(x, y, x + width - 1, y + height - 1);
+  }
+
 
 }

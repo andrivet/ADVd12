@@ -50,32 +50,32 @@ void VersionsPanel::create() {
 
   auto back = panel.control(IMG_LEFT, 7, 2);
 
-  panel.text("ADVd12 version:", 7, 76, LABEL::GRAY);
-  panel.text("ADVd12 build:", 7, 106, LABEL::GRAY);
-  panel.text("Marlin version:", 7, 136, LABEL::GRAY);
-  panel.text("Printer model:", 7, 166, LABEL::GRAY);
-  panel.text("Mainboard:", 7, 196, LABEL::GRAY);
-  panel.text("BLTouch:", 7, 226, LABEL::GRAY);
+  panel.label("ADVd12 version:", 40, 75, LABEL::GRAY);
+  panel.label("ADVd12 build:", 40, 105, LABEL::GRAY);
+  panel.label("Marlin version:", 40, 135, LABEL::GRAY);
+  panel.label("Printer model:", 40, 165, LABEL::GRAY);
+  panel.label("Mainboard:", 40, 195, LABEL::GRAY);
+  panel.label("BLTouch:", 40, 225, LABEL::GRAY);
 
-  panel.text(Core::version(), 174, 76, LABEL::REGULAR);
-  panel.text(Core::build(), 174, 106, LABEL::REGULAR);
-  panel.text(SHORT_BUILD_VERSION, 174, 136, LABEL::REGULAR);
-  panel.text("D12-230", 174, 166, LABEL::REGULAR);
+  panel.label(Core::version(), 180, 75, LABEL::REGULAR);
+  panel.label(Core::build(), 180, 105, LABEL::REGULAR);
+  panel.label(SHORT_BUILD_VERSION, 180, 135, LABEL::REGULAR);
+  panel.label("D12-230", 180, 165, LABEL::REGULAR);
 
 #if defined(D12_230_v1_2)
-  panel.text("Robin Nano V1.2", 174, 196, LABEL::REGULAR);
+  panel.label("Robin Nano V1.2", 180, 195, LABEL::REGULAR);
 #elif defined(D12_230_v1_3)
-  panel.text("Robin Nano V1.3", 174, 196, LABEL::REGULAR);
+  panel.label("Robin Nano V1.3", 180, 195, LABEL::REGULAR);
 #elif defined(D12_SIMULATOR)
-  panel.text("Simulator", 174, 196, LABEL::REGULAR);
+  panel.label("Simulator", 180, 195, LABEL::REGULAR);
 #else
-  panel.text("Unknown", 174, 196, LABEL::REGULAR);
+  panel.label("Unknown", 180, 195, LABEL::REGULAR);
 #endif
 
 #if defined(BLTOUCH)
-  panel.text("Yes", 174, 226, LABEL::REGULAR);
+  panel.label("Yes", 180, 225, LABEL::REGULAR);
 #else
-  panel.text("No", 174, 226, LABEL::REGULAR);
+  panel.label("No", 180, 225, LABEL::REGULAR);
 #endif
 
   panel.reset_bindings();

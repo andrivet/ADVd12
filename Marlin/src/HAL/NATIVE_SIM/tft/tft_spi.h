@@ -64,4 +64,7 @@ public:
 
   static void writeSequence(uint16_t *data, uint16_t count);
   static void writeMultiple(uint16_t color, uint32_t count);
+
+  // @advd12
+  static void writeSequenceIT(uint16_t *data, uint16_t count, void(*cb)()) { writeSequence(data, count); cb(); }
 };

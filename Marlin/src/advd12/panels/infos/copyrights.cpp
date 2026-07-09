@@ -50,12 +50,12 @@ void CopyrightsPanel::create() {
 
   auto back = panel.control(IMG_LEFT, 7, 2);
 
-  panel.text("ADVd12", 9, 64, 331, ALIGN::CENTER, LABEL::REGULAR);
-  panel.text("Copyright (c) 2026\nSebastien Andrivet", 9, 91, 331, ALIGN::CENTER, LABEL::GRAY);
+  panel.label("ADVd12", 0, 64, 343, ALIGN::CENTER, LABEL::REGULAR);
+  panel.label("Copyright (c) 2026\nSebastien Andrivet", 0, 91, 343, ALIGN::CENTER, LABEL::GRAY);
 
-  panel.text("Marlin", 9, 147, 331, ALIGN::CENTER, LABEL::REGULAR);
-  panel.text("Copyright (c) 2026\nMarlinFirmware", 9, 174, 331, ALIGN::CENTER, LABEL::GRAY);
-  panel.text("Copyright (c) 2011 Camiel\nGubbels, Eric van der Zalm", 9, 223, 331, ALIGN::CENTER, LABEL::GRAY);
+  panel.label("Marlin", 0, 147, 343, ALIGN::CENTER, LABEL::REGULAR);
+  panel.label("Copyright (c) 2026\nMarlinFirmware", 0, 174, 343, ALIGN::CENTER, LABEL::GRAY);
+  panel.label("Copyright (c) 2011 Camiel\nGubbels, Eric van der Zalm", 0, 223, 343, ALIGN::CENTER, LABEL::GRAY);
 
   panel.reset_bindings();
   panel.bind(back, &on_back);

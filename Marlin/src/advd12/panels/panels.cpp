@@ -219,6 +219,7 @@ void PanelBase::layout_menu(const char *title) {
 
   auto label = lv_label_create(scr_);
   lv_label_set_text(label, title);
+  lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
   lv_obj_align_to(label, rect, LV_ALIGN_TOP_MID, 0, -36);
 
   variables();

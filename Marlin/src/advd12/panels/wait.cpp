@@ -196,6 +196,7 @@ void wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURC
 
   auto label = lv_label_create(msgbox);
   lv_label_set_text(label, title);
+  lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
   lv_obj_align_to(label, line, LV_ALIGN_BOTTOM_MID, 0, -18);
 
   auto text = lv_label_create(msgbox);

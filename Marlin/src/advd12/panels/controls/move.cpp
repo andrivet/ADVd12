@@ -28,13 +28,13 @@
 #include "../../../lcd/extui/ui_api.h"
 #include "../../libs/ADVstd/bitmasks.h"
 #include "../../core/ids.h"
-#include "../../core/styles.h"
 #include "../../core/core.h"
 #include "../../core/status.h"
+#include "../../core/logging.h"
+#include "../wait.h"
 #include "../panels.h"
 #include "move.h"
 #include "controls.h"
-#include "src/advd12/panels/wait.h"
 
 namespace {
 
@@ -59,7 +59,7 @@ constexpr feedRate_t FEEDRATE_X = 20;
 constexpr feedRate_t FEEDRATE_Y = 20;
 constexpr feedRate_t FEEDRATE_Z = 10;
 constexpr feedRate_t FEEDRATE_E = 2;
-constexpr unsigned TASK_DELAY = 250; // Has to be more than DEFAULT_TASK_DELAY
+constexpr unsigned TASK_DELAY = 500; // Has to be more than DEFAULT_TASK_DELAY and long_press_time
 
 lv_obj_t *home(lv_coord_t x, lv_coord_t y, const char *symbol, const char *text);
 void move(Direction direction);
@@ -117,15 +117,15 @@ void MovePanel::create() {
 
   panel.reset_bindings();
   panel.bind(back, &on_back);
-  panel.bind(disable, &on_disable);
-  panel.bind(x_minus, &on_x_minus);
-  panel.bind(x_plus, &on_x_plus);
-  panel.bind(y_minus, &on_y_minus);
-  panel.bind(y_plus, &on_y_plus);
-  panel.bind(z_minus, &on_z_minus);
-  panel.bind(z_plus, &on_z_plus);
-  panel.bind(e_minus, &on_e_minus);
-  panel.bind(e_plus, &on_e_plus);
+  panel.bind(disable, &on_disable, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(x_minus, &on_x_minus, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(x_plus, &on_x_plus, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(y_minus, &on_y_minus, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(y_plus, &on_y_plus, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(z_minus, &on_z_minus, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(z_plus, &on_z_plus, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(e_minus, &on_e_minus, EventType::PRESSED | EventType::REPEAT);
+  panel.bind(e_plus, &on_e_plus, EventType::PRESSED | EventType::REPEAT);
   panel.bind(home_x, &on_home_x);
   panel.bind(home_y, &on_home_y);
   panel.bind(home_z, &on_home_z);

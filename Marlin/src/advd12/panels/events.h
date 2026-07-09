@@ -49,8 +49,10 @@ struct EventBinder {
       lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_PRESSED, binding);
     if(type & EventType::LONG)
       lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_LONG_PRESSED, binding);
-    if(type & EventType::REPEAT)
+    if(type & EventType::REPEAT) {
+      lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_LONG_PRESSED, binding);
       lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_LONG_PRESSED_REPEAT, binding);
+    }
     if(type & EventType::CHANGED)
       lv_obj_add_event_cb(obj, &EventBinder::handler, LV_EVENT_VALUE_CHANGED, binding);
   }

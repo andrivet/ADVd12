@@ -136,8 +136,14 @@ void TFT_FSMC::init() {
   DMAtx.Init.PeriphInc = DMA_PINC_DISABLE;
   HAL_DMA_Init(&DMAtx);
 
+  // @advd12
+#ifdef STM32F1xx
   HAL_NVIC_SetPriority(DMA2_Channel1_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA2_Channel1_IRQn);
+#elif defined(STM32F4xx)
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+#endif
 }
 
 uint32_t TFT_FSMC::getID() {
@@ -208,9 +214,15 @@ void TFT_FSMC::transmit(uint32_t memoryIncrease, uint16_t *data, uint16_t count)
 
 static void(*dma_callback)() = nullptr;
 
+#ifdef STM32F1xx
 extern "C" void DMA2_Channel1_IRQHandler() {
   TFT_FSMC::DMA_IRQHandler();
 }
+#elif defined(STM32F4xx)
+extern "C" void DMA2_Stream0_IRQHandler() {
+  TFT_FSMC::DMA_IRQHandler();
+}
+#endif
 
 static void dma_complete_callback(DMA_HandleTypeDef *hdma) {
   TFT_FSMC::dataTransferEnd();

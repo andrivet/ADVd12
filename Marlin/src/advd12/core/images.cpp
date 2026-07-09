@@ -94,7 +94,7 @@ void Images::update_assets() {
   uint32_t addresses[MAX_NB_IMAGES]{};
   uint32_t address = ADDR_IMAGES;
 
-  lv_label_set_text(label1, "Loading assets...");
+  lv_label_set_text(label1, "Loading new assets...");
   for(dir_t entry; dir.readDir(&entry, CardReader::longFilename) > 0;) {
     if(CardReader::longFilename[0] == 0 && entry.name[0] != 0)
       dos_to_long(entry.name, CardReader::longFilename);
@@ -105,8 +105,6 @@ void Images::update_assets() {
     load_asset(dir, CardReader::longFilename, addresses, address);
   }
 
-  lv_label_set_text(label1, "Write addresses...");
-  lv_refr_now(nullptr);
   write_addresses(addresses);
 
   dir.rename(&root, "_assets");

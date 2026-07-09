@@ -139,7 +139,8 @@ lv_obj_t * home(lv_coord_t x, lv_coord_t y, const char *symbol, const char *text
 
   auto label = lv_label_create(button);
   lv_label_set_text(label, symbol);
-  lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
+  lv_obj_set_style_text_font(label, &lv_font_montserrat_16, LV_PART_MAIN);
   lv_obj_align(label, LV_ALIGN_CENTER, -1, 2);
 
   return button;

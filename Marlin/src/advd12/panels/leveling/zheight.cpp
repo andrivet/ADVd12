@@ -80,7 +80,6 @@ void ZHeightPanel::create() {
   auto label = lv_label_create(panel.scr());
   lv_label_set_text(label, text);
   lv_obj_set_pos(label, 22, 137);
-  lv_obj_add_style(label, &style_regular, LV_PART_MAIN);
   lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
   lv_obj_set_width(label, 293);
   lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);

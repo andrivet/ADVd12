@@ -57,7 +57,8 @@ void PanelBase::release() {
 bool PanelBase::create() {
   if(scr_ != nullptr) return false;
   scr_ = lv_obj_create(nullptr);
-  lv_obj_add_style(scr_, &style_panel, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_bg_color(scr_, lv_color_black(), LV_PART_MAIN);
+  lv_obj_set_style_bg_opa(scr_, LV_OPA_COVER, LV_PART_MAIN);
   lv_scr_load(scr_);
 
   if(current_panel_) current_panel_->release();
@@ -69,7 +70,8 @@ lv_obj_t* PanelBase::rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_
   auto rect = lv_obj_create(scr_);
   lv_obj_set_pos(rect, x, y);
   lv_obj_set_size(rect, width, height);
-  lv_obj_add_style(rect, &style_rectangle, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_bg_color(rect, orange, LV_PART_MAIN);
+  lv_obj_set_style_bg_opa(rect, LV_OPA_COVER, LV_PART_MAIN);
   return rect;
 }
 
@@ -83,15 +85,16 @@ lv_obj_t* PanelBase::button(const char *img, const char *text, lv_coord_t x, lv_
   lv_imgbtn_set_src(btn, LV_IMGBTN_STATE_PRESSED,  nullptr, img, nullptr);
   lv_imgbtn_set_src(btn, LV_IMGBTN_STATE_DISABLED, nullptr, img, nullptr);
 
-  lv_obj_add_style(btn, &style_button_up, LV_PART_MAIN | LV_STATE_DEFAULT);
-  lv_obj_add_style(btn, &style_button_down, LV_PART_MAIN | LV_STATE_PRESSED);
+  lv_obj_set_style_img_recolor(btn, lv_color_black(), LV_PART_MAIN | LV_STATE_PRESSED);
+  lv_obj_set_style_img_recolor_opa(btn, LV_OPA_40, LV_PART_MAIN | LV_STATE_PRESSED);
 
   lv_obj_clear_flag(btn, LV_OBJ_FLAG_SCROLLABLE);
 
   if(text) {
     auto label = lv_label_create(scr_);
     lv_label_set_text(label, text);
-    lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
+    lv_obj_set_style_text_font(label, &lv_font_montserrat_16, LV_PART_MAIN);
     lv_obj_align_to(label, btn, LV_ALIGN_BOTTOM_MID, 0, label_y_offset);
   }
 
@@ -112,8 +115,10 @@ lv_obj_t* PanelBase::control(const char *img, lv_coord_t x, lv_coord_t y, const 
   if(text) {
     auto label = lv_label_create(scr_);
     lv_label_set_text(label, text);
-    lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
-    lv_obj_align_to(label, btn, LV_ALIGN_BOTTOM_MID, 0, 20);
+    lv_obj_set_style_text_color(label, gray, LV_PART_MAIN);
+    lv_obj_set_style_text_font(label, &lv_font_montserrat_16, LV_PART_MAIN);
+    lv_obj_set_style_text_align(label, LV_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_align_to(label, btn, LV_ALIGN_OUT_BOTTOM_MID, 0, 4);
   }
 
   return btn;
@@ -128,7 +133,8 @@ lv_obj_t *PanelBase::circle_button(lv_coord_t x, lv_coord_t y, const char *text)
 
   auto label = lv_label_create(button);
   lv_label_set_text(label, text);
-  lv_obj_add_style(label, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
+  lv_obj_set_style_text_font(label, &lv_font_montserrat_16, LV_PART_MAIN);
   lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
 
   return button;
@@ -141,13 +147,13 @@ lv_obj_t* PanelBase::icon(const char *img, lv_coord_t x, lv_coord_t y) {
   return icon;
 }
 
-static lv_style_t *label_style(LABEL kind) {
+static lv_color_t label_color(LABEL kind) {
   switch(kind) {
-    case LABEL::EXTRUDER: return &style_extruder;
-    case LABEL::BED: return &style_bed;
-    case LABEL::FAN: return &style_fan;
-    case LABEL::GRAY: return &style_gray;
-    default: return &style_regular;
+    case LABEL::EXTRUDER: return red;
+    case LABEL::BED: return green;
+    case LABEL::FAN: return blue;
+    case LABEL::GRAY: return gray;
+    default: return lv_color_white();
   }
 }
 
@@ -155,7 +161,10 @@ lv_obj_t* PanelBase::text(const char *text, lv_coord_t x, lv_coord_t y, LABEL ki
   auto label = lv_label_create(scr_);
   lv_label_set_text(label, text);
   lv_obj_set_pos(label, x, y);
-  lv_obj_add_style(label, label_style(kind), LV_PART_MAIN | LV_STATE_DEFAULT);
+
+  auto color = label_color(kind);
+  lv_obj_set_style_text_color(label, color, LV_PART_MAIN);
+  lv_obj_set_style_text_font(label, &lv_font_montserrat_20, LV_PART_MAIN);
   return label;
 }
 
@@ -172,7 +181,11 @@ lv_obj_t* PanelBase::text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord
   auto label = lv_label_create(scr_);
   lv_label_set_text(label, text);
   lv_obj_set_pos(label, x, y);
-  lv_obj_add_style(label, label_style(kind), LV_PART_MAIN);
+
+  auto color = label_color(kind);
+  lv_obj_set_style_text_color(label, color, LV_PART_MAIN);
+  lv_obj_set_style_text_font(label, &lv_font_montserrat_20, LV_PART_MAIN);
+
   lv_label_set_long_mode(label, LV_LABEL_LONG_CLIP);
   lv_obj_set_width(label, width);
   lv_obj_set_style_text_align(label, label_align(align), LV_PART_MAIN);
@@ -207,7 +220,6 @@ void PanelBase::layout_menu(const char *title) {
   auto label = lv_label_create(scr_);
   lv_label_set_text(label, title);
   lv_obj_align_to(label, rect, LV_ALIGN_TOP_MID, 0, -36);
-  lv_obj_add_style(label, &style_regular, LV_PART_MAIN | LV_STATE_DEFAULT);
 
   variables();
 }

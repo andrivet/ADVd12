@@ -26,14 +26,10 @@
 #pragma once
 #include <lvgl.h>
 
-inline lv_style_t style_panel;
-inline lv_style_t style_rectangle;
-inline lv_style_t style_button_down;
-inline lv_style_t style_button_up;
-inline lv_style_t style_button_label;
 inline lv_style_t style_dropdown;
-inline lv_style_t style_regular;
-inline lv_style_t style_extruder;
-inline lv_style_t style_bed;
-inline lv_style_t style_fan;
-inline lv_style_t style_gray;
+
+inline auto orange = lv_color_make(255, 148, 0);
+inline auto red = lv_color_make(255, 138, 97);
+inline auto green = lv_color_make(126, 211, 33);
+inline auto blue = lv_color_make(116, 198, 255);
+inline auto gray = lv_color_make(151, 151, 151);

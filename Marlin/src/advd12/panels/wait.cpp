@@ -183,22 +183,24 @@ void wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURC
   msgbox = lv_obj_create(parent);
   lv_obj_set_size(msgbox, 329, 233);
   lv_obj_set_pos(msgbox, 7, 40);
-  lv_obj_add_style(msgbox, &style_panel, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_bg_color(msgbox, lv_color_black(), LV_PART_MAIN);
+  lv_obj_set_style_bg_opa(msgbox, LV_OPA_COVER, LV_PART_MAIN);
   lv_obj_set_style_border_width(msgbox, 3, LV_PART_MAIN | LV_STATE_DEFAULT);
   lv_obj_set_style_border_color(msgbox, lv_color_make(255, 148, 0), LV_PART_MAIN | LV_STATE_DEFAULT);
 
   auto line = lv_obj_create(msgbox);
   lv_obj_set_pos(line, 0, 55);
   lv_obj_set_size(line, 329, 3);
-  lv_obj_add_style(line, &style_rectangle, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_bg_color(line, orange, LV_PART_MAIN);
+  lv_obj_set_style_bg_opa(line, LV_OPA_COVER, LV_PART_MAIN);
 
   auto label = lv_label_create(msgbox);
   lv_label_set_text(label, title);
-  lv_obj_add_style(label, &style_regular, LV_PART_MAIN | LV_STATE_DEFAULT);
   lv_obj_align_to(label, line, LV_ALIGN_BOTTOM_MID, 0, -18);
 
   auto text = lv_label_create(msgbox);
-  lv_obj_add_style(text, &style_button_label, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
+  lv_obj_set_style_text_font(label, &lv_font_montserrat_16, LV_PART_MAIN);
   lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
   lv_obj_set_width(text, lv_pct(100));
   lv_label_set_text(text, message);
@@ -215,8 +217,8 @@ lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y) {
   lv_imgbtn_set_src(btn, LV_IMGBTN_STATE_PRESSED,  nullptr, src, nullptr);
   lv_imgbtn_set_src(btn, LV_IMGBTN_STATE_DISABLED, nullptr, src, nullptr);
 
-  lv_obj_add_style(btn, &style_button_up, LV_PART_MAIN | LV_STATE_DEFAULT);
-  lv_obj_add_style(btn, &style_button_down, LV_PART_MAIN | LV_STATE_PRESSED);
+  lv_obj_set_style_img_recolor(btn, lv_color_black(), LV_PART_MAIN | LV_STATE_PRESSED);
+  lv_obj_set_style_img_recolor_opa(btn, LV_OPA_40, LV_PART_MAIN | LV_STATE_PRESSED);
 
   return btn;
 }

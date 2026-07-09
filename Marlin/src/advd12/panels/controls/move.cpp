@@ -61,7 +61,7 @@ constexpr feedRate_t FEEDRATE_Z = 10;
 constexpr feedRate_t FEEDRATE_E = 2;
 constexpr unsigned TASK_DELAY = 500; // Has to be more than DEFAULT_TASK_DELAY and long_press_time
 
-lv_obj_t *home(lv_coord_t x, lv_coord_t y, const char *symbol, const char *text);
+lv_obj_t *home(lv_coord_t x, lv_coord_t y, const char *symbol);
 void move(Direction direction);
 
 void on_back(lv_event_t *e);
@@ -94,26 +94,26 @@ void MovePanel::create() {
   auto back = panel.control(IMG_LEFT, 7, 2);
   auto disable = panel.control(IMG_DISABLE, 289, 2);
 
-  auto x_minus = panel.small_control(IMG_LEFT, 24, 104);
-  auto x_plus = panel.small_control(IMG_RIGHT, 116, 104);
+  auto x_minus = panel.control(IMG_LEFT, 17, 109);
+  auto x_plus = panel.control(IMG_RIGHT, 113, 109);
 
-  auto y_minus = panel.small_control(IMG_DOWN, 70, 142);
-  auto y_plus = panel.small_control(IMG_UP, 70, 66);
+  auto y_plus = panel.control(IMG_UP, 65, 61);
+  auto y_minus = panel.control(IMG_DOWN, 65, 157);
 
-  auto z_minus = panel.small_control(IMG_DOWN, 194, 142);
-  auto z_plus = panel.small_control(IMG_UP, 194, 66);
+  auto z_plus = panel.control(IMG_UP, 189, 61);
+  auto z_minus = panel.control(IMG_DOWN, 189, 157);
 
-  auto e_plus = panel.small_control(IMG_DOWN, 278, 142);
-  auto e_minus = panel.small_control(IMG_UP, 278, 66);
+  auto e_minus = panel.control(IMG_UP, 273, 61);
+  auto e_plus = panel.control(IMG_DOWN, 273, 157);
 
-  auto home_x = home(21, 202, "X", "Home X");
-  auto home_y = home(105, 202, "Y", "Home Y");
-  auto home_z = home(189, 202, "Z", "Home Z");
-  auto home_a = home(273, 202, "*", "All");
+  auto home_x = home(21, 219, "X");
+  auto home_y = home(105, 219, "Y");
+  auto home_z = home(189, 219, "Z");
+  auto home_a = home(273, 219, "*");
 
-  panel.text("XY", 78, 112, LABEL::REGULAR);
-  panel.text("Z", 207, 112, LABEL::REGULAR);
-  panel.text("E", 291, 112, LABEL::REGULAR);
+  panel.text("XY", 65, 123, 48, ALIGN::CENTER, LABEL::REGULAR);
+  panel.text("Z", 206, 123, LABEL::REGULAR);
+  panel.text("E", 290, 123, LABEL::REGULAR);
 
   panel.reset_bindings();
   panel.bind(back, &on_back);
@@ -134,8 +134,8 @@ void MovePanel::create() {
 
 namespace {
 
-lv_obj_t * home(lv_coord_t x, lv_coord_t y, const char *symbol, const char *text) {
-  auto button = panel.control(IMG_HOME, x, y, text);
+lv_obj_t * home(lv_coord_t x, lv_coord_t y, const char *symbol) {
+  auto button = panel.control(IMG_HOME, x, y);
 
   auto label = lv_label_create(button);
   lv_label_set_text(label, symbol);

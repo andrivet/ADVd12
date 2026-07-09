@@ -124,12 +124,8 @@ lv_obj_t* PanelBase::control(const char *img, lv_coord_t x, lv_coord_t y, const 
   return btn;
 }
 
-lv_obj_t* PanelBase::small_control(const char *img, lv_coord_t x, lv_coord_t y) {
-  return button(img, nullptr, x, y, 38, 38, 0);
-}
-
 lv_obj_t *PanelBase::circle_button(lv_coord_t x, lv_coord_t y, const char *text) {
-  auto button = small_control(IMG_CIRCLE, x, y);
+  auto button = control(IMG_CIRCLE, x, y);
 
   auto label = lv_label_create(button);
   lv_label_set_text(label, text);
@@ -203,6 +199,45 @@ lv_obj_t* PanelBase::text(int value, lv_coord_t x, lv_coord_t y, lv_coord_t widt
   char buffer[32];
   snprintf(buffer, 32, "%d", value);
   return text(buffer, x, y, width, align, kind);
+}
+
+lv_obj_t* PanelBase::label(const char *text, lv_coord_t x, lv_coord_t y, LABEL kind) {
+  auto label = lv_label_create(scr_);
+  lv_label_set_text(label, text);
+  lv_obj_set_pos(label, x, y);
+
+  auto color = label_color(kind);
+  lv_obj_set_style_text_color(label, color, LV_PART_MAIN);
+  lv_obj_set_style_text_font(label, &lv_font_montserrat_16, LV_PART_MAIN);
+  return label;
+}
+
+lv_obj_t* PanelBase::label(const char *text, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind) {
+  auto label = lv_label_create(scr_);
+  lv_label_set_text(label, text);
+  lv_obj_set_pos(label, x, y);
+
+  auto color = label_color(kind);
+  lv_obj_set_style_text_color(label, color, LV_PART_MAIN);
+  lv_obj_set_style_text_font(label, &lv_font_montserrat_16, LV_PART_MAIN);
+
+  lv_label_set_long_mode(label, LV_LABEL_LONG_CLIP);
+  lv_obj_set_width(label, width);
+  lv_obj_set_style_text_align(label, label_align(align), LV_PART_MAIN);
+  return label;
+}
+
+lv_obj_t* PanelBase::label(double value, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind) {
+  char buffer[32];
+  auto rounded = lround(value * 10);
+  snprintf(buffer, 32, "%ld.%ld", rounded / 10, rounded % 10);
+  return label(buffer, x, y, width, align, kind);
+}
+
+lv_obj_t* PanelBase::label(int value, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind) {
+  char buffer[32];
+  snprintf(buffer, 32, "%d", value);
+  return label(buffer, x, y, width, align, kind);
 }
 
 void PanelBase::layout_main() {

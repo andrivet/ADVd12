@@ -63,8 +63,8 @@ void ZHeightPanel::create() {
 
   auto back = panel.control(IMG_LEFT, 7, 2);
   auto save = panel.control(IMG_SAVE, 289, 2);
-  auto down = panel.small_control(IMG_DOWN, 42, 75);
-  auto up = panel.small_control(IMG_UP, 159, 75);
+  auto down = panel.control(IMG_DOWN, 32, 70);
+  auto up = panel.control(IMG_UP, 159, 70);
 
   z_offset = panel.text("0.00", 80, 84, 79, ALIGN::CENTER, LABEL::REGULAR);
 
@@ -82,6 +82,7 @@ void ZHeightPanel::create() {
   lv_obj_set_pos(label, 22, 137);
   lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
   lv_obj_set_width(label, 293);
+  lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
   lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN);
 
   panel.reset_bindings();

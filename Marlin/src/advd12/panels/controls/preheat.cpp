@@ -77,18 +77,18 @@ void PreheatPanel::create() {
   auto back = preheat_panel.control(IMG_LEFT, 7, 2);
   auto save = preheat_panel.control(IMG_SAVE, 289, 2);
 
-  preheat_panel.icon(IMG_EXTRUDER, 14, 128);
-  preheat_panel.icon(IMG_BED, 14, 180);
-  preheat_panel.icon(IMG_FAN, 14, 232);
+  preheat_panel.icon(IMG_EXTRUDER, 14, 133);
+  preheat_panel.icon(IMG_BED, 14, 185);
+  preheat_panel.icon(IMG_FAN, 14, 237);
 
-  auto previous = preheat_panel.small_control(IMG_LEFT, 53, 71);
-  auto next = preheat_panel.small_control(IMG_RIGHT, 173, 71);
-  auto ext_minus = preheat_panel.small_control(IMG_MINUS, 53, 123);
-  auto ext_plus = preheat_panel.small_control(IMG_PLUS, 173, 123);
-  auto bed_minus = preheat_panel.small_control(IMG_MINUS, 53, 175);
-  auto bed_plus = preheat_panel.small_control(IMG_PLUS, 173, 175);
-  auto fan_minus = preheat_panel.small_control(IMG_MINUS, 53, 227);
-  auto fan_plus = preheat_panel.small_control(IMG_PLUS, 173, 227);
+  auto previous = preheat_panel.control(IMG_LEFT, 53, 64);
+  auto next = preheat_panel.control(IMG_RIGHT, 173, 63);
+  auto ext_minus = preheat_panel.control(IMG_MINUS, 53, 123);
+  auto ext_plus = preheat_panel.control(IMG_PLUS, 173, 123);
+  auto bed_minus = preheat_panel.control(IMG_MINUS, 53, 175);
+  auto bed_plus = preheat_panel.control(IMG_PLUS, 173, 175);
+  auto fan_minus = preheat_panel.control(IMG_MINUS, 53, 227);
+  auto fan_plus = preheat_panel.control(IMG_PLUS, 173, 227);
   auto cooldown = preheat_panel.control(IMG_COOLDOWN, 262, 123, "Cool");
 
   preheat_panel.reset_bindings();
@@ -104,10 +104,10 @@ void PreheatPanel::create() {
   preheat_panel.bind(fan_plus, &on_fan_plus, EventType::PRESSED | EventType::REPEAT);
   preheat_panel.bind(cooldown, &on_cooldown);
 
-  index_text_ = preheat_panel.text("", 121, 79, LABEL::REGULAR);
-  ext_text_ = preheat_panel.text("", 108, 131, LABEL::REGULAR);
-  bed_text_ = preheat_panel.text("", 108, 183, LABEL::REGULAR);
-  fan_text_ = preheat_panel.text("", 108, 235, LABEL::REGULAR);
+  index_text_ = preheat_panel.text("", 101, 77, 72, ALIGN::CENTER, LABEL::REGULAR);
+  ext_text_ = preheat_panel.text("", 101, 136, 72, ALIGN::CENTER, LABEL::REGULAR);
+  bed_text_ = preheat_panel.text("", 101, 188, 72, ALIGN::CENTER, LABEL::REGULAR);
+  fan_text_ = preheat_panel.text("", 101, 240, 72, ALIGN::CENTER, LABEL::REGULAR);
 
   show();
 }

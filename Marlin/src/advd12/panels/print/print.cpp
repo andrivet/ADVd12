@@ -79,7 +79,7 @@ void PrintPanel::create() {
   if(!panel.create()) return;
   panel.layout_menu("");
 
-  panel.rectangle(0, 103, 342, 3);
+  panel.rectangle(0, 108, 342, 3);
 
   auto back = panel.control(IMG_LEFT, 7, 2);
   auto stop = panel.control(IMG_STOP, 77, 2);
@@ -87,11 +87,11 @@ void PrintPanel::create() {
   auto change = panel.control(IMG_CHANGE, 217, 2);
   auto options = panel.control(IMG_OPTIONS, 289, 2);
 
-  panel.icon(IMG_STEPS2, 8, 58);
-  auto down = panel.small_control(IMG_DOWN, 77, 60);
-  auto up = panel.small_control(IMG_UP, 194, 60);
+  panel.icon(IMG_STEPS2, 8, 60);
+  auto down = panel.control(IMG_DOWN, 62, 57);
+  auto up = panel.control(IMG_UP, 189, 57);
 #if HAS_BED_PROBE
-  z_offset_var = panel.text("0.00", 115, 68, 87, ALIGN::CENTER, LABEL::REGULAR);
+  z_offset_var = panel.text("0.00", 110, 69, 79, ALIGN::CENTER, LABEL::REGULAR);
 #endif
 
   dropdown = lv_dropdown_create(panel.scr());

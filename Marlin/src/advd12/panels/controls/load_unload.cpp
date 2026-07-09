@@ -68,14 +68,14 @@ void LoadUnloadPanel::create() {
 
   auto back = panel.control(IMG_LEFT, 7, 2);
 
-  auto minus = panel.small_control(IMG_MINUS, 93, 85);
-  auto plus = panel.small_control(IMG_PLUS, 213, 85);
+  auto minus = panel.control(IMG_MINUS, 93, 80);
+  auto plus = panel.control(IMG_PLUS, 213, 80);
   auto partial_unload = panel.control(IMG_UNLOAD, 24, 189, "Partial");
   auto full_unload = panel.control(IMG_UNLOAD, 108, 189, "Full");
   auto partial_load = panel.control(IMG_LOAD2, 192, 189, "Partial");
   auto full_load = panel.control(IMG_LOAD2, 276, 189, "Full");
 
-  temp_text_ = panel.text("", 144, 93, LABEL::REGULAR);
+  temp_text_ = panel.text("", 141, 93, 72, ALIGN::CENTER, LABEL::REGULAR);
   panel.text("Unload", 8, 152, 164, ALIGN::CENTER, LABEL::REGULAR);
   panel.text("Load", 176, 152, 164, ALIGN::CENTER, LABEL::REGULAR);
 

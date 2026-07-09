@@ -51,11 +51,6 @@ void on_2(lv_event_t *e);
 void on_3(lv_event_t *e);
 void on_4(lv_event_t *e);
 void on_5(lv_event_t *e);
-void on_6(lv_event_t *e);
-void on_7(lv_event_t *e);
-void on_8(lv_event_t *e);
-void on_9(lv_event_t *e);
-
 }
 
 bool RoughPanel::can_switch() {
@@ -68,15 +63,11 @@ void RoughPanel::create() {
   Bed::create(panel.scr());
 
   auto back = panel.control(IMG_LEFT, 7, 2);
-  auto level_1 = panel.circle_button(57, 181, "1");
-  auto level_2 = panel.circle_button(155, 181, "2");
-  auto level_3 = panel.circle_button(253, 181, "3");
-  auto level_4 = panel.circle_button(241, 130, "4");
-  auto level_5 = panel.circle_button(155, 130, "5");
-  auto level_6 = panel.circle_button(69, 130, "6");
-  auto level_7 = panel.circle_button(81, 79, "7");
-  auto level_8 = panel.circle_button(155, 79, "8");
-  auto level_9 = panel.circle_button(229, 79, "9");
+  auto level_1 = panel.circle_button(46, 171, "1");
+  auto level_2 = panel.circle_button(250, 171, "2");
+  auto level_3 = panel.circle_button(226, 78, "3");
+  auto level_4 = panel.circle_button(70, 78, "4");
+  auto level_5 = panel.circle_button(148, 125, "5");
 
   panel.reset_bindings();
   panel.bind(back, on_back);
@@ -85,10 +76,6 @@ void RoughPanel::create() {
   panel.bind(level_3, on_3);
   panel.bind(level_4, on_4);
   panel.bind(level_5, on_5);
-  panel.bind(level_6, on_6);
-  panel.bind(level_7, on_7);
-  panel.bind(level_8, on_8);
-  panel.bind(level_9, on_9);
 
   if(ExtUI::getActualTemp_celsius(ExtUI::E0) > 50)
     Wait::wait_back_continue(GET_TEXT(ADVD12_TITLE_WARNING), GET_TEXT(ADVD12_MSG_LEVELING_HOT), &prepare);
@@ -137,35 +124,19 @@ void on_1(lv_event_t *e) {
 }
 
 void on_2(lv_event_t *e) {
-  move(X_BED_SIZE / 2., MARGIN);
-}
-
-void on_3(lv_event_t *e) {
   move(X_BED_SIZE - MARGIN, MARGIN);
 }
 
+void on_3(lv_event_t *e) {
+  move(X_BED_SIZE - MARGIN, Y_BED_SIZE - MARGIN);
+}
+
 void on_4(lv_event_t *e) {
-  move(X_BED_SIZE - MARGIN, X_BED_SIZE / 2.);
+  move(MARGIN, Y_BED_SIZE - MARGIN);
 }
 
 void on_5(lv_event_t *e) {
   move(X_BED_SIZE / 2., Y_BED_SIZE / 2.);
-}
-
-void on_6(lv_event_t *e) {
-  move(MARGIN, X_BED_SIZE / 2.);
-}
-
-void on_7(lv_event_t *e) {
-  move(MARGIN, Y_BED_SIZE - MARGIN);
-}
-
-void on_8(lv_event_t *e) {
-  move(X_BED_SIZE / 2., Y_BED_SIZE - MARGIN);
-}
-
-void on_9(lv_event_t *e) {
-  move(X_BED_SIZE - MARGIN, Y_BED_SIZE - MARGIN);
 }
 
 

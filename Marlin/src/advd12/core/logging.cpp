@@ -35,11 +35,11 @@ ENABLE_BITMASK_OPERATOR(MODE);
 
 #if ADVD12_LOG < 5
   void SuspendLogging::suspend() {
-    set_one_bit(internals::mode, internals::MODE::SUSPENDED_UNTIL_RESUME, true);
+    set_one_bit(mode, MODE::SUSPENDED_UNTIL_RESUME, true);
   }
 
   void SuspendLogging::resume() {
-    set_one_bit(internals::mode, internals::MODE::SUSPENDED_UNTIL_RESUME, false);
+    set_one_bit(mode, MODE::SUSPENDED_UNTIL_RESUME, false);
   }
 #endif
 

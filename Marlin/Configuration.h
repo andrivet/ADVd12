@@ -46,7 +46,14 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Marlin's development mode
 //#define MARLIN_DEV_MODE
 //#define PINS_DEBUGGING
-#define ADVD12_LOG 5
+
+// Logging
+// 1: error, 2: warning, 3: info, 4: verbose, 5: everything (including suspended)
+#if defined(D12_SIMULATOR)
+#define ADVD12_LOG 4
+#else
+#define ADVD12_LOG 2
+#endif
 
 // Model of printer
 // Typically defined in the environment
@@ -61,7 +68,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //#define D12_FULL_TMC2209
 
 // BLTouch
-//#define BLTOUCH // eventually defined in the environment
+//#define BLTOUCH // Typically defined in the environment
 
 // Kind of display
 #define TFT_ADV_UI
@@ -1635,7 +1642,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 /**
  * The BLTouch probe uses a Hall effect sensor and emulates a servo.
  */
-//#define BLTOUCH @advd12 eventually defined in the environment
+//#define BLTOUCH @advd12 Typically defined in the environment
 
 /**
  * MagLev V4 probe by MDD

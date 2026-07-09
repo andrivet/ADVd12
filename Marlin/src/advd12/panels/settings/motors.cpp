@@ -47,7 +47,7 @@ void MotorsPanel::create() {
   if(!motors_panel.create()) return;
   motors_panel.layout_menu("Motors");
 
-  auto back = motors_panel.control(IMG_BACK, 7, 2);
+  auto back = motors_panel.control(IMG_LEFT, 7, 2);
 
   auto steps = motors_panel.medium_button(IMG_STEPS, "Steps", 19, 76);
   auto feedrate = motors_panel.medium_button(IMG_FEEDRATE, "Feedrate", 101, 76);

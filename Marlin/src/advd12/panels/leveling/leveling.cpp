@@ -58,7 +58,7 @@ void LevelingPanel::create() {
   if(!leveling_panel.create()) return;
   leveling_panel.layout_menu("Leveling");
 
-  auto back = leveling_panel.control(IMG_BACK, 7, 2);
+  auto back = leveling_panel.control(IMG_LEFT, 7, 2);
   auto rough = leveling_panel.medium_button(IMG_ROUGH, "Rough", 19, 76);
 
 #if HAS_LEVELING

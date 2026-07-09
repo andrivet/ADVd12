@@ -53,7 +53,7 @@ void ControlsPanel::create() {
   if(!controls_panel.create()) return;
   controls_panel.layout_menu("Controls");
 
-  auto back = controls_panel.control(IMG_BACK, 7, 2);
+  auto back = controls_panel.control(IMG_LEFT, 7, 2);
 
   auto load   = controls_panel.medium_button(IMG_LOAD, "Load", 19, 76);
   auto heat   = controls_panel.medium_button(IMG_HEAT, "Preheat", 101, 76);

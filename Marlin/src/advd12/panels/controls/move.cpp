@@ -91,11 +91,11 @@ void MovePanel::create() {
   if(!panel.create()) return;
   panel.layout_menu("Move");
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
   auto disable = panel.control(IMG_DISABLE, 289, 2);
 
-  auto x_minus = panel.small_control(IMG_PREVIOUS, 24, 104);
-  auto x_plus = panel.small_control(IMG_NEXT, 116, 104);
+  auto x_minus = panel.small_control(IMG_LEFT, 24, 104);
+  auto x_plus = panel.small_control(IMG_RIGHT, 116, 104);
 
   auto y_minus = panel.small_control(IMG_DOWN, 70, 142);
   auto y_plus = panel.small_control(IMG_UP, 70, 66);

@@ -59,7 +59,7 @@ void AutomaticPanel::create() {
   panel.layout_menu("Automatic");
   Bed::create(panel.scr());
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
 
   panel.reset_bindings();
   panel.bind(back, on_back);

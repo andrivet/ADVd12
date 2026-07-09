@@ -48,7 +48,7 @@ void VersionsPanel::create() {
   if(!panel.create()) return;
   panel.layout_menu("Versions");
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
 
   panel.text("ADVd12 version:", 7, 76, LABEL::GRAY);
   panel.text("ADVd12 build:", 7, 106, LABEL::GRAY);

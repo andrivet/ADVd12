@@ -74,15 +74,15 @@ void PreheatPanel::create() {
   if(!preheat_panel.create()) return;
   preheat_panel.layout_menu("Preheat");
 
-  auto back = preheat_panel.control(IMG_BACK, 7, 2);
+  auto back = preheat_panel.control(IMG_LEFT, 7, 2);
   auto save = preheat_panel.control(IMG_SAVE, 289, 2);
 
   preheat_panel.icon(IMG_EXTRUDER, 14, 128);
   preheat_panel.icon(IMG_BED, 14, 180);
   preheat_panel.icon(IMG_FAN, 14, 232);
 
-  auto previous = preheat_panel.small_control(IMG_PREVIOUS, 53, 71);
-  auto next = preheat_panel.small_control(IMG_NEXT, 173, 71);
+  auto previous = preheat_panel.small_control(IMG_LEFT, 53, 71);
+  auto next = preheat_panel.small_control(IMG_RIGHT, 173, 71);
   auto ext_minus = preheat_panel.small_control(IMG_MINUS, 53, 123);
   auto ext_plus = preheat_panel.small_control(IMG_PLUS, 173, 123);
   auto bed_minus = preheat_panel.small_control(IMG_MINUS, 53, 175);

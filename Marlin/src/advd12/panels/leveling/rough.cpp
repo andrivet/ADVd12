@@ -67,7 +67,7 @@ void RoughPanel::create() {
   panel.layout_menu("Rough");
   Bed::create(panel.scr());
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
   auto level_1 = panel.circle_button(57, 181, "1");
   auto level_2 = panel.circle_button(155, 181, "2");
   auto level_3 = panel.circle_button(253, 181, "3");

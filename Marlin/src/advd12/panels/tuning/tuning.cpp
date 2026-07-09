@@ -52,7 +52,7 @@ void TuningPanel::create() {
   if(!tuning_panel.create()) return;
   tuning_panel.layout_menu("Tuning");
 
-  auto back = tuning_panel.control(IMG_BACK, 7, 2);
+  auto back = tuning_panel.control(IMG_LEFT, 7, 2);
 
   auto sensor = tuning_panel.medium_button(IMG_SENSOR, "BLTouch", 19, 76);
   auto extruder = tuning_panel.medium_button(IMG_EXTRUDER2, "Extruder", 101, 76);

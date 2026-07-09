@@ -67,7 +67,7 @@ void Wait::wait(const char *message, void (*cb)(CALLBACK_SOURCE)) {
 void Wait::wait_back(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE)) {
   wait_base(title, message, cb);
 
-  auto btn = wait_button(IMG_BACK, 4, 4);
+  auto btn = wait_button(IMG_LEFT, 4, 4);
   binder.reset();
   binder.bind(btn, &on_back);
 }
@@ -75,7 +75,7 @@ void Wait::wait_back(const char *title, const char *message, void (*cb)(CALLBACK
 void Wait::wait_back(const char * title, const char * message) {
   wait_base(title, message, nullptr);
 
-  auto btn = wait_button(IMG_BACK, 4, 4);
+  auto btn = wait_button(IMG_LEFT, 4, 4);
   binder.reset();
   binder.bind(btn, &on_back);
 }
@@ -83,8 +83,8 @@ void Wait::wait_back(const char * title, const char * message) {
 void Wait::wait_back_continue(const char * title, const char * message, void (*cb)(CALLBACK_SOURCE)) {
   wait_base(title, message, cb);
 
-  auto back = wait_button(IMG_BACK, 4, 4);
-  auto cont = wait_button(IMG_CONTINUE, 276, 4);
+  auto back = wait_button(IMG_LEFT, 4, 4);
+  auto cont = wait_button(IMG_RIGHT, 276, 4);
   binder.reset();
   binder.bind(back, &on_back);
   binder.bind(cont, &on_continue);

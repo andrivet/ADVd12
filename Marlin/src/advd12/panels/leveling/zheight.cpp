@@ -61,7 +61,7 @@ void ZHeightPanel::create() {
   if(!panel.create()) return;
   panel.layout_menu("Z Height");
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
   auto save = panel.control(IMG_SAVE, 289, 2);
   auto down = panel.small_control(IMG_DOWN, 42, 75);
   auto up = panel.small_control(IMG_UP, 159, 75);

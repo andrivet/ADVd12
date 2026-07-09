@@ -81,7 +81,7 @@ void PrintPanel::create() {
 
   panel.rectangle(0, 103, 342, 3);
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
   auto stop = panel.control(IMG_STOP, 77, 2);
   auto pause = panel.control(IMG_PAUSE, 147, 2);
   auto change = panel.control(IMG_CHANGE, 217, 2);

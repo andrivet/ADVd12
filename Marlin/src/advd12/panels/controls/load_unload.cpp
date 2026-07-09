@@ -66,7 +66,7 @@ void LoadUnloadPanel::create() {
   if(!panel.create()) return;
   panel.layout_menu("Load & Unload");
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
 
   auto minus = panel.small_control(IMG_MINUS, 93, 85);
   auto plus = panel.small_control(IMG_PLUS, 213, 85);

@@ -82,7 +82,7 @@ void SdPanel::create() {
 
   panel.rectangle(ROW_WIDTH, 56, 3, 228);
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
   auto parent = panel.circle_button(297, 69, "..");
   auto up = panel.small_control(IMG_UP, 297, 121);
   auto down = panel.small_control(IMG_DOWN, 297, 233);

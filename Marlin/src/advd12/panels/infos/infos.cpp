@@ -52,7 +52,7 @@ void InfosPanel::create() {
   if(!infos_panel.create()) return;
   infos_panel.layout_menu("Infos");
 
-  auto back = infos_panel.control(IMG_BACK, 7, 2);
+  auto back = infos_panel.control(IMG_LEFT, 7, 2);
 
   auto stats = infos_panel.medium_button(IMG_STATS, "Stats", 19, 76);
   auto versions = infos_panel.medium_button(IMG_VERSIONS, "Versions", 101, 76);

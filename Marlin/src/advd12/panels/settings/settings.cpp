@@ -49,7 +49,7 @@ void SettingsPanel::create() {
   if(!settings_panel.create()) return;
   settings_panel.layout_menu("Settings");
 
-  auto back = settings_panel.control(IMG_BACK, 7, 2);
+  auto back = settings_panel.control(IMG_LEFT, 7, 2);
 
   auto motors = settings_panel.medium_button(IMG_MOTOR, "Motors", 19, 76);
   auto pid = settings_panel.medium_button(IMG_PID, "PID", 101, 76);

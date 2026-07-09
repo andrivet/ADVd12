@@ -55,7 +55,7 @@ void GridPanel::create() {
   panel.layout_menu("Grid");
   Bed::create(panel.scr());
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
   grid();
 
   panel.reset_bindings();

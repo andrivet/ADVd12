@@ -48,7 +48,7 @@ void CopyrightsPanel::create() {
   if(!panel.create()) return;
   panel.layout_menu("Copyrights");
 
-  auto back = panel.control(IMG_BACK, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
 
   panel.text("ADVd12", 9, 64, 331, ALIGN::CENTER, LABEL::REGULAR);
   panel.text("Copyright (c) 2026\nSebastien Andrivet", 9, 91, 331, ALIGN::CENTER, LABEL::GRAY);

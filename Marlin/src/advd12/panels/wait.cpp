@@ -84,7 +84,7 @@ void Wait::wait_back_continue(const char * title, const char * message, void (*c
   wait_base(title, message, cb);
 
   auto back = wait_button(IMG_LEFT, 4, 4);
-  auto cont = wait_button(IMG_RIGHT, 276, 4);
+  auto cont = wait_button(IMG_SAVE, 276, 4);
   binder.reset();
   binder.bind(back, &on_back);
   binder.bind(cont, &on_continue);

@@ -70,7 +70,7 @@ void ZHeightPanel::create() {
 
   auto dropdown = lv_dropdown_create(panel.scr());
   lv_dropdown_set_options(dropdown, "0.02\n0.10\n1.00");
-  lv_obj_set_pos(dropdown, 214, 75);
+  lv_obj_set_pos(dropdown, 223, 75);
   lv_obj_set_size(dropdown, 87, 38);
   lv_obj_add_style(dropdown, &style_dropdown, LV_PART_MAIN);
   auto drop_list = lv_dropdown_get_list(dropdown);
@@ -153,9 +153,7 @@ void on_increment(lv_event_t *e) {
 void prepare() {
   old_offset = ExtUI::getZOffset_mm();
   ExtUI::setZOffset_mm(0); // Before homing otherwise, Marlin is lost
-  ExtUI::setZOffset_mm(ExtUI::getAxisPosition_mm(ExtUI::Z) + old_offset);
-
-  set_offset();
+  ExtUI::setAbsoluteZAxisPosition_mm(ExtUI::getAxisPosition_mm(ExtUI::Z) + old_offset);
 
   Wait::homing(nullptr, []() -> void {
     float positions[2] = {X_CENTER, Y_CENTER};
@@ -163,6 +161,7 @@ void prepare() {
     ExtUI::setMultipleAxisPosition_mm(2, positions, axis, FEEDRATE_XY);
     ExtUI::setAxisPosition_mm(0, ExtUI::Z, FEEDRATE_Z);
     ExtUI::setSoftEndstopState(false);
+    set_offset();
   });
 }
 

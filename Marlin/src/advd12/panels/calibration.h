@@ -24,7 +24,6 @@
  */
 
 #pragma once
-#include "panels.h"
 
 struct CalibrationPanel {
   static void update();

@@ -29,6 +29,7 @@
 #include "assets.h"
 #include "images.h"
 #include "../panels/main.h"
+#include "../panels/panels.h"
 #include "../panels/calibration.h"
 #include "../../HAL/HAL.h"
 #include "../../lcd/marlinui.h"

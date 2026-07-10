@@ -31,6 +31,7 @@
 #include "../../core/status.h"
 #include "../panels.h"
 #include "../wait.h"
+#include "../calibration.h"
 
 namespace {
 Panel<7> settings_panel;
@@ -86,6 +87,7 @@ void on_reset(lv_event_t *e) {
       ExtUI::setAllAxisUnhomed();
       ExtUI::setAllAxisPositionUnknown();
       Status::set(GET_TEXT(ADVD12_MSG_SETTINGS_RESET), Status::STATUS_OPTIONS::RESET);
+      PanelBase::switch_panel<CalibrationPanel>();
     });
 }
 

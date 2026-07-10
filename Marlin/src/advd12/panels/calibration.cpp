@@ -25,6 +25,7 @@
 
 #include "calibration.h"
 #include "main.h"
+#include "panels.h"
 #include "../../lcd/tft_io/touch_calibration.h"
 
 namespace {

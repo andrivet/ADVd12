@@ -23,21 +23,24 @@
  *
  */
 
+#include "../../../lcd/extui/ui_api.h"
 #include <lvgl.h>
 #include "settings.h"
 #include "../main.h"
 #include "../../core/ids.h"
-#include "src/advd12/panels/panels.h"
+#include "../../core/status.h"
+#include "../panels.h"
+#include "../wait.h"
 
 namespace {
 Panel<7> settings_panel;
 
 void on_back(lv_event_t *e);
+void on_reset(lv_event_t *e);
 void on_motors(lv_event_t *e);
 void on_pid(lv_event_t *e);
 void on_sensor(lv_event_t *e);
 void on_brightness(lv_event_t *e);
-void on_beeper(lv_event_t *e);
 void on_runout(lv_event_t *e);
 }
 
@@ -50,21 +53,21 @@ void SettingsPanel::create() {
   settings_panel.layout_menu("Settings");
 
   auto back = settings_panel.control(IMG_LEFT, 7, 2);
+  auto reset = settings_panel.control(IMG_RESET2, 289, 2);
 
   auto motors = settings_panel.medium_button(IMG_MOTOR, "Motors", 19, 76);
   auto pid = settings_panel.medium_button(IMG_PID, "PID", 101, 76);
   auto sensor = settings_panel.medium_button(IMG_SENSOR, " Sensor", 183, 76);
   auto brightness = settings_panel.medium_button(IMG_BRIGHTNESS, "LCD", 265, 76);
-  auto beeper = settings_panel.medium_button(IMG_BEEPER, "X Beeper", 19, 188);
   auto runout = settings_panel.medium_button(IMG_RUNOUT, "Runout", 19, 188);
 
   settings_panel.reset_bindings();
   settings_panel.bind(back, &on_back);
+  settings_panel.bind(reset, &on_reset);
   settings_panel.bind(motors, &on_motors);
   settings_panel.bind(pid, &on_pid);
   settings_panel.bind(sensor, &on_sensor);
   settings_panel.bind(brightness, &on_brightness);
-  settings_panel.bind(beeper, &on_beeper);
   settings_panel.bind(runout, &on_runout);
 }
 
@@ -72,6 +75,18 @@ namespace {
 
 void on_back(lv_event_t *e) {
   PanelBase::switch_panel<MainPanel>();
+}
+
+void on_reset(lv_event_t *e) {
+  Wait::wait_back_continue("Reset settings?", "Are you sure you want to reset settings?",
+    [](CALLBACK_SOURCE src) {
+      if(src == CALLBACK_SOURCE::BACK) return;
+      ExtUI::resetSettings();
+      ExtUI::saveSettings();
+      ExtUI::setAllAxisUnhomed();
+      ExtUI::setAllAxisPositionUnknown();
+      Status::set(GET_TEXT(ADVD12_MSG_SETTINGS_RESET), Status::STATUS_OPTIONS::RESET);
+    });
 }
 
 void on_motors(lv_event_t *e) {
@@ -87,10 +102,6 @@ void on_sensor(lv_event_t *e) {
 }
 
 void on_brightness(lv_event_t *e) {
-
-}
-
-void on_beeper(lv_event_t *e) {
 
 }
 

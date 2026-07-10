@@ -200,8 +200,8 @@ void wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURC
   lv_obj_align_to(label, line, LV_ALIGN_BOTTOM_MID, 0, -18);
 
   auto text = lv_label_create(msgbox);
-  lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
-  lv_obj_set_style_text_font(label, &lv_font_montserrat_16, LV_PART_MAIN);
+  lv_obj_set_style_text_color(text, lv_color_white(), LV_PART_MAIN);
+  lv_obj_set_style_text_font(text, &lv_font_montserrat_16, LV_PART_MAIN);
   lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
   lv_obj_set_width(text, lv_pct(100));
   lv_label_set_text(text, message);

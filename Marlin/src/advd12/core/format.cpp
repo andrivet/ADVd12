@@ -32,7 +32,7 @@ namespace Format {
 
 void format0(char *buffer, std::size_t buffer_size, double value) {
   if(std::isnan(value)) {
-    strncpy(buffer, "-", buffer_size);
+    strncpy(buffer, "0.0", buffer_size);
     return;
   }
   auto rounded = ::lround(value * 10);
@@ -45,7 +45,7 @@ void format0(char *buffer, std::size_t buffer_size, double value) {
 
 void format00(char *buffer, std::size_t buffer_size, double value) {
   if(std::isnan(value)) {
-    strncpy(buffer, "-", buffer_size);
+    strncpy(buffer, "0.00", buffer_size);
     return;
   }
   auto rounded = ::lround(value * 100);

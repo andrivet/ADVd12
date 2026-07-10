@@ -29,6 +29,7 @@
 #include "../core/ids.h"
 #include "../core/task.h"
 #include "../core/progress.h"
+#include "src/advd12/core/format.h"
 
 PanelBase *PanelBase::current_panel_ = nullptr;
 
@@ -190,8 +191,7 @@ lv_obj_t* PanelBase::text(const char *text, lv_coord_t x, lv_coord_t y, lv_coord
 
 lv_obj_t* PanelBase::text(double value, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind) {
   char buffer[32];
-  auto rounded = lround(value * 10);
-  snprintf(buffer, 32, "%ld.%ld", rounded / 10, rounded % 10);
+  Format::format0(buffer, 32, value);
   return text(buffer, x, y, width, align, kind);
 }
 
@@ -229,8 +229,7 @@ lv_obj_t* PanelBase::label(const char *text, lv_coord_t x, lv_coord_t y, lv_coor
 
 lv_obj_t* PanelBase::label(double value, lv_coord_t x, lv_coord_t y, lv_coord_t width, ALIGN align, LABEL kind) {
   char buffer[32];
-  auto rounded = lround(value * 10);
-  snprintf(buffer, 32, "%ld.%ld", rounded / 10, rounded % 10);
+  Format::format0(buffer, 32, value);
   return label(buffer, x, y, width, align, kind);
 }
 
@@ -311,15 +310,7 @@ void PanelBase::variables() {
 void update_variable(lv_obj_t *text, double value) {
   if(!text) return;
   char buffer[32];
-  auto rounded = lround(value * 10);
-  auto negative = rounded < 0;
-  if(negative) rounded = -rounded;
-  auto whole = rounded / 10;
-  auto fract = rounded % 10;
-  if(negative)
-    snprintf(buffer, 32, "-%ld.%ld", whole, fract);
-  else
-    snprintf(buffer, 32, "%ld.%ld", whole, fract);
+  Format::format0(buffer, sizeof(buffer), value);
   lv_label_set_text(text, buffer);
 }
 

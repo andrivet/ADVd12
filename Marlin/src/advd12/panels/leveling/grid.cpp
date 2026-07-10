@@ -30,9 +30,8 @@
 #include "bed.h"
 #include "leveling.h"
 #include "../panels.h"
-#include "../wait.h"
 #include "../../core/ids.h"
-#include "../../core/status.h"
+#include "../../core/format.h"
 
 namespace {
 
@@ -79,7 +78,7 @@ void grid() {
 
   for(auto y = 0; y < GRID_MAX_POINTS_Y; y++)
     for(auto x = 0; x < GRID_MAX_POINTS_X; x++) {
-      sprintf(text, "%.2f", z_values[x][y]);
+      Format::format00(text, sizeof text, z_values[x][y]);
       auto &point = points[y][x];
       panel.text(text, point.x, point.y, 48, aligns[x], LABEL::REGULAR);
     }

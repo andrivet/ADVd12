@@ -32,6 +32,7 @@
 #include "../wait.h"
 #include "../../core/styles.h"
 #include "../../core/status.h"
+#include "../../core/format.h"
 #include "../../core/ids.h"
 
 namespace {
@@ -91,7 +92,7 @@ void PrintPanel::create() {
   auto down = panel.control(IMG_DOWN, 62, 57);
   auto up = panel.control(IMG_UP, 189, 57);
 #if HAS_BED_PROBE
-  z_offset_var = panel.text("0.00", 110, 69, 79, ALIGN::CENTER, LABEL::REGULAR);
+  z_offset_var = panel.text("0.00", 110, 69, 82, ALIGN::CENTER, LABEL::REGULAR);
 #endif
 
   dropdown = lv_dropdown_create(panel.scr());
@@ -232,7 +233,7 @@ void next_point() {
 #if HAS_BED_PROBE
 void display_z_offset() {
   char text[8];
-  sprintf(text, "%.2f", ExtUI::getZOffset_mm());
+  Format::format00(text, sizeof text, ExtUI::getZOffset_mm());
   lv_label_set_text(z_offset_var, text);
 }
 #endif

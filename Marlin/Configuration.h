@@ -1061,7 +1061,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * Note: For Bowden Extruders make this large enough to allow load/unload.
  */
 #define PREVENT_LENGTHY_EXTRUDE
-#define EXTRUDE_MAXLENGTH 500
+#define EXTRUDE_MAXLENGTH 800 // @advd12
 
 //===========================================================================
 //======================== Thermal Runaway Protection =======================

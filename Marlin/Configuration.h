@@ -48,11 +48,11 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //#define PINS_DEBUGGING
 
 // Logging
-// 1: error, 2: warning, 3: info, 4: verbose, 5: everything (including suspended)
+// 0: disabled, 1: error, 2: warning, 3: info, 4: verbose, 5: everything (including suspended)
 #if defined(D12_SIMULATOR)
 #define ADVD12_LOG 4
 #else
-#define ADVD12_LOG 2
+#define ADVD12_LOG 0 // set to 0 in production
 #endif
 
 // Model of printer

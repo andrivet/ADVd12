@@ -44,7 +44,7 @@ void Kill::killed(const char *msg, const char *component) {
   lv_obj_center(modal);
   lv_obj_add_flag(modal, LV_OBJ_FLAG_CLICKABLE);
   lv_obj_set_style_bg_color(modal, lv_color_black(), LV_PART_MAIN | LV_STATE_DEFAULT);
-  lv_obj_set_style_bg_opa(modal, LV_OPA_20, LV_PART_MAIN | LV_STATE_DEFAULT);
+  lv_obj_set_style_bg_opa(modal, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
 
   auto msgbox = lv_obj_create(parent);
   lv_obj_set_size(msgbox, 329, 233);

@@ -27,11 +27,12 @@
 #include "../../inc/MarlinConfig.h"
 #include "../../lcd/extui/ui_api.h"
 #include "wait.h"
+#include "events.h"
+#include "graph.h"
 #include "../core/core.h"
 #include "../core/status.h"
 #include "../core/styles.h"
 #include "../core/ids.h"
-#include "events.h"
 
 namespace {
 lv_obj_t *modal = nullptr;
@@ -39,12 +40,14 @@ lv_obj_t *msgbox = nullptr;
 EventBinder<1> binder{};
 void (*wait_cb)(CALLBACK_SOURCE) = nullptr;
 void (*homing_cb)() = nullptr;
+bool close_on_homing = false;
 
-void wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE));
+lv_obj_t *wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE));
 lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y);
 void on_back(lv_event_t *event);
 void on_continue(lv_event_t *event);
 void on_confirm(lv_event_t *event);
+void on_cancel_heating(lv_event_t *event);
 }
 
 
@@ -102,12 +105,14 @@ void Wait::wait_user(const char * title, const char *message, bool awaiting) {
 
 void Wait::homing(const FlashChar* command, void (*cb)()) {
   homing_cb = cb;
+  close_on_homing = true;
   wait_base("Homing", "Please wait...", nullptr);
   ExtUI::injectCommands(command == nullptr ? F("G28") : command);
 }
 
 void Wait::homing(const FlashChar* command) {
   homing_cb = nullptr;
+  close_on_homing = true;
   wait_base("Homing", "Please wait...", nullptr);
   ExtUI::injectCommands(command == nullptr ? F("G28") : command);
 }
@@ -117,7 +122,10 @@ void Wait::homing_start() {
 }
 
 void Wait::homing_done() {
-  close();
+  if(close_on_homing) {
+    close_on_homing = false;
+    close();
+  }
   if(homing_cb) {
     homing_cb();
     homing_cb = nullptr;
@@ -165,9 +173,38 @@ bool Wait::check_not_busy() {
   return false;
 }
 
+void Wait::heating(void (*cb)(CALLBACK_SOURCE)) {
+  wait_task.set([]() -> CALLBACK_RESULT {
+    if(
+      ExtUI::getActualTemp_celsius(ExtUI::E0) < static_cast<celsius_float_t>(ExtUI::getTargetTemp_celsius(ExtUI::E0)) ||
+      ExtUI::getActualTemp_celsius(ExtUI::BED) < static_cast<celsius_float_t>(ExtUI::getTargetTemp_celsius(ExtUI::BED))
+    ) {
+      Graph::next_point();
+      return CALLBACK_RESULT::CONTINUE;
+    }
+
+    close();
+    if(wait_cb) wait_cb(CALLBACK_SOURCE::CONTINUE);
+    return CALLBACK_RESULT::STOP;
+  }, 500);
+
+  auto box = wait_base("Heating", nullptr, cb);
+  Graph::create(box);
+
+  auto cancel = wait_button(IMG_CANCEL, 4, 4);
+  binder.reset();
+  binder.bind(cancel, &on_cancel_heating);
+}
+
 namespace {
 
-void wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE)) {
+void on_cancel_heating(lv_event_t *event) {
+  wait_task.clear();
+  Wait::close();
+  if(wait_cb) wait_cb(CALLBACK_SOURCE::BACK);
+}
+
+lv_obj_t *wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE)) {
   if(modal || msgbox) Wait::close();
 
   wait_cb = cb;
@@ -199,13 +236,17 @@ void wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURC
   lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
   lv_obj_align_to(label, line, LV_ALIGN_BOTTOM_MID, 0, -18);
 
-  auto text = lv_label_create(msgbox);
-  lv_obj_set_style_text_color(text, lv_color_white(), LV_PART_MAIN);
-  lv_obj_set_style_text_font(text, &lv_font_montserrat_16, LV_PART_MAIN);
-  lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
-  lv_obj_set_width(text, lv_pct(100));
-  lv_label_set_text(text, message);
-  lv_obj_set_pos(text, 0, 126);
+  if(message) {
+    auto text = lv_label_create(msgbox);
+    lv_obj_set_style_text_color(text, lv_color_white(), LV_PART_MAIN);
+    lv_obj_set_style_text_font(text, &lv_font_montserrat_16, LV_PART_MAIN);
+    lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_CENTER, LV_PART_MAIN | LV_STATE_DEFAULT);
+    lv_obj_set_width(text, lv_pct(100));
+    lv_label_set_text(text, message);
+    lv_obj_set_pos(text, 0, 126);
+  }
+
+  return msgbox;
 }
 
 lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y) {

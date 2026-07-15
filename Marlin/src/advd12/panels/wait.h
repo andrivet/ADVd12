@@ -44,4 +44,5 @@ void ensure_homed(void (*cb)());
 void not_busy(void (*cb)(CALLBACK_SOURCE));
 void close();
 bool check_not_busy();
+void heating(void (*cb)(CALLBACK_SOURCE));
 };

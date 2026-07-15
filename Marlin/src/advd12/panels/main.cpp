@@ -82,10 +82,7 @@ void on_leveling(lv_event_t *e) {
 }
 
 void on_print(lv_event_t *e) {
-  if(ExtUI::isPrinting())
-    PanelBase::switch_panel<PrintPanel>();
-  else
-    PanelBase::switch_panel<SdPanel>();
+  PanelBase::switch_panel<SdPanel>();
 }
 
 void on_tuning(lv_event_t *e) {

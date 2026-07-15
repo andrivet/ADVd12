@@ -33,6 +33,7 @@
 #include "../../core/status.h"
 #include "../../core/styles.h"
 #include "../../core/ids.h"
+#include "src/advd12/panels/wait.h"
 
 namespace {
 
@@ -73,7 +74,7 @@ void on_file5(lv_event_t *e);
 }
 
 bool SdPanel::can_switch() {
-  return !ExtUI::isPrinting();
+  return Wait::check_not_busy();
 }
 
 void SdPanel::create() {
@@ -251,11 +252,17 @@ void select_row(unsigned index) {
     files_.changeDir(filename);
     files_.refresh();
     show_first_page();
+    return;
   }
-  else {
-    ExtUI::printFile(filename);
+
+  char text[40];
+  snprintf(text, sizeof(text), "Print file %s?", files_.filename());
+  Wait::wait_back_continue("Print", text, [](CALLBACK_SOURCE src) {
+    if(src == CALLBACK_SOURCE::BACK) return;
+    ExtUI::printFile(files_.shortFilename());
+    PrintPanel::set_filename(files_.filename());
     PanelBase::switch_panel<PrintPanel>();
-  }
+  });
 }
 
 }

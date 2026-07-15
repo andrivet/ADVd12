@@ -53,7 +53,7 @@ void format00(char *buffer, std::size_t buffer_size, double value) {
   if(negative) rounded = -rounded;
   auto whole = rounded / 100;
   auto fract = rounded % 100;
-  snprintf(buffer, buffer_size, negative ? "-%ld.%ld" : "%ld.%ld", whole, fract);
+  snprintf(buffer, buffer_size, negative ? "-%ld.%02ld" : "%ld.%02ld", whole, fract);
 }
 
 }

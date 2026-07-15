@@ -1,5 +1,5 @@
 /**
-* ADVd12 firmware
+ * ADVd12 firmware
  * Copyright (c) 2026 Sebastien Andriver [https://github.com/andrivet/advd12]
  *
  * Base on Marlin firmware
@@ -37,39 +37,39 @@
 
 namespace {
 
-constexpr unsigned NB_POINTS = 240;
-constexpr unsigned BED_TEMP_MAX = 160;
-constexpr unsigned BED_TEMP_MIN = 20;
-constexpr unsigned EXT_TEMP_MAX = 260;
-constexpr unsigned EXT_TEMP_MIN = 40;
-
-lv_obj_t *chart = nullptr;
-lv_chart_series_t *bed_series = nullptr;
-lv_chart_series_t *ext_series = nullptr;
+char filename[64];
 lv_obj_t *dropdown = nullptr;
-#if HAS_BED_PROBE
 lv_obj_t *z_offset_var = nullptr;
-#endif
-float increment = 0.02;
+lv_obj_t *feedrate_var = nullptr;
+lv_obj_t *flowrate_var = nullptr;
+float increment = 0.01;
 
-Panel<8> panel;
+Panel<11> panel;
 
-void draw_graduations();
-void next_point();
-#if HAS_BED_PROBE
 void display_z_offset();
-#endif
+void display_feedrate();
+void display_flowrate();
 float get_multiplier(uint16_t index);
 
-void on_back(lv_event_t *e);
 void on_stop(lv_event_t *e);
 void on_pause(lv_event_t *e);
-void on_change(lv_event_t *e);
-void on_options(lv_event_t *e);
+void on_continue(lv_event_t *e);
+//void on_change(lv_event_t *e);
 void on_down(lv_event_t *e);
 void on_up(lv_event_t *e);
+void on_feedrate_minus(lv_event_t *e);
+void on_feedrate_plus(lv_event_t *e);
+void on_flowrate_minus(lv_event_t *e);
+void on_flowrate_plus(lv_event_t *e);
 void on_increment_selected(lv_event_t *e);
 
+}
+
+void PrintPanel::set_filename(const char *name) {
+  auto length = strlen(name);
+  if(length >= sizeof(filename))
+    length = sizeof(filename) - 1;
+  memcpy(filename, name, length);
 }
 
 bool PrintPanel::can_switch() {
@@ -80,118 +80,100 @@ void PrintPanel::create() {
   if(!panel.create()) return;
   panel.layout_menu("");
 
-  panel.rectangle(0, 108, 342, 3);
+  auto stop = panel.control(IMG_STOP, 7, 2);
+  auto pause = panel.control(IMG_PAUSE, 74, 2);
+  auto cont = panel.control(IMG_START, 140, 2);
+  //auto change = panel.control(IMG_CHANGE, 288, 2);
 
-  auto back = panel.control(IMG_LEFT, 7, 2);
-  auto stop = panel.control(IMG_STOP, 77, 2);
-  auto pause = panel.control(IMG_PAUSE, 147, 2);
-  auto change = panel.control(IMG_CHANGE, 217, 2);
-  auto options = panel.control(IMG_OPTIONS, 289, 2);
+  panel.icon(IMG_FS_FILE, 15, 64);
+  panel.text(filename, 62, 69, 274, ALIGN::LEFT, LABEL::REGULAR);
 
-  panel.icon(IMG_STEPS2, 8, 60);
-  auto down = panel.control(IMG_DOWN, 62, 57);
-  auto up = panel.control(IMG_UP, 189, 57);
-#if HAS_BED_PROBE
-  z_offset_var = panel.text("0.00", 110, 69, 82, ALIGN::CENTER, LABEL::REGULAR);
-#endif
+  panel.icon(IMG_STEPS2, 8, 106);
+  auto down = panel.control(IMG_DOWN, 62, 104);
+  auto up = panel.control(IMG_UP, 189, 104);
+  z_offset_var = panel.text("0.00", 110, 117, 79, ALIGN::CENTER, LABEL::REGULAR);
 
   dropdown = lv_dropdown_create(panel.scr());
   lv_dropdown_set_options(dropdown, "0.01\n0.05\n0.25");
-  lv_obj_set_pos(dropdown, 249, 60);
+  lv_obj_set_pos(dropdown, 249, 108);
   lv_obj_set_size(dropdown, 87, 38);
   lv_obj_add_style(dropdown, &style_dropdown, LV_PART_MAIN);
   auto drop_list = lv_dropdown_get_list(dropdown);
   if(drop_list) lv_obj_add_style(drop_list, &style_dropdown, LV_PART_MAIN);
 
-  draw_graduations();
+  panel.icon(IMG_FEEDRATE2, 15, 172);
+  auto feedrate_minus = panel.control(IMG_MINUS, 62, 162);
+  auto feedrate_plus = panel.control(IMG_PLUS, 189, 162);
+  feedrate_var = panel.text("100%", 110, 175, 79, ALIGN::CENTER, LABEL::REGULAR);
 
-  chart = lv_chart_create(panel.scr());
-  lv_obj_set_pos(chart, 50, 113);
-  lv_obj_set_size(chart, NB_POINTS, 168);
-  lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
-  lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, BED_TEMP_MIN, BED_TEMP_MAX);
-  lv_chart_set_range(chart, LV_CHART_AXIS_SECONDARY_Y, EXT_TEMP_MIN, EXT_TEMP_MAX);
-  lv_chart_set_point_count(chart, NB_POINTS);
-  lv_chart_set_update_mode(chart, LV_CHART_UPDATE_MODE_SHIFT);
-  lv_chart_set_axis_tick(chart, LV_CHART_AXIS_PRIMARY_Y, 0, 0, 0, 0, false, 0);
-  lv_chart_set_axis_tick(chart, LV_CHART_AXIS_SECONDARY_Y, 0, 0, 0, 0, false, 0);
-  bed_series = lv_chart_add_series(chart, lv_color_make(126, 211, 33), LV_CHART_AXIS_PRIMARY_Y);
-  ext_series = lv_chart_add_series(chart, lv_color_make(255, 138, 97), LV_CHART_AXIS_SECONDARY_Y);
-  lv_chart_set_div_line_count(chart, 0, 0);
-  lv_chart_set_all_value(chart, bed_series, static_cast<lv_coord_t>(ExtUI::getActualTemp_celsius(ExtUI::BED)));
-  lv_chart_set_all_value(chart, ext_series, static_cast<lv_coord_t>(ExtUI::getActualTemp_celsius(ExtUI::E0)));
-
-  lv_obj_set_style_border_width(chart, 0, LV_PART_MAIN);
-  lv_obj_set_style_line_color(chart, lv_color_white(), LV_PART_ITEMS);
-  lv_obj_set_style_line_width(chart, 2, LV_PART_ITEMS);
+  panel.icon(IMG_FLOWRATE, 15, 228);
+  auto flowrate_minus = panel.control(IMG_MINUS, 62, 220);
+  auto flowrate_plus = panel.control(IMG_PLUS, 189, 220);
+  flowrate_var = panel.text("100%", 110, 233, 79, ALIGN::CENTER, LABEL::REGULAR);
 
   panel.reset_bindings();
-  panel.bind(back, &on_back);
   panel.bind(stop, &on_stop);
   panel.bind(pause, &on_pause);
-  panel.bind(change, &on_change);
-  panel.bind(options, &on_options);
+  panel.bind(cont, &on_continue);
+  //panel.bind(change, &on_change);
   panel.bind(down, &on_down);
   panel.bind(up, &on_up);
   panel.bind(dropdown, &on_increment_selected, EventType::CHANGED);
+  panel.bind(feedrate_minus, &on_feedrate_minus);
+  panel.bind(feedrate_plus, &on_feedrate_plus);
+  panel.bind(flowrate_minus, &on_flowrate_minus);
+  panel.bind(flowrate_plus, &on_flowrate_plus);
 
-  background_task.set([]() -> CALLBACK_RESULT {
-    next_point();
-#if HAS_BED_PROBE
-    display_z_offset();
-#endif
-    return CALLBACK_RESULT::CONTINUE;
-  }, 1000);
+  display_z_offset();
+
+  Wait::heating([](CALLBACK_SOURCE src) {
+    if(src == CALLBACK_SOURCE::BACK) {
+      ExtUI::stopPrint();
+      PanelBase::switch_panel<MainPanel>();
+    }
+  });
 }
 
 namespace {
 
-void on_back(lv_event_t *e) {
-  background_task.clear();
- PanelBase::switch_panel<MainPanel>();
-}
-
 void on_stop(lv_event_t *e) {
-  if(!ExtUI::isPrinting()) {
-    Status::set(GET_TEXT(ADVD12_MSG_ALREADY_STOPPED));
-    return;
-  }
-
   Wait::wait_back_continue(GET_TEXT(ADVD12_TITLE_CONFIRM), GET_TEXT(ADVD12_MSG_ABORT_PRINT), [] (CALLBACK_SOURCE src) -> void {
-   if(src == CALLBACK_SOURCE::BACK) { // Cancel abort print
-     Status::set(GET_TEXT(ADVD12_MSG_PRINT_CONTINUE), Status::STATUS_OPTIONS::RESET);
-     return;
-   }
+    if(src == CALLBACK_SOURCE::BACK) { // Cancel abort print
+      Status::set(GET_TEXT(ADVD12_MSG_PRINT_CONTINUE), Status::STATUS_OPTIONS::RESET);
+      return;
+    }
 
-   ExtUI::stopPrint();
+    ExtUI::stopPrint();
+    PanelBase::switch_panel<MainPanel>();
   });
 }
 
 void on_pause(lv_event_t *e) {
-  if(!ExtUI::isPrinting()) return;
-  if(ExtUI::isPrintingPaused())
-    ExtUI::resumePrint();
-  else
-    ExtUI::pausePrint();
+  if(!ExtUI::isPrinting() || ExtUI::isPrintingPaused()) return;
+  ExtUI::pausePrint();
 }
 
+void on_continue(lv_event_t *e) {
+  if(!ExtUI::isPrinting() || !ExtUI::isPrintingPaused()) return;
+  ExtUI::resumePrint();
+}
+
+/*
 void on_change(lv_event_t *e) {
   if(!ExtUI::isPrinting()) return;
   ExtUI::injectCommands("M600");
-}
-
-void on_options(lv_event_t *e) {
-
-}
+}*/
 
 void on_down(lv_event_t *e) {
   auto steps = ExtUI::mmToWholeSteps(increment, ExtUI::Z);
   ExtUI::smartAdjustAxis_steps(static_cast<int16_t>(-steps), ExtUI::Z, true);
+  display_z_offset();
 }
 
 void on_up(lv_event_t *e) {
   auto steps = ExtUI::mmToWholeSteps(increment, ExtUI::Z);
   ExtUI::smartAdjustAxis_steps(steps, ExtUI::Z, true);
+  display_z_offset();
 }
 
 void on_increment_selected(lv_event_t *e) {
@@ -208,34 +190,55 @@ float get_multiplier(uint16_t index) {
   }
 }
 
-void draw_graduations() {
-  char text[8];
-  for(unsigned i = 0; i < 5; i++) {
-    sprintf(text, "%d", i * 30 + 30);
-    panel.text(text, 4, 257 - i * 36, 32, ALIGN::RIGHT, LABEL::BED);
-    sprintf(text, "%d", i * 50 + 50);
-    panel.text(text, 304, 257 - i * 36, 32, ALIGN::LEFT, LABEL::EXTRUDER);
-
-    auto y = 124 + i * 36;
-    auto rect = lv_obj_create(panel.scr());
-    lv_obj_set_pos(rect, 50, static_cast<lv_coord_t>(y));
-    lv_obj_set_size(rect, NB_POINTS, 1);
-    lv_obj_set_style_bg_color(rect, lv_color_make(128, 128, 128), LV_PART_MAIN);
-    lv_obj_set_style_bg_opa(rect, LV_OPA_COVER, LV_PART_MAIN);
-  }
-}
-
-void next_point() {
-  lv_chart_set_next_value(chart, ext_series, static_cast<lv_coord_t>(ExtUI::getActualTemp_celsius(ExtUI::E0)));
-  lv_chart_set_next_value(chart, bed_series, static_cast<lv_coord_t>(ExtUI::getActualTemp_celsius(ExtUI::BED)));
-}
-
-#if HAS_BED_PROBE
 void display_z_offset() {
   char text[8];
-  Format::format00(text, sizeof text, ExtUI::getZOffset_mm());
+#if HAS_BED_PROBE
+  auto offset = ExtUI::getZOffset_mm();
+#else
+  auto offset = ExtUI::getAxisPosition_mm(ExtUI::Z);
+#endif
+  Format::format00(text, sizeof text, offset);
   lv_label_set_text(z_offset_var, text);
 }
-#endif
+
+void display_feedrate() {
+  char text[8];
+  sprintf(text, "%d%%", static_cast<int>(ExtUI::getFeedrate_percent()));
+  lv_label_set_text(feedrate_var, text);
+}
+
+void display_flowrate() {
+  char text[8];
+  sprintf(text, "%d%%", static_cast<int>(ExtUI::getFlow_percent(ExtUI::E0)));
+  lv_label_set_text(flowrate_var, text);
+}
+
+void on_feedrate_minus(lv_event_t *e) {
+  auto feedrate = ExtUI::getFeedrate_percent();
+  if(feedrate <= 50) return;
+  ExtUI::setFeedrate_percent(feedrate - 1);
+  display_feedrate();
+}
+
+void on_feedrate_plus(lv_event_t *e) {
+  auto feedrate = ExtUI::getFeedrate_percent();
+  if(feedrate >= 150) return;
+  ExtUI::setFeedrate_percent(feedrate + 1);
+  display_feedrate();
+}
+
+void on_flowrate_minus(lv_event_t *e) {
+  auto flowrate = ExtUI::getFlow_percent(ExtUI::E0);
+  if(flowrate <= 50) return;
+  ExtUI::setFlow_percent(flowrate - 1, ExtUI::E0);
+  display_flowrate();
+}
+
+void on_flowrate_plus(lv_event_t *e) {
+  auto flowrate = ExtUI::getFlow_percent(ExtUI::E0);
+  if(flowrate >= 150) return;
+  ExtUI::setFlow_percent(flowrate + 1, ExtUI::E0);
+  display_flowrate();
+}
 
 }

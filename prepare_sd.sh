@@ -18,6 +18,10 @@ if [[ -d "$TARGET/_assets" ]]; then
     rm -rf "$TARGET/_assets"
 fi
 
+# Build the firmware
+echo "Build firmware..."
+pio run -e advd12_230
+
 # Check that the source file exists
 if [[ ! -f "$SOURCE" ]]; then
     echo "Error: Source file '$SOURCE' not found."
@@ -33,10 +37,6 @@ fi
 # Remove any .cur and .bin files
 echo "Removing existing .cur and .bin files..."
 find "$TARGET" -maxdepth 1 \( -name "*.cur" -o -name "*.bin" \) -delete
-
-# Build the firmware
-echo "Build firmware..."
-pio run -e advd12_230
 
 # Copy the new firmware and assets
 

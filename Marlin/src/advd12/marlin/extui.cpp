@@ -91,7 +91,7 @@ namespace ExtUI {
   }
 
   void onPrintDone() {
-    Progress::finish();
+    // Nothing to do
   }
 
   void onFilamentRunout(const extruder_t extruder) {

@@ -88,7 +88,7 @@ bool MovePanel::can_switch() {
 }
 
 void MovePanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Move");
 
   auto back = panel.control(IMG_LEFT, 7, 2);

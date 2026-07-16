@@ -78,7 +78,7 @@ bool SdPanel::can_switch() {
 }
 
 void SdPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("microSD Card");
 
   panel.rectangle(ROW_WIDTH, 56, 3, 228);

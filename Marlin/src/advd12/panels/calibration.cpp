@@ -42,7 +42,7 @@ bool CalibrationPanel::can_switch() {
 }
 
 void CalibrationPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
 
   TouchCalibration::calibration_start();
   auto pt = TouchCalibration::calibration_points[0];

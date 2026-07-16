@@ -45,7 +45,7 @@ bool VersionsPanel::can_switch() {
 }
 
 void VersionsPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Versions");
 
   auto back = panel.control(IMG_LEFT, 7, 2);

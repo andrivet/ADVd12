@@ -58,7 +58,7 @@ bool ZHeightPanel::can_switch() {
 }
 
 void ZHeightPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Z Height");
 
   auto back = panel.control(IMG_LEFT, 7, 2);

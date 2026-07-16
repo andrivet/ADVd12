@@ -49,7 +49,7 @@ bool InfosPanel::can_switch() {
 }
 
 void InfosPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Infos");
 
   auto back = panel.control(IMG_LEFT, 7, 2);

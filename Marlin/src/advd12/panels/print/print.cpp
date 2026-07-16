@@ -77,7 +77,7 @@ bool PrintPanel::can_switch() {
 }
 
 void PrintPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("");
 
   auto stop = panel.control(IMG_STOP, 7, 2);

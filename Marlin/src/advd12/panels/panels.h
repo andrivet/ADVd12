@@ -49,7 +49,7 @@ template<typename T>
 static void switch_panel();
 
 struct PanelBase {
-  void create();
+  bool create();
   void release();
   [[nodiscard]] lv_obj_t* scr() const { return scr_; }
 

@@ -55,8 +55,8 @@ void PanelBase::release() {
   scr_ = nullptr;
 }
 
-void PanelBase::create() {
-  assert(scr_ == nullptr);
+bool PanelBase::create() {
+  if(scr_ != nullptr) return false; // Already created
   scr_ = lv_obj_create(nullptr);
   lv_obj_set_style_bg_color(scr_, lv_color_black(), LV_PART_MAIN);
   lv_obj_set_style_bg_opa(scr_, LV_OPA_COVER, LV_PART_MAIN);
@@ -64,6 +64,7 @@ void PanelBase::create() {
 
   if(current_panel_) current_panel_->release();
   current_panel_ = this;
+  return true;
 }
 
 lv_obj_t* PanelBase::rectangle(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height) {

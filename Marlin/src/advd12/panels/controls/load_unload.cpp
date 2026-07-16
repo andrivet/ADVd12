@@ -63,7 +63,7 @@ bool LoadUnloadPanel::can_switch() {
 }
 
 void LoadUnloadPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Load & Unload");
 
   auto back = panel.control(IMG_LEFT, 7, 2);

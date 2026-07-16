@@ -50,7 +50,7 @@ bool SettingsPanel::can_switch() {
 }
 
 void SettingsPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Settings");
 
   auto back = panel.control(IMG_LEFT, 7, 2);

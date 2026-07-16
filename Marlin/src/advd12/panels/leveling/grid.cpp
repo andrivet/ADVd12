@@ -50,7 +50,7 @@ bool GridPanel::can_switch() {
 }
 
 void GridPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Grid");
   Bed::create(panel.scr());
 

@@ -55,7 +55,7 @@ bool AutomaticPanel::can_switch() {
 }
 
 void AutomaticPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Automatic");
   Bed::create(panel.scr());
 

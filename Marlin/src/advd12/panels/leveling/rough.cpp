@@ -58,7 +58,7 @@ bool RoughPanel::can_switch() {
 }
 
 void RoughPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Rough");
   Bed::create(panel.scr());
 

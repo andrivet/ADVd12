@@ -52,7 +52,7 @@ bool MainPanel::can_switch() {
 }
 
 void MainPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_main();
 
   auto controls = panel.big_button(IMG_CONTROLS, "Controls", 36, 34);

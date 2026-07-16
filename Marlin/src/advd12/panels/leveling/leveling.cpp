@@ -55,7 +55,7 @@ bool LevelingPanel::can_switch() {
 }
 
 void LevelingPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Leveling");
 
   auto back = panel.control(IMG_LEFT, 7, 2);

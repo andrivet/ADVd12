@@ -45,7 +45,7 @@ bool CopyrightsPanel::can_switch() {
 }
 
 void CopyrightsPanel::create() {
-  panel.create();
+  if(!panel.create()) return;
   panel.layout_menu("Copyrights");
 
   auto back = panel.control(IMG_LEFT, 7, 2);

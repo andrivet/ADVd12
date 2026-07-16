@@ -45,12 +45,11 @@ enum struct ALIGN {
   CENTER
 };
 
+template<typename T>
+static void switch_panel();
 
 struct PanelBase {
-  template<typename T>
-  static void switch_panel();
-
-  [[nodiscard]] bool create();
+  void create();
   void release();
   [[nodiscard]] lv_obj_t* scr() const { return scr_; }
 
@@ -84,7 +83,7 @@ private:
 };
 
 template<typename T>
-void PanelBase::switch_panel() {
+void switch_panel() {
   if(!T::can_switch()) return;
   T::create();
 }

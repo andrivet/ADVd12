@@ -58,7 +58,7 @@ bool ZHeightPanel::can_switch() {
 }
 
 void ZHeightPanel::create() {
-  if(!panel.create()) return;
+  panel.create();
   panel.layout_menu("Z Height");
 
   auto back = panel.control(IMG_LEFT, 7, 2);
@@ -103,7 +103,7 @@ void on_back(lv_event_t *e) {
   ExtUI::setZOffset_mm(old_offset);
   ExtUI::setAbsoluteZAxisPosition_mm(ExtUI::getAxisPosition_mm(ExtUI::Z) - old_offset);
   ExtUI::setAxisPosition_mm(Z_AFTER_HOMING, ExtUI::Z, FEEDRATE_Z);
-  Wait::not_busy([](CALLBACK_SOURCE) { PanelBase::switch_panel<LevelingPanel>(); });
+  Wait::not_busy([](CALLBACK_SOURCE) { switch_panel<LevelingPanel>(); });
 }
 
 void on_save(lv_event_t *e) {
@@ -115,7 +115,7 @@ void on_save(lv_event_t *e) {
   ExtUI::setAxisPosition_mm(Z_AFTER_HOMING, ExtUI::Z, FEEDRATE_Z);
   ExtUI::saveSettings();
   Status::set(GET_TEXT(ADVD12_MSG_Z_OFFSET_SAVED), Status::STATUS_OPTIONS::RESET);
-  Wait::not_busy([](CALLBACK_SOURCE) { PanelBase::switch_panel<LevelingPanel>(); });
+  Wait::not_busy([](CALLBACK_SOURCE) { switch_panel<LevelingPanel>(); });
 }
 
 void set_offset() {

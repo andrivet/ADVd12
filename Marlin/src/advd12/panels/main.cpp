@@ -37,7 +37,7 @@
 #include "src/lcd/extui/ui_api.h"
 
 namespace {
-Panel<6> main_panel;
+Panel<6> panel;
 
 void on_controls(lv_event_t *e);
 void on_leveling(lv_event_t *e);
@@ -52,49 +52,49 @@ bool MainPanel::can_switch() {
 }
 
 void MainPanel::create() {
-  if(!main_panel.create()) return;
-  main_panel.layout_main();
+  panel.create();
+  panel.layout_main();
 
-  auto controls = main_panel.big_button(IMG_CONTROLS, "Controls", 36, 34);
-  auto leveling = main_panel.big_button(IMG_LEVELING, "Leveling", 140, 34);
-  auto print    = main_panel.big_button(IMG_PRINT, "Printing", 244, 34);
-  auto tuning   = main_panel.big_button(IMG_TUNING, "Tuning", 36, 154);
-  auto settings = main_panel.big_button(IMG_SETTINGS, "Settings", 140, 154);
-  auto info     = main_panel.big_button(IMG_INFO, "Info", 244, 154);
+  auto controls = panel.big_button(IMG_CONTROLS, "Controls", 36, 34);
+  auto leveling = panel.big_button(IMG_LEVELING, "Leveling", 140, 34);
+  auto print    = panel.big_button(IMG_PRINT, "Printing", 244, 34);
+  auto tuning   = panel.big_button(IMG_TUNING, "Tuning", 36, 154);
+  auto settings = panel.big_button(IMG_SETTINGS, "Settings", 140, 154);
+  auto info     = panel.big_button(IMG_INFO, "Info", 244, 154);
 
-  main_panel.reset_bindings();
-  main_panel.bind(controls, &on_controls);
-  main_panel.bind(leveling, &on_leveling);
-  main_panel.bind(print, &on_print);
-  main_panel.bind(tuning, &on_tuning);
-  main_panel.bind(settings, &on_settings);
-  main_panel.bind(info, &on_info);
+  panel.reset_bindings();
+  panel.bind(controls, &on_controls);
+  panel.bind(leveling, &on_leveling);
+  panel.bind(print, &on_print);
+  panel.bind(tuning, &on_tuning);
+  panel.bind(settings, &on_settings);
+  panel.bind(info, &on_info);
 }
 
 namespace {
 
 void on_controls(lv_event_t *e) {
-  PanelBase::switch_panel<ControlsPanel>();
+  switch_panel<ControlsPanel>();
 }
 
 void on_leveling(lv_event_t *e) {
-  PanelBase::switch_panel<LevelingPanel>();
+  switch_panel<LevelingPanel>();
 }
 
 void on_print(lv_event_t *e) {
-  PanelBase::switch_panel<SdPanel>();
+  switch_panel<SdPanel>();
 }
 
 void on_tuning(lv_event_t *e) {
-  PanelBase::switch_panel<TuningPanel>();
+  switch_panel<TuningPanel>();
 }
 
 void on_settings(lv_event_t *e) {
-  PanelBase::switch_panel<SettingsPanel>();
+  switch_panel<SettingsPanel>();
 }
 
 void on_info(lv_event_t *e) {
-  PanelBase::switch_panel<InfosPanel>();
+  switch_panel<InfosPanel>();
 }
 
 }

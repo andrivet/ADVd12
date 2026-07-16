@@ -35,7 +35,7 @@
 
 namespace {
 
-Panel<5> infos_panel;
+Panel<5> panel;
 
 void on_back(lv_event_t *e);
 void on_stats(lv_event_t *e);
@@ -49,28 +49,28 @@ bool InfosPanel::can_switch() {
 }
 
 void InfosPanel::create() {
-  if(!infos_panel.create()) return;
-  infos_panel.layout_menu("Infos");
+  panel.create();
+  panel.layout_menu("Infos");
 
-  auto back = infos_panel.control(IMG_LEFT, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
 
-  auto stats = infos_panel.medium_button(IMG_STATS, "Stats", 19, 76);
-  auto versions = infos_panel.medium_button(IMG_VERSIONS, "Versions", 101, 76);
-  auto copyrights = infos_panel.medium_button(IMG_COPYRIGHTS, "Copyright", 183, 76);
-  auto io = infos_panel.medium_button(IMG_IO, "I/O", 265, 76);
+  auto stats = panel.medium_button(IMG_STATS, "Stats", 19, 76);
+  auto versions = panel.medium_button(IMG_VERSIONS, "Versions", 101, 76);
+  auto copyrights = panel.medium_button(IMG_COPYRIGHTS, "Copyright", 183, 76);
+  auto io = panel.medium_button(IMG_IO, "I/O", 265, 76);
 
-  infos_panel.reset_bindings();
-  infos_panel.bind(back, &on_back);
-  infos_panel.bind(stats, &on_stats);
-  infos_panel.bind(versions, &on_versions);
-  infos_panel.bind(copyrights, &on_copyrights);
-  infos_panel.bind(io, &on_io);
+  panel.reset_bindings();
+  panel.bind(back, &on_back);
+  panel.bind(stats, &on_stats);
+  panel.bind(versions, &on_versions);
+  panel.bind(copyrights, &on_copyrights);
+  panel.bind(io, &on_io);
 }
 
 namespace {
 
 void on_back(lv_event_t *e) {
-  PanelBase::switch_panel<MainPanel>();
+  switch_panel<MainPanel>();
 }
 
 void on_stats(lv_event_t *e) {
@@ -78,11 +78,11 @@ void on_stats(lv_event_t *e) {
 }
 
 void on_versions(lv_event_t *e) {
-  PanelBase::switch_panel<VersionsPanel>();
+  switch_panel<VersionsPanel>();
 }
 
 void on_copyrights(lv_event_t *e) {
-  PanelBase::switch_panel<CopyrightsPanel>();
+  switch_panel<CopyrightsPanel>();
 }
 
 void on_io(lv_event_t *e) {

@@ -30,7 +30,7 @@
 #include "src/advd12/panels/panels.h"
 
 namespace {
-Panel<5> motors_panel;
+Panel<5> panel;
 
 void on_back(lv_event_t *e);
 void on_steps(lv_event_t *e);
@@ -44,28 +44,28 @@ bool MotorsPanel::can_switch() {
 }
 
 void MotorsPanel::create() {
-  if(!motors_panel.create()) return;
-  motors_panel.layout_menu("Motors");
+  panel.create();
+  panel.layout_menu("Motors");
 
-  auto back = motors_panel.control(IMG_LEFT, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
 
-  auto steps = motors_panel.medium_button(IMG_STEPS, "Steps", 19, 76);
-  auto feedrate = motors_panel.medium_button(IMG_FEEDRATE, "Feedrate", 101, 76);
-  auto max_accel = motors_panel.medium_button(IMG_ACCELERATION, "Max Accel", 183, 76);
-  auto def_accel = motors_panel.medium_button(IMG_ACCELERATION, "Def Accel", 265, 76);
+  auto steps = panel.medium_button(IMG_STEPS, "Steps", 19, 76);
+  auto feedrate = panel.medium_button(IMG_FEEDRATE, "Feedrate", 101, 76);
+  auto max_accel = panel.medium_button(IMG_ACCELERATION, "Max Accel", 183, 76);
+  auto def_accel = panel.medium_button(IMG_ACCELERATION, "Def Accel", 265, 76);
 
-  motors_panel.reset_bindings();
-  motors_panel.bind(back, &on_back);
-  motors_panel.bind(steps, &on_steps);
-  motors_panel.bind(feedrate, &on_feedrate);
-  motors_panel.bind(max_accel, &on_max_acceleration);
-  motors_panel.bind(def_accel, &on_default_acceleration);
+  panel.reset_bindings();
+  panel.bind(back, &on_back);
+  panel.bind(steps, &on_steps);
+  panel.bind(feedrate, &on_feedrate);
+  panel.bind(max_accel, &on_max_acceleration);
+  panel.bind(def_accel, &on_default_acceleration);
 }
 
 namespace {
 
 void on_back(lv_event_t *e) {
-  PanelBase::switch_panel<MainPanel>();
+  switch_panel<MainPanel>();
 }
 
 void on_steps(lv_event_t *e) {

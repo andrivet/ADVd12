@@ -88,7 +88,7 @@ bool MovePanel::can_switch() {
 }
 
 void MovePanel::create() {
-  if(!panel.create()) return;
+  panel.create();
   panel.layout_menu("Move");
 
   auto back = panel.control(IMG_LEFT, 7, 2);
@@ -147,7 +147,7 @@ lv_obj_t * home(lv_coord_t x, lv_coord_t y, const char *symbol) {
 }
 
 void on_back(lv_event_t *e) {
-  PanelBase::switch_panel<ControlsPanel>();
+  switch_panel<ControlsPanel>();
 }
 
 void on_disable(lv_event_t *e) {

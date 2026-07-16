@@ -58,7 +58,7 @@ bool RoughPanel::can_switch() {
 }
 
 void RoughPanel::create() {
-  if(!panel.create()) return;
+  panel.create();
   panel.layout_menu("Rough");
   Bed::create(panel.scr());
 
@@ -89,7 +89,7 @@ void prepare(CALLBACK_SOURCE src) {
   if(src == CALLBACK_SOURCE::BACK) {
     ExtUI::setTargetTemp_celsius(0, ExtUI::BED);
     Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
-    PanelBase::switch_panel<MainPanel>();
+    switch_panel<MainPanel>();
     return;
   }
 
@@ -98,7 +98,7 @@ void prepare(CALLBACK_SOURCE src) {
 #endif
 
   Wait::homing(F("G28\nG1 Z4 F1200"), [] () -> void {
-    Wait::not_busy([](CALLBACK_SOURCE) { PanelBase::switch_panel<RoughPanel>(); });
+    Wait::not_busy([](CALLBACK_SOURCE) { switch_panel<RoughPanel>(); });
   });
 }
 
@@ -107,7 +107,7 @@ void on_back(lv_event_t *e) {
   ExtUI::setLevelingActive(true); // Enable back compensation
 #endif
   ExtUI::setAxisPosition_mm(Z_AFTER_HOMING, ExtUI::Z, FEEDRATE_Z);
-  Wait::not_busy([](CALLBACK_SOURCE) { PanelBase::switch_panel<MainPanel>(); } );
+  Wait::not_busy([](CALLBACK_SOURCE) { switch_panel<MainPanel>(); } );
 }
 
 void move(float x, float y) {

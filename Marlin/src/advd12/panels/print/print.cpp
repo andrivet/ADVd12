@@ -77,7 +77,7 @@ bool PrintPanel::can_switch() {
 }
 
 void PrintPanel::create() {
-  if(!panel.create()) return;
+  panel.create();
   panel.layout_menu("");
 
   auto stop = panel.control(IMG_STOP, 7, 2);
@@ -129,7 +129,7 @@ void PrintPanel::create() {
   Wait::heating([](CALLBACK_SOURCE src) {
     if(src == CALLBACK_SOURCE::BACK) {
       ExtUI::stopPrint();
-      PanelBase::switch_panel<MainPanel>();
+      switch_panel<MainPanel>();
     }
   });
 }
@@ -144,7 +144,7 @@ void on_stop(lv_event_t *e) {
     }
 
     ExtUI::stopPrint();
-    PanelBase::switch_panel<MainPanel>();
+    switch_panel<MainPanel>();
   });
 }
 

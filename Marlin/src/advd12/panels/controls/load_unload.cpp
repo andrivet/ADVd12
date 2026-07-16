@@ -63,7 +63,7 @@ bool LoadUnloadPanel::can_switch() {
 }
 
 void LoadUnloadPanel::create() {
-  if(!panel.create()) return;
+  panel.create();
   panel.layout_menu("Load & Unload");
 
   auto back = panel.control(IMG_LEFT, 7, 2);
@@ -107,7 +107,7 @@ void show_temp() {
 void on_back(lv_event_t *e) {
   ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
   ExtUI::setAxisPosition_mm(previous_z_, ExtUI::Z, 20);
-  PanelBase::switch_panel<ControlsPanel>();
+  switch_panel<ControlsPanel>();
 }
 
 void on_minus(lv_event_t *e) {

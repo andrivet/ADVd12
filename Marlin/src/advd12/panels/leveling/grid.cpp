@@ -50,7 +50,7 @@ bool GridPanel::can_switch() {
 }
 
 void GridPanel::create() {
-  if(!panel.create()) return;
+  panel.create();
   panel.layout_menu("Grid");
   Bed::create(panel.scr());
 
@@ -86,7 +86,7 @@ void grid() {
 }
 
 void on_back(lv_event_t *e) {
-  PanelBase::switch_panel<LevelingPanel>();
+  switch_panel<LevelingPanel>();
 }
 
 }

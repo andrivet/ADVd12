@@ -38,7 +38,7 @@
 #include "../../core/ids.h"
 
 namespace {
-Panel<7> leveling_panel;
+Panel<7> panel;
 
 void on_back(lv_event_t *e);
 void on_rough_leveling(lv_event_t *e);
@@ -55,44 +55,44 @@ bool LevelingPanel::can_switch() {
 }
 
 void LevelingPanel::create() {
-  if(!leveling_panel.create()) return;
-  leveling_panel.layout_menu("Leveling");
+  panel.create();
+  panel.layout_menu("Leveling");
 
-  auto back = leveling_panel.control(IMG_LEFT, 7, 2);
-  auto rough = leveling_panel.medium_button(IMG_ROUGH, "Rough", 19, 76);
+  auto back = panel.control(IMG_LEFT, 7, 2);
+  auto rough = panel.medium_button(IMG_ROUGH, "Rough", 19, 76);
 
 #if HAS_LEVELING
-  auto automatic = leveling_panel.medium_button(IMG_AUTOMATIC, "Automatic", 101, 76);
-  auto reset = leveling_panel.medium_button(IMG_RESET, " Reset", 183, 76);
-  auto z_height = leveling_panel.medium_button(IMG_Z_HEIGHT, "Z-Height", 265, 76);
-  auto grid = leveling_panel.medium_button(IMG_GRID, "Grid", 19, 188);
+  auto automatic = panel.medium_button(IMG_AUTOMATIC, "Automatic", 101, 76);
+  auto reset = panel.medium_button(IMG_RESET, " Reset", 183, 76);
+  auto z_height = panel.medium_button(IMG_Z_HEIGHT, "Z-Height", 265, 76);
+  auto grid = panel.medium_button(IMG_GRID, "Grid", 19, 188);
 #endif
 
-  leveling_panel.reset_bindings();
-  leveling_panel.bind(back, &on_back);
-  leveling_panel.bind(rough, &on_rough_leveling);
+  panel.reset_bindings();
+  panel.bind(back, &on_back);
+  panel.bind(rough, &on_rough_leveling);
 #if HAS_LEVELING
-  leveling_panel.bind(automatic, &on_automatic_leveling);
-  leveling_panel.bind(reset, &on_reset_leveling);
-  leveling_panel.bind(z_height, &on_z_height);
-  leveling_panel.bind(grid, &on_leveling_grid);
+  panel.bind(automatic, &on_automatic_leveling);
+  panel.bind(reset, &on_reset_leveling);
+  panel.bind(z_height, &on_z_height);
+  panel.bind(grid, &on_leveling_grid);
 #endif
 }
 
 namespace {
 
 void on_back(lv_event_t *e) {
-  PanelBase::switch_panel<MainPanel>();
+  switch_panel<MainPanel>();
 }
 
 void on_rough_leveling(lv_event_t *e) {
-  PanelBase::switch_panel<RoughPanel>();
+  switch_panel<RoughPanel>();
 }
 
 #if HAS_LEVELING
 
 void on_automatic_leveling(lv_event_t *e) {
-  PanelBase::switch_panel<AutomaticPanel>();
+  switch_panel<AutomaticPanel>();
 }
 
 void on_reset_leveling(lv_event_t *e) {
@@ -100,11 +100,11 @@ void on_reset_leveling(lv_event_t *e) {
 }
 
 void on_z_height(lv_event_t *e) {
-  PanelBase::switch_panel<ZHeightPanel>();
+  switch_panel<ZHeightPanel>();
 }
 
 void on_leveling_grid(lv_event_t *e) {
-  PanelBase::switch_panel<GridPanel>();
+  switch_panel<GridPanel>();
 }
 
 #endif

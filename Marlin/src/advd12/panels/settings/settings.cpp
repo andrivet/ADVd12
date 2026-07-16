@@ -34,7 +34,7 @@
 #include "../calibration.h"
 
 namespace {
-Panel<7> settings_panel;
+Panel<7> panel;
 
 void on_back(lv_event_t *e);
 void on_reset(lv_event_t *e);
@@ -50,32 +50,32 @@ bool SettingsPanel::can_switch() {
 }
 
 void SettingsPanel::create() {
-  if(!settings_panel.create()) return;
-  settings_panel.layout_menu("Settings");
+  panel.create();
+  panel.layout_menu("Settings");
 
-  auto back = settings_panel.control(IMG_LEFT, 7, 2);
-  auto reset = settings_panel.control(IMG_RESET2, 289, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
+  auto reset = panel.control(IMG_RESET2, 289, 2);
 
-  auto motors = settings_panel.medium_button(IMG_MOTOR, "Motors", 19, 76);
-  auto pid = settings_panel.medium_button(IMG_PID, "PID", 101, 76);
-  auto sensor = settings_panel.medium_button(IMG_SENSOR, " Sensor", 183, 76);
-  auto brightness = settings_panel.medium_button(IMG_BRIGHTNESS, "LCD", 265, 76);
-  auto runout = settings_panel.medium_button(IMG_RUNOUT, "Runout", 19, 188);
+  auto motors = panel.medium_button(IMG_MOTOR, "Motors", 19, 76);
+  auto pid = panel.medium_button(IMG_PID, "PID", 101, 76);
+  auto sensor = panel.medium_button(IMG_SENSOR, " Sensor", 183, 76);
+  auto brightness = panel.medium_button(IMG_BRIGHTNESS, "LCD", 265, 76);
+  auto runout = panel.medium_button(IMG_RUNOUT, "Runout", 19, 188);
 
-  settings_panel.reset_bindings();
-  settings_panel.bind(back, &on_back);
-  settings_panel.bind(reset, &on_reset);
-  settings_panel.bind(motors, &on_motors);
-  settings_panel.bind(pid, &on_pid);
-  settings_panel.bind(sensor, &on_sensor);
-  settings_panel.bind(brightness, &on_brightness);
-  settings_panel.bind(runout, &on_runout);
+  panel.reset_bindings();
+  panel.bind(back, &on_back);
+  panel.bind(reset, &on_reset);
+  panel.bind(motors, &on_motors);
+  panel.bind(pid, &on_pid);
+  panel.bind(sensor, &on_sensor);
+  panel.bind(brightness, &on_brightness);
+  panel.bind(runout, &on_runout);
 }
 
 namespace {
 
 void on_back(lv_event_t *e) {
-  PanelBase::switch_panel<MainPanel>();
+  switch_panel<MainPanel>();
 }
 
 void on_reset(lv_event_t *e) {
@@ -87,7 +87,7 @@ void on_reset(lv_event_t *e) {
       ExtUI::setAllAxisUnhomed();
       ExtUI::setAllAxisPositionUnknown();
       Status::set(GET_TEXT(ADVD12_MSG_SETTINGS_RESET), Status::STATUS_OPTIONS::RESET);
-      PanelBase::switch_panel<CalibrationPanel>();
+      switch_panel<CalibrationPanel>();
     });
 }
 

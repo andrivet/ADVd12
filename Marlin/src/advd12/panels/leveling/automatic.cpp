@@ -55,7 +55,7 @@ bool AutomaticPanel::can_switch() {
 }
 
 void AutomaticPanel::create() {
-  if(!panel.create()) return;
+  panel.create();
   panel.layout_menu("Automatic");
   Bed::create(panel.scr());
 
@@ -95,7 +95,7 @@ void AutomaticPanel::on_leveling_done(bool success) {
   else {
     ExtUI::saveSettings();
     ExtUI::setLevelingActive(true);
-    PanelBase::switch_panel<GridPanel>();
+    switch_panel<GridPanel>();
   }
 }
 
@@ -103,7 +103,7 @@ namespace {
 
 void prepare() {
   Wait::homing(F("G28"), [] () -> void {
-    PanelBase::switch_panel<AutomaticPanel>();
+    switch_panel<AutomaticPanel>();
     ExtUI::injectCommands(ExtUI::isLevelingHighSpeed() ? F("G29\nG28 X Y") : F("G29 E\nG28 X Y"));
   });
 }
@@ -112,7 +112,7 @@ void on_back(lv_event_t *e) {
   ExtUI::setTargetTemp_celsius(0, ExtUI::BED);
   Status::set(GET_TEXT(ADVD12_MSG_LEVELING_CANCEL), Status::STATUS_OPTIONS::RESET);
   ExtUI::cancelLeveling();
-  Wait::not_busy([](CALLBACK_SOURCE) { PanelBase::switch_panel<LevelingPanel>(); } );
+  Wait::not_busy([](CALLBACK_SOURCE) { switch_panel<LevelingPanel>(); } );
 }
 
 }

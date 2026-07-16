@@ -45,7 +45,7 @@ bool CopyrightsPanel::can_switch() {
 }
 
 void CopyrightsPanel::create() {
-  if(!panel.create()) return;
+  panel.create();
   panel.layout_menu("Copyrights");
 
   auto back = panel.control(IMG_LEFT, 7, 2);
@@ -64,7 +64,7 @@ void CopyrightsPanel::create() {
 namespace {
 
 void on_back(lv_event_t *e) {
-  PanelBase::switch_panel<InfosPanel>();
+  switch_panel<InfosPanel>();
 }
 
 }

@@ -35,7 +35,7 @@
 #include "src/advd12/core/core.h"
 
 namespace {
-Panel<6> controls_panel;
+Panel<6> panel;
 
 void on_back(lv_event_t *e);
 void on_load_unload(lv_event_t *e);
@@ -50,38 +50,38 @@ bool ControlsPanel::can_switch() {
 }
 
 void ControlsPanel::create() {
-  if(!controls_panel.create()) return;
-  controls_panel.layout_menu("Controls");
+  panel.create();
+  panel.layout_menu("Controls");
 
-  auto back = controls_panel.control(IMG_LEFT, 7, 2);
+  auto back = panel.control(IMG_LEFT, 7, 2);
 
-  auto load   = controls_panel.medium_button(IMG_LOAD, "Load", 19, 76);
-  auto heat   = controls_panel.medium_button(IMG_HEAT, "Preheat", 101, 76);
-  auto cool   = controls_panel.medium_button(IMG_COOL, "Cooldown", 183, 76);
-  auto move   = controls_panel.medium_button(IMG_MOVE, "Move", 265, 76);
-  auto disable= controls_panel.medium_button(IMG_MOTOR, "Disable", 19, 188);
+  auto load   = panel.medium_button(IMG_LOAD, "Load", 19, 76);
+  auto heat   = panel.medium_button(IMG_HEAT, "Preheat", 101, 76);
+  auto cool   = panel.medium_button(IMG_COOL, "Cooldown", 183, 76);
+  auto move   = panel.medium_button(IMG_MOVE, "Move", 265, 76);
+  auto disable= panel.medium_button(IMG_MOTOR, "Disable", 19, 188);
 
-  controls_panel.reset_bindings();
-  controls_panel.bind(back, &on_back);
-  controls_panel.bind(load, &on_load_unload);
-  controls_panel.bind(heat, &on_preheat);
-  controls_panel.bind(cool, &on_cooldown);
-  controls_panel.bind(move, &on_move);
-  controls_panel.bind(disable, &on_disable_motors);
+  panel.reset_bindings();
+  panel.bind(back, &on_back);
+  panel.bind(load, &on_load_unload);
+  panel.bind(heat, &on_preheat);
+  panel.bind(cool, &on_cooldown);
+  panel.bind(move, &on_move);
+  panel.bind(disable, &on_disable_motors);
 }
 
 namespace {
 
 void on_back(lv_event_t *e) {
-  PanelBase::switch_panel<MainPanel>();
+  switch_panel<MainPanel>();
 }
 
 void on_load_unload(lv_event_t *e) {
-  PanelBase::switch_panel<LoadUnloadPanel>();
+  switch_panel<LoadUnloadPanel>();
 }
 
 void on_preheat(lv_event_t *e) {
-  PanelBase::switch_panel<PreheatPanel>();
+  switch_panel<PreheatPanel>();
 }
 
 void on_cooldown(lv_event_t *e) {
@@ -89,7 +89,7 @@ void on_cooldown(lv_event_t *e) {
 }
 
 void on_move(lv_event_t *e) {
-  PanelBase::switch_panel<MovePanel>();
+  switch_panel<MovePanel>();
 }
 
 void on_disable_motors(lv_event_t *e) {

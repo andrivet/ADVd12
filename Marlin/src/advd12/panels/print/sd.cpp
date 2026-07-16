@@ -78,7 +78,7 @@ bool SdPanel::can_switch() {
 }
 
 void SdPanel::create() {
-  if(!panel.create()) return;
+  panel.create();
   panel.layout_menu("microSD Card");
 
   panel.rectangle(ROW_WIDTH, 56, 3, 228);
@@ -120,7 +120,7 @@ void SdPanel::create() {
 namespace {
 
 void on_back(lv_event_t *e) {
-  PanelBase::switch_panel<MainPanel>();
+  switch_panel<MainPanel>();
 }
 
 void on_up(lv_event_t *e) {
@@ -261,7 +261,7 @@ void select_row(unsigned index) {
     if(src == CALLBACK_SOURCE::BACK) return;
     ExtUI::printFile(files_.shortFilename());
     PrintPanel::set_filename(files_.filename());
-    PanelBase::switch_panel<PrintPanel>();
+    switch_panel<PrintPanel>();
   });
 }
 

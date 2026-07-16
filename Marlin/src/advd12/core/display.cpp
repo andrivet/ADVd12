@@ -91,7 +91,7 @@ void Display::task_handler() {
 }
 
 void Display::calibrate() {
-  PanelBase::switch_panel<CalibrationPanel>();
+  switch_panel<CalibrationPanel>();
 }
 
 namespace {

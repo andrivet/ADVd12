@@ -62,4 +62,14 @@ void init() {
     });
 }
 
+void set_done() {
+  auto elapsed = ExtUI::getProgress_seconds_elapsed();
+  unsigned hours   = elapsed / 3600;
+  unsigned minutes = (elapsed % 3600) / 60;
+
+  char text[32];
+  sprintf(text, "Printed in %02u:%02u", hours, minutes);
+  set(text, STATUS_OPTIONS::PERSISTENT);
+}
+
 }

@@ -34,10 +34,10 @@
 #include "../../core/status.h"
 #include "../../core/format.h"
 #include "../../core/ids.h"
+#include "src/advd12/core/core.h"
 
 namespace {
 
-char filename[64];
 lv_obj_t *dropdown = nullptr;
 lv_obj_t *z_offset_var = nullptr;
 lv_obj_t *feedrate_var = nullptr;
@@ -65,13 +65,6 @@ void on_increment_selected(lv_event_t *e);
 
 }
 
-void PrintPanel::set_filename(const char *name) {
-  auto length = strlen(name);
-  if(length >= sizeof(filename))
-    length = sizeof(filename) - 1;
-  memcpy(filename, name, length);
-}
-
 bool PrintPanel::can_switch() {
  return true;
 }
@@ -86,7 +79,7 @@ void PrintPanel::create() {
   //auto change = panel.control(IMG_CHANGE, 288, 2);
 
   panel.icon(IMG_FS_FILE, 15, 64);
-  panel.text(filename, 62, 69, 274, ALIGN::LEFT, LABEL::REGULAR);
+  panel.text(advd12::Core::print_filename(), 62, 69, 274, ALIGN::LEFT, LABEL::REGULAR);
 
   panel.icon(IMG_STEPS2, 8, 106);
   auto down = panel.control(IMG_DOWN, 62, 104);

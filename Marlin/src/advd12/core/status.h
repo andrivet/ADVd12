@@ -32,6 +32,7 @@ namespace Status {
 enum class STATUS_OPTIONS { NONE = 0x0000, RESET = 0x0001, PERSISTENT = 0x0002};
 
 void set(const char* message, STATUS_OPTIONS options = STATUS_OPTIONS::NONE);
+void set_done();
 void set_default();
 void reset();
 void init();

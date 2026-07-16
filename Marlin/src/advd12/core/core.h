@@ -36,5 +36,9 @@ void calibrate();
 void disable_motors();
 const char *version();
 const char *build();
+void print_started();
+void print_done();
+const char *print_filename();
+void set_print_filename(const char *name);
 
 };

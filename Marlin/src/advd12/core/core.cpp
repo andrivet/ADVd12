@@ -33,11 +33,18 @@
 #include "progress.h"
 #include "dates.h"
 #include "../panels/panels.h"
+#include "../panels/print/print.h"
+#include "../panels/main.h"
 
 namespace {
+
 constexpr unsigned int Z_ROOM = 20; // mm
 
+char filename[64];
+bool usb_print = true;
+
 void send_gplv3_7b_notice();
+
 }
 
 void advd12::Core::init() {
@@ -136,6 +143,31 @@ const char *advd12::Core::build() {
     0
   };
   return build;
+}
+
+void advd12::Core::print_started() {
+  // Warning: it is called 2 times
+  Progress::start();
+  switch_panel<PrintPanel>();
+}
+
+void advd12::Core::print_done() {
+  Progress::finish();
+  switch_panel<MainPanel>();
+  usb_print = true;
+  Status::set_done();
+}
+
+const char *advd12::Core::print_filename() {
+  return usb_print ? "USB" : filename;
+}
+
+void advd12::Core::set_print_filename(const char *name) {
+  auto length = strlen(name);
+  if(length >= sizeof(filename))
+    length = sizeof(filename) - 1;
+  memcpy(filename, name, length);
+  usb_print = false;
 }
 
 namespace {

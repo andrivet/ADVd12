@@ -27,11 +27,10 @@
 #include "../../../inc/MarlinConfig.h"
 #include "../../../lcd/extui/ui_api.h"
 #include "sd.h"
-#include "print.h"
 #include "../panels.h"
 #include "../main.h"
+#include "../../core/core.h"
 #include "../../core/status.h"
-#include "../../core/styles.h"
 #include "../../core/ids.h"
 #include "src/advd12/panels/wait.h"
 
@@ -259,9 +258,8 @@ void select_row(unsigned index) {
   snprintf(text, sizeof(text), "Print file %s?", files_.filename());
   Wait::wait_back_continue("Print", text, [](CALLBACK_SOURCE src) {
     if(src == CALLBACK_SOURCE::BACK) return;
+    advd12::Core::set_print_filename(files_.filename());
     ExtUI::printFile(files_.shortFilename());
-    PrintPanel::set_filename(files_.filename());
-    switch_panel<PrintPanel>();
   });
 }
 

@@ -27,5 +27,4 @@
 struct PrintPanel {
   static bool can_switch();
   static void create();
-  static void set_filename(const char* filename);
 };

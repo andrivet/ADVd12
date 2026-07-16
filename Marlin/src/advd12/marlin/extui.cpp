@@ -79,7 +79,8 @@ namespace ExtUI {
   }
 
   void onPrintTimerStarted() {
-    Progress::start();
+    // Warning: it is called 2 times
+    Core::print_started();
   }
 
   void onPrintTimerPaused() {
@@ -87,7 +88,7 @@ namespace ExtUI {
   }
 
   void onPrintTimerStopped() {
-    Progress::finish();
+    Core::print_done();
   }
 
   void onPrintDone() {

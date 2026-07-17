@@ -35,13 +35,14 @@
 #include "../../core/core.h"
 #include "../../core/task.h"
 #include "../../core/status.h"
+#include "src/advd12/core/logging.h"
 
 namespace {
 
 float previous_z_ = 0;
 celsius_t temp_ = 200;
 bool load_ = true;
-unsigned extrude_length_ = 0;
+float extrude_length_ = 0.;
 lv_obj_t *temp_text_ = nullptr;
 
 Panel<7> panel;
@@ -141,7 +142,7 @@ void on_full_load(lv_event_t *e) {
 //! Prepare Load or Unload step #1: set the target temperature, setup the next step and display a wait message
 void prepare(unsigned length, bool load) {
   load_ = load;
-  extrude_length_ = length;
+  extrude_length_ = static_cast<float>(length);
 
   ExtUI::setTargetTemp_celsius(temp_, ExtUI::H0, true);
   if(ExtUI::getDefaultTemp_celsius(ExtUI::H0) != temp_) {
@@ -150,34 +151,37 @@ void prepare(unsigned length, bool load) {
   }
 
   ExtUI::setHostKeepaliveState(GcodeSuite::IN_PROCESS);
-  auto title = load ? GET_TEXT(MSG_FILAMENT_CHANGE_LOAD) : GET_TEXT(MSG_FILAMENT_CHANGE_UNLOAD);
-  Wait::wait_back(title, GET_TEXT(MSG_HEATING), [] (CALLBACK_SOURCE) -> void {
-    background_task.clear();
-    Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
-    ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
-    ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
-  });
+  Wait::heating([](CALLBACK_SOURCE src) -> void {
+    if(src == CALLBACK_SOURCE::BACK) {
+      Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+      ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
+      ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
+      return;
+    }
 
-  background_task.set([] () -> CALLBACK_RESULT {
-    if(ExtUI::getActualTemp_celsius(ExtUI::E0) < static_cast<float>(ExtUI::getTargetTemp_celsius(ExtUI::E0))) return CALLBACK_RESULT::CONTINUE;
     extrude();
-    return CALLBACK_RESULT::STOP;
   });
 }
 
 void extrude() {
+  auto current = ExtUI::getAxisPosition_mm(ExtUI::E0);
+  auto length = load_ ? extrude_length_ : -extrude_length_;
+  auto new_position = current + length;
+  Log::verbose() << "E: current = " << current << ", length = " << length << ", new = " << new_position << Log::endl();
   ExtUI::setAxisPosition_mm(
-    ExtUI::getAxisPosition_mm(ExtUI::E0) + static_cast<float>(load_ ? extrude_length_ : -extrude_length_),
+    new_position,
     ExtUI::E0,
     load_ ? FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE : FILAMENT_CHANGE_UNLOAD_FEEDRATE
   );
+  Log::verbose() << "E: current = " << ExtUI::getAxisPosition_mm(ExtUI::E0) << Log::endl();
 
   auto title = load_ ? GET_TEXT(MSG_FILAMENT_CHANGE_LOAD) : GET_TEXT(MSG_FILAMENT_CHANGE_UNLOAD);
-  Wait::wait_back(title, GET_TEXT(ADVD12_MSG_IN_PROGRESS), [] (CALLBACK_SOURCE) -> void {
-    background_task.clear();
-    Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
-    ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
-    ExtUI::stopMove();
+  Wait::wait_back(title, GET_TEXT(ADVD12_MSG_IN_PROGRESS), [] (CALLBACK_SOURCE src) -> void {
+    if(src == CALLBACK_SOURCE::BACK) {
+      Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+      ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
+      ExtUI::stopMove();
+    }
   });
 
   background_task.set([] () -> CALLBACK_RESULT {

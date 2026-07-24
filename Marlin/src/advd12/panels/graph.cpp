@@ -34,7 +34,7 @@ namespace {
 constexpr unsigned NB_POINTS = 240;
 constexpr unsigned BED_TEMP_MAX = 155;
 constexpr unsigned BED_TEMP_MIN = 25;
-constexpr unsigned EXT_TEMP_MAX = 260;
+constexpr unsigned EXT_TEMP_MAX = 265;
 constexpr unsigned EXT_TEMP_MIN = 40;
 
 lv_obj_t *chart = nullptr;

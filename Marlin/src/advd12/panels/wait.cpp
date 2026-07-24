@@ -67,26 +67,26 @@ void Wait::wait(const char *message, void (*cb)(CALLBACK_SOURCE)) {
   wait_base("Wait", message, cb);
 }
 
-void Wait::wait_back(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE)) {
+void Wait::wait_cancel(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE)) {
   wait_base(title, message, cb);
 
-  auto btn = wait_button(IMG_LEFT, 4, 4);
+  auto btn = wait_button(IMG_CANCEL, 4, 4);
   binder.reset();
   binder.bind(btn, &on_back);
 }
 
-void Wait::wait_back(const char * title, const char * message) {
+void Wait::wait_cancel(const char * title, const char * message) {
   wait_base(title, message, nullptr);
 
-  auto btn = wait_button(IMG_LEFT, 4, 4);
+  auto btn = wait_button(IMG_CANCEL, 4, 4);
   binder.reset();
   binder.bind(btn, &on_back);
 }
 
-void Wait::wait_back_continue(const char * title, const char * message, void (*cb)(CALLBACK_SOURCE)) {
+void Wait::wait_cancel_continue(const char * title, const char * message, void (*cb)(CALLBACK_SOURCE)) {
   wait_base(title, message, cb);
 
-  auto back = wait_button(IMG_LEFT, 4, 4);
+  auto back = wait_button(IMG_CANCEL, 4, 4);
   auto cont = wait_button(IMG_SAVE, 276, 4);
   binder.reset();
   binder.bind(back, &on_back);
@@ -169,7 +169,7 @@ void Wait::close() {
 
 bool Wait::check_not_busy() {
   if(!advd12::Core::is_busy()) return true;
-  wait_back(GET_TEXT(ADVD12_TITLE_WARNING), GET_TEXT(ADVD12_MSG_BUSY));
+  wait_cancel(GET_TEXT(ADVD12_TITLE_WARNING), GET_TEXT(ADVD12_MSG_BUSY));
   return false;
 }
 

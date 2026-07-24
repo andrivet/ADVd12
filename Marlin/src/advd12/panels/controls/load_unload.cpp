@@ -176,7 +176,7 @@ void extrude() {
   Log::verbose() << "E: current = " << ExtUI::getAxisPosition_mm(ExtUI::E0) << Log::endl();
 
   auto title = load_ ? GET_TEXT(MSG_FILAMENT_CHANGE_LOAD) : GET_TEXT(MSG_FILAMENT_CHANGE_UNLOAD);
-  Wait::wait_back(title, GET_TEXT(ADVD12_MSG_IN_PROGRESS), [] (CALLBACK_SOURCE src) -> void {
+  Wait::wait_cancel(title, GET_TEXT(ADVD12_MSG_IN_PROGRESS), [] (CALLBACK_SOURCE src) -> void {
     if(src == CALLBACK_SOURCE::BACK) {
       Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
       ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);

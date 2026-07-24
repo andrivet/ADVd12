@@ -79,7 +79,7 @@ void on_back(lv_event_t *e) {
 }
 
 void on_reset(lv_event_t *e) {
-  Wait::wait_back_continue("Reset settings?", "Are you sure you want to reset settings?",
+  Wait::wait_cancel_continue("Reset settings?", "Are you sure you want to reset settings?",
     [](CALLBACK_SOURCE src) {
       if(src == CALLBACK_SOURCE::BACK) return;
       ExtUI::resetSettings();

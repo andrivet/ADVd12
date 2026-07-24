@@ -78,7 +78,7 @@ void RoughPanel::create() {
   panel.bind(level_5, on_5);
 
   if(ExtUI::getActualTemp_celsius(ExtUI::E0) > 50)
-    Wait::wait_back_continue(GET_TEXT(ADVD12_TITLE_WARNING), GET_TEXT(ADVD12_MSG_LEVELING_HOT), &prepare);
+    Wait::wait_cancel_continue(GET_TEXT(ADVD12_TITLE_WARNING), GET_TEXT(ADVD12_MSG_LEVELING_HOT), &prepare);
   else
     prepare(CALLBACK_SOURCE::CONTINUE);
 }

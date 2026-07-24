@@ -33,6 +33,7 @@
 #include "../wait.h"
 #include "../../core/ids.h"
 #include "../../core/styles.h"
+#include "src/advd12/core/format.h"
 #include "src/advd12/core/status.h"
 
 namespace {
@@ -120,7 +121,7 @@ void on_save(lv_event_t *e) {
 
 void set_offset() {
   char text[8];
-  sprintf(text, "%0.2f", ExtUI::getAxisPosition_mm(ExtUI::Z));
+  Format::format00(text, sizeof text, ExtUI::getAxisPosition_mm(ExtUI::Z));
   lv_label_set_text(z_offset, text);
 }
 

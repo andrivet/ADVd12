@@ -75,7 +75,7 @@ void TouchCalibration::validate_calibration() {
   else {
     calibration_state = CALIBRATION_FAIL;
     calibration_reset();
-    if (need_calibration() && failed_count++ < TOUCH_CALIBRATION_MAX_RETRIES) calibration_state = CALIBRATION_NONE;
+    if (need_calibration() && failed_count++ < TOUCH_CALIBRATION_MAX_RETRIES) calibration_state = CALIBRATION_TOP_LEFT; // @advd12 fix bug
   }
   #undef CP
 

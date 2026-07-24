@@ -259,7 +259,7 @@ void PanelBase::layout_menu(const char *title) {
   variables();
 }
 
-void PanelBase::variables() {
+void PanelBase::layout_reset() {
   status_var = nullptr;
   et_var = nullptr;
   tc_var = nullptr;
@@ -267,6 +267,10 @@ void PanelBase::variables() {
   x_var = nullptr;
   y_var = nullptr;
   z_var = nullptr;
+}
+
+void PanelBase::variables() {
+  layout_reset();
 
   status_var = text("", 0, 292, 480, ALIGN::CENTER, LABEL::REGULAR);
 

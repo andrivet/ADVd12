@@ -26,6 +26,7 @@
 #include "calibration.h"
 #include "main.h"
 #include "panels.h"
+#include "../core/styles.h"
 #include "../../lcd/tft_io/touch_calibration.h"
 
 namespace {
@@ -58,7 +59,15 @@ void CalibrationPanel::create() {
 void CalibrationPanel::update() {
   auto stage = TouchCalibration::get_calibration_state();
 
-  if(stage == CALIBRATION_SUCCESS || stage == CALIBRATION_FAIL) {
+  if(stage == CALIBRATION_FAIL) {
+    auto label = lv_label_create(panel.scr());
+    lv_label_set_text(label, "Calibration Failed");
+    lv_obj_set_style_text_color(label, red, LV_PART_MAIN);
+    lv_obj_align_to(label, nullptr, LV_ALIGN_CENTER, 0, 24);
+    return;
+  }
+
+  if(stage == CALIBRATION_SUCCESS) {
     TouchCalibration::calibration_end();
     switch_panel<MainPanel>();
     return;

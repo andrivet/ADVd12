@@ -175,10 +175,20 @@ bool Wait::check_not_busy() {
 
 void Wait::heating(void (*cb)(CALLBACK_SOURCE)) {
   wait_task.set([]() -> CALLBACK_RESULT {
+    bool reached_extruder = false;
+    bool reached_bed = false;
     if(
-      ExtUI::getActualTemp_celsius(ExtUI::E0) < static_cast<celsius_float_t>(ExtUI::getTargetTemp_celsius(ExtUI::E0)) ||
-      ExtUI::getActualTemp_celsius(ExtUI::BED) < static_cast<celsius_float_t>(ExtUI::getTargetTemp_celsius(ExtUI::BED))
-    ) {
+      ExtUI::getTargetTemp_celsius(ExtUI::E0) != 0 &&
+      ExtUI::getActualTemp_celsius(ExtUI::E0) >= static_cast<celsius_float_t>(ExtUI::getTargetTemp_celsius(ExtUI::E0))
+    )
+      reached_extruder = true;
+    if(
+      ExtUI::getTargetTemp_celsius(ExtUI::BED) != 0 &&
+      ExtUI::getActualTemp_celsius(ExtUI::BED) >= static_cast<celsius_float_t>(ExtUI::getTargetTemp_celsius(ExtUI::BED))
+    )
+      reached_bed = true;
+
+    if(!reached_extruder || !reached_bed) {
       Graph::next_point();
       return CALLBACK_RESULT::CONTINUE;
     }

@@ -58,6 +58,7 @@ void PanelBase::release() {
 bool PanelBase::create() {
   if(scr_ != nullptr) return false; // Already created
   scr_ = lv_obj_create(nullptr);
+  lv_obj_clear_flag(scr_, LV_OBJ_FLAG_SCROLLABLE);
   lv_obj_set_style_bg_color(scr_, lv_color_black(), LV_PART_MAIN);
   lv_obj_set_style_bg_opa(scr_, LV_OPA_COVER, LV_PART_MAIN);
   lv_scr_load(scr_);

@@ -75,6 +75,7 @@ void Images::update_assets() {
 
   auto screen = lv_obj_create(nullptr);
   lv_scr_load(screen);
+  lv_obj_clear_flag(screen, LV_OBJ_FLAG_SCROLLABLE);
 
   auto label1 = lv_label_create(screen);
   lv_label_set_long_mode(label1, LV_LABEL_LONG_CLIP);

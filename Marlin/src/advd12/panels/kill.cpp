@@ -40,6 +40,7 @@ void Kill::killed(const char *msg, const char *component) {
   Wait::close();
 
   auto modal = lv_obj_create(parent);
+  lv_obj_clear_flag(modal, LV_OBJ_FLAG_SCROLLABLE);
   lv_obj_set_size(modal, LV_PCT(100), LV_PCT(100));
   lv_obj_center(modal);
   lv_obj_add_flag(modal, LV_OBJ_FLAG_CLICKABLE);
@@ -47,6 +48,7 @@ void Kill::killed(const char *msg, const char *component) {
   lv_obj_set_style_bg_opa(modal, LV_OPA_TRANSP, LV_PART_MAIN | LV_STATE_DEFAULT);
 
   auto msgbox = lv_obj_create(parent);
+  lv_obj_clear_flag(msgbox, LV_OBJ_FLAG_SCROLLABLE);
   lv_obj_set_size(msgbox, 329, 233);
   lv_obj_set_pos(msgbox, 7, 40);
   lv_obj_set_style_bg_color(msgbox, red, LV_PART_MAIN | LV_STATE_DEFAULT);

@@ -34,6 +34,7 @@ Panel<0> panel;
 
 lv_obj_t *line(lv_coord_t x, lv_coord_t y, lv_coord_t width, lv_coord_t height);
 
+lv_obj_t *label_ = nullptr;
 lv_obj_t *cross_line1_ = nullptr;
 lv_obj_t *cross_line2_ = nullptr;
 }
@@ -46,24 +47,28 @@ void CalibrationPanel::create() {
   if(!panel.create()) return;
 
   TouchCalibration::calibration_start();
-  auto pt = TouchCalibration::calibration_points[0];
-  cross_line1_ = line(pt.x - 15, pt.y, 31, 1);
-  cross_line2_ = line(pt.x, pt.y - 15, 1, 31);
 
   auto label = lv_label_create(panel.scr());
   lv_label_set_text(label, "LCD Calibration");
   lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
   lv_obj_align_to(label, nullptr, LV_ALIGN_CENTER, 0, 0);
+
+  label_ = lv_label_create(panel.scr());
+  lv_label_set_text(label_, "");
+  lv_obj_set_style_text_color(label_, red, LV_PART_MAIN);
+  lv_obj_align_to(label_, nullptr, LV_ALIGN_CENTER, 0, 24);
+
+  auto pt = TouchCalibration::calibration_points[0];
+  cross_line1_ = line(pt.x - 15, pt.y, 31, 1);
+  cross_line2_ = line(pt.x, pt.y - 15, 1, 31);
 }
 
 void CalibrationPanel::update() {
   auto stage = TouchCalibration::get_calibration_state();
 
   if(stage == CALIBRATION_FAIL) {
-    auto label = lv_label_create(panel.scr());
-    lv_label_set_text(label, "Calibration Failed");
-    lv_obj_set_style_text_color(label, red, LV_PART_MAIN);
-    lv_obj_align_to(label, nullptr, LV_ALIGN_CENTER, 0, 24);
+    lv_label_set_text(label_, "Calibration failed");
+    lv_obj_align_to(label_, nullptr, LV_ALIGN_CENTER, 0, 24);
     return;
   }
 
@@ -76,6 +81,11 @@ void CalibrationPanel::update() {
   auto pt = TouchCalibration::calibration_points[stage];
   lv_obj_set_pos(cross_line1_, pt.x - 15, pt.y);
   lv_obj_set_pos(cross_line2_, pt.x, pt.y - 15);
+
+  if(TouchCalibration::failed_count > 0) {
+    lv_label_set_text(label_, "Please retry");
+    lv_obj_align_to(label_, nullptr, LV_ALIGN_CENTER, 0, 24);
+  }
 }
 
 namespace {

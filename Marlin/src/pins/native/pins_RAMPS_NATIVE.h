@@ -30,7 +30,7 @@
 #endif
 
 #ifndef DEFAULT_MACHINE_NAME
-  #define DEFAULT_MACHINE_NAME "SimRap 1.4"
+  #define DEFAULT_MACHINE_NAME "Simulator"
 #endif
 
 #ifndef MARLIN_EEPROM_SIZE

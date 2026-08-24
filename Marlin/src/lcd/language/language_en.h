@@ -1143,6 +1143,7 @@ namespace LanguageNarrow_en {
   LSTR ADVD12_MSG_BOOTING                = _UxGT("Booting...");
   LSTR ADVD12_MSG_SD_CARD_DETECTED       = _UxGT("SD card detected");
   LSTR ADVD12_MSG_SD_CARD_REMOVED        = _UxGT("SD card removed");
+  LSTR ADVD12_MSG_SD_CARD_NONE           = _UxGT("No SD card");
   LSTR ADVD12_MSG_SD_CARD_ERROR          = _UxGT("Error reading SD card");
   LSTR ADVD12_MSG_BUSY                   = _UxGT("Not available when busy");
   LSTR ADVD12_MSG_PREHEAT                = _UxGT("Preheat");

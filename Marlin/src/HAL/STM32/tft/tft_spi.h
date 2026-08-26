@@ -56,6 +56,7 @@ private:
   #if ENABLED(USE_SPI_DMA_TC)
     static void transmitDMA_IT(uint32_t memoryIncrease, uint16_t *data, uint16_t count);
   #endif
+  static void transmitIT(uint32_t memoryIncrease, uint16_t *data, uint16_t count, void(*cb)()); // @advd12
 
 public:
   static void init();
@@ -85,4 +86,9 @@ public:
       count = count > DMA_MAX_WORDS ? count - DMA_MAX_WORDS : 0;
     }
   }
+
+  // @advd12
+  static void DMA_IRQHandler() { HAL_DMA_IRQHandler(&TFT_SPI::DMAtx); }
+  static void writeSequenceIT(uint16_t *data, uint16_t count, void(*cb)()) { transmitIT(DMA_PINC_ENABLE, data, count, cb); }
+
 };

@@ -25,10 +25,10 @@
   #define ADVD12_NAME "D12-230-1.2"
 #elif defined(D12_230_v1_3)
   #define ADVD12_NAME "D12-230-1.3"
-#elif defined(D12_500_Pro)
-  #define ADVD12_NAME "D12-500-Pro"
-#elif defined(D12_300_Pro)
-  #define ADVD12_NAME "D12-530-Pro"
+#elif defined(D12_230_v3_0)
+  #define ADVD12_NAME "D12-230-3.0"
+#elif defined(D12_230_v3_1)
+  #define ADVD12_NAME "D12-230-3.1"
 #elif defined(D12_SIMULATOR)
   #define ADVD12_NAME "D12-Simulator"
 #endif

@@ -577,7 +577,7 @@
 #elif MB(MKS_ROBIN_MINI)
   #include "stm32f1/pins_MKS_ROBIN_MINI.h"          // STM32F1                              env:mks_robin_mini env:mks_robin_mini_maple
 #elif MB(MKS_ROBIN_NANO)
-  #include "stm32f1/pins_MKS_ROBIN_NANO.h"          // STM32F1                              env:mks_robin_nano_v1v2 env:mks_robin_nano_v1v2_maple env:mks_robin_nano_v1v2_usbmod env:advd12_230
+  #include "stm32f1/pins_MKS_ROBIN_NANO.h"          // STM32F1                              env:mks_robin_nano_v1v2 env:mks_robin_nano_v1v2_maple env:mks_robin_nano_v1v2_usbmod env:advd12_230_mks_12 env:advd12_230_bl_mks_12
 #elif MB(MKS_ROBIN_NANO_V2)
   #include "stm32f1/pins_MKS_ROBIN_NANO_V2.h"       // STM32F1                              env:mks_robin_nano_v1v2 env:mks_robin_nano_v1v2_maple
 #elif MB(MKS_ROBIN_LITE)
@@ -757,9 +757,9 @@
 #elif MB(MKS_ROBIN_PRO_V2)
   #include "stm32f4/pins_MKS_ROBIN_PRO_V2.h"        // STM32F4                              env:mks_robin_pro2
 #elif MB(MKS_ROBIN_NANO_V3)
-  #include "stm32f4/pins_MKS_ROBIN_NANO_V3.h"       // STM32F4                              env:mks_robin_nano_v3 env:mks_robin_nano_v3_usb_flash_drive env:mks_robin_nano_v3_usb_flash_drive_msc
+  #include "stm32f4/pins_MKS_ROBIN_NANO_V3.h"       // STM32F4                              env:mks_robin_nano_v3 env:mks_robin_nano_v3_usb_flash_drive env:mks_robin_nano_v3_usb_flash_drive_msc env:advd12_230_bl_mks_30 env:advd12_230_mks_30
 #elif MB(MKS_ROBIN_NANO_V3_1)
-  #include "stm32f4/pins_MKS_ROBIN_NANO_V3.h"       // STM32F4                              env:mks_robin_nano_v3_1 env:mks_robin_nano_v3_1_usb_flash_drive env:mks_robin_nano_v3_1_usb_flash_drive_msc
+  #include "stm32f4/pins_MKS_ROBIN_NANO_V3.h"       // STM32F4                              env:mks_robin_nano_v3_1 env:mks_robin_nano_v3_1_usb_flash_drive env:mks_robin_nano_v3_1_usb_flash_drive_msc env:advd12_230_bl_mks_31 env:advd12_230_mks_31
 #elif MB(MKS_MONSTER8_V1)
   #include "stm32f4/pins_MKS_MONSTER8_V1.h"         // STM32F4                              env:mks_monster8 env:mks_monster8_usb_flash_drive env:mks_monster8_usb_flash_drive_msc
 #elif MB(MKS_MONSTER8_V2)
@@ -779,7 +779,7 @@
 #elif MB(OPULO_LUMEN_REV4)
   #include "stm32f4/pins_OPULO_LUMEN_REV4.h"        // STM32F4                              env:Opulo_Lumen_REV4
 #elif MB(MKS_ROBIN_NANO_V1_3_F4)
-  #include "stm32f4/pins_MKS_ROBIN_NANO_V1_3_F4.h"  // STM32F4                              env:mks_robin_nano_v1_3_f4 env:mks_robin_nano_v1_3_f4_usbmod
+  #include "stm32f4/pins_MKS_ROBIN_NANO_V1_3_F4.h"  // STM32F4                              env:mks_robin_nano_v1_3_f4 env:mks_robin_nano_v1_3_f4_usbmod env:advd12_230_mks_13 env:advd12_230_bl_mks_13
 #elif MB(MKS_EAGLE)
   #include "stm32f4/pins_MKS_EAGLE.h"               // STM32F4                              env:mks_eagle env:mks_eagle_usb_flash_drive env:mks_eagle_usb_flash_drive_msc
 #elif MB(ARTILLERY_RUBY)

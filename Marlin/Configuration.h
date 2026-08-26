@@ -46,6 +46,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Marlin's development mode
 //#define MARLIN_DEV_MODE
 //#define PINS_DEBUGGING
+//#define POSTMORTEM_DEBUGGING
 
 // Logging
 // 0: disabled, 1: error, 2: warning, 3: info, 4: verbose, 5: everything (including suspended)
@@ -60,8 +61,8 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Change also the default environment in platformio.ini
 //#define D12_230_v1_2
 //#define D12_230_v1_3
-//#define D12_500_Pro
-//#define D12_300_Pro
+//#define D12_230_v3_0 // experimental
+//#define D12_230_v3_1 // experimental
 //#define D12_SIMULATOR
 
 // Kind of drivers
@@ -72,13 +73,9 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 
 // Kind of display
 #define TFT_ADV_UI
-#if defined(D12_SIMULATOR)
-// Set to 0 to avoid long delay when showing the logo
-#define HAS_LOGO_IN_FLASH 1
-//#define REINIT_NOISY_LCD // To avoid compilation waning
-#else
-#define HAS_LOGO_IN_FLASH 1
-#endif
+
+// Be sure to physically remove the jumpers (MKS v3.1 only)
+#define DIAG_JUMPERS_REMOVED
 
 //===========================================================================
 
@@ -86,7 +83,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 #define TFT_GENERIC
 #elif defined(D12_230_v1_3) || defined(D12_230_v1_2)
 #define MKS_ROBIN_TFT35
-#elif defined(D12_300_Pro) || defined(D12_500_Pro)
+#elif defined(D12_230_v3_0) || defined(D12_230_v3_1)
 #define MKS_TS35_V2_0
 #endif
 
@@ -135,14 +132,14 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 #elif defined(D12_230_v1_2)
   #define MOTHERBOARD BOARD_MKS_ROBIN_NANO
   #define PRINTER_MODEL "D12-230 Robin Nano V1.2"
-#elif defined(D12_300_Pro)
+#elif defined(D12_230_v3_0)
   #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V3
-  #define PRINTER_MODEL "D12-300 Pro Robin Nano V3"
-#elif defined(D12_500_Pro)
-  #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V3
-  #define PRINTER_MODEL "D12-500 Pro Robin Nano V3"
+  #define PRINTER_MODEL "D12-230 Robin Nano V3.0"
+#elif defined(D12_230_v3_1)
+  #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V3_1
+  #define PRINTER_MODEL "D12-230 Robin Nano V3.1"
 #else
-  #error Please define one of D12_230_v1_2, D12_230_v1_3, D12_500_Pro, D12_300_Pro, D12_SIMULATOR
+  #error Please define one of D12_230_v1_2, D12_230_v1_3, D12_230_v3_0, D12_230_v3_1, D12_SIMULATOR
 #endif
 
 // @section serial
@@ -157,7 +154,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  */
 #if defined(D12_230_v1_2) || defined(D12_230_v1_3) || defined(D12_SIMULATOR)
 #define SERIAL_PORT 3
-#elif defined(D12_300_Pro) || defined(D12_500_Pro)
+#elif defined(D12_230_v3_0) || defined(D12_230_v3_1)
 #define SERIAL_PORT -1
 #endif
 
@@ -253,10 +250,10 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //#define E6_DRIVER_TYPE A4988
 //#define E7_DRIVER_TYPE A4988
 
-#if defined(D12_300_Pro) || defined(D12_500_Pro) || defined(D12_FULL_TMC2209)
+#if defined(D12_230_v3_0) || defined(D12_230_v3_1) || defined(D12_FULL_TMC2209)
 #define Z_DRIVER_TYPE  TMC2209_STANDALONE
 #define E0_DRIVER_TYPE TMC2209_STANDALONE
-#define E1_DRIVER_TYPE
+#define E1_DRIVER_TYPE TMC2209_STANDALONE
 #else
 #define Z_DRIVER_TYPE  A4988
 #define E0_DRIVER_TYPE A4988
@@ -927,23 +924,9 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
   //#define DEFAULT_BED_KI  17.62
   //#define DEFAULT_BED_KD 120.95
   
-  #if defined(D12_500_Pro)
-    #define DEFAULT_BED_KP  99.83
-    #define DEFAULT_BED_KI  17.58
-    #define DEFAULT_BED_KD 378.03
-  #endif
-
-  #if defined(D12_300_Pro)
-    #define DEFAULT_BED_KP  50.05
-    #define DEFAULT_BED_KI   8.45
-    #define DEFAULT_BED_KD 197.52
-  #endif
-
-  #if defined(D12_230_v1_2) || defined(D12_230_v1_3) || defined(D12_SIMULATOR)
-     #define DEFAULT_BED_KP  92.32
-     #define DEFAULT_BED_KI  17.62
-     #define DEFAULT_BED_KD 120.95
-  #endif
+  #define DEFAULT_BED_KP  92.32
+  #define DEFAULT_BED_KI  17.62
+  #define DEFAULT_BED_KD 120.95
 
   // FIND YOUR OWN: "M303 E-1 C8 S90" to run autotune on the bed at 90 degreesC for 8 cycles.
 #else
@@ -2026,15 +2009,9 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //#define INVERT_E6_DIR false
 //#define INVERT_E7_DIR false
 
-#if defined(D12_230_v1_2) || defined(D12_230_v1_3) || defined(D12_SIMULATOR)
 #define INVERT_Z_DIR true
 #define INVERT_E0_DIR true
 #define INVERT_E1_DIR true
-#elif defined(D12_500_Pro) || defined(D12_300_Pro)
-#define INVERT_Z_DIR false
-#define INVERT_E0_DIR false
-#define INVERT_E1_DIR false
-#endif
 
 // @section homing
 
@@ -2087,29 +2064,6 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // @section geometry
 
 // The size of the printable area
-#if defined(D12_500_Pro)
-#define X_BED_SIZE 505
-#define Y_BED_SIZE 505
-#define X_MIN_POS 0
-#define Y_MIN_POS 0
-#define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE
-#define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 500
-#endif
-
-#if defined(D12_300_Pro)
-#define X_BED_SIZE 300
-#define Y_BED_SIZE 300
-#define X_MIN_POS 0
-#define Y_MIN_POS 0
-#define Z_MIN_POS 0
-#define X_MAX_POS X_BED_SIZE
-#define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 400
-#endif
-
-#if defined(D12_230_v1_3) || defined(D12_230_v1_2) || defined(D12_SIMULATOR)
 #define X_BED_SIZE 230
 #define Y_BED_SIZE 230
 #define X_MIN_POS 0
@@ -2118,7 +2072,6 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
 #define Z_MAX_POS 250
-#endif
 
 // Travel limits (linear=mm, rotational=°) after homing, corresponding to endstop positions.
 //#define X_MIN_POS 0

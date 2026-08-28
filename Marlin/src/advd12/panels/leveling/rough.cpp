@@ -28,8 +28,8 @@
 #include "../../../lcd/extui/ui_api.h"
 #include "rough.h"
 #include "bed.h"
+#include "leveling.h"
 #include "../panels.h"
-#include "../main.h"
 #include "../wait.h"
 #include "../../core/ids.h"
 #include "../../core/status.h"
@@ -88,7 +88,7 @@ namespace {
 void prepare(CALLBACK_SOURCE src) {
   if(src == CALLBACK_SOURCE::BACK) {
     Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
-    switch_panel<MainPanel>();
+    switch_panel<LevelingPanel>();
     return;
   }
 
@@ -106,7 +106,7 @@ void on_back(lv_event_t *e) {
   ExtUI::setLevelingActive(true); // Enable back compensation
 #endif
   ExtUI::setAxisPosition_mm(Z_AFTER_HOMING, ExtUI::Z, FEEDRATE_Z);
-  Wait::not_busy([](CALLBACK_SOURCE) { switch_panel<MainPanel>(); } );
+  Wait::not_busy([](CALLBACK_SOURCE) { switch_panel<LevelingPanel>(); } );
 }
 
 void move(float x, float y) {

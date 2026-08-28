@@ -70,6 +70,7 @@ struct PanelBase {
 
   void layout_main();
   void layout_menu(const char *title);
+  void layout_title(const char *title);
   static void layout_reset();
   void variables();
   static void update_variables(bool force = false);
@@ -80,6 +81,7 @@ private:
 
 private:
   lv_obj_t *scr_ = nullptr;
+  lv_obj_t *title_ = nullptr;
   static PanelBase *current_panel_;
 };
 

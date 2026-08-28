@@ -630,6 +630,7 @@ namespace ExtUI {
   void stopMove();
   void setAbsoluteZAxisPosition_mm(const float position);
   void resetStatus();
+  bool getSdDirName(char *buffer, size_t size);
 };
 
 /**

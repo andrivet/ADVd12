@@ -309,6 +309,7 @@ public:
 
   // Current Working Dir - Set by cd, cdup, cdroot, and diveToFile(true, ...)
   static char* getWorkDirName()  { workDir.getDosName(filename); return filename; }
+  static bool getWorkDirLongName(char *buffer, size_t size); // @advd12
   static MediaFile& getWorkDir() { return workDir.isOpen() ? workDir : root; }
 
   // Print File stats

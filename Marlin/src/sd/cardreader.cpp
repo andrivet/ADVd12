@@ -1704,4 +1704,45 @@ void CardReader::fileHasFinished() {
 
 #endif // POWER_LOSS_RECOVERY
 
+  // @advd12
+
+  bool CardReader::getWorkDirLongName(char *buffer, size_t size) {
+    if (!buffer || !size)
+      return false;
+
+    // Root directory
+    if (flag.workDirIsRoot) {
+      strlcpy(buffer, "/", size);
+      return true;
+    }
+
+    // Get the DOS 8.3 name of the current directory
+    char dosName[FILENAME_LENGTH];
+    workDir.getDosName(dosName);
+
+    // Find the parent of the current working directory
+    MediaFile parent = workDirDepth > 1
+      ? workDirParents[workDirDepth - 2]
+      : root;
+
+    parent.rewind();
+
+    dir_t entry;
+    char longName[LONG_FILENAME_LENGTH];
+
+    while (parent.readDir(&entry, longName) > 0) {
+      char entryName[FILENAME_LENGTH];
+      createFilename(entryName, entry);
+
+      if (strcasecmp(dosName, entryName) == 0) {
+        strlcpy(buffer, longName[0] ? longName : dosName, size);
+        return true;
+      }
+    }
+
+    // Entry wasn't found. Still return a usable name.
+    strlcpy(buffer, dosName, size);
+    return false;
+  }
+
 #endif // HAS_MEDIA

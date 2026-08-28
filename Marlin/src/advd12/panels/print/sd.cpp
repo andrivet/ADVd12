@@ -48,6 +48,7 @@ lv_obj_t *icons_[NB_VISIBLE_SD_FILES] = {};
 lv_obj_t *filenames_[NB_VISIBLE_SD_FILES] = {};
 lv_obj_t *rows_[NB_VISIBLE_SD_FILES] = {};
 lv_obj_t *nb_pages_ = nullptr;
+char dirname[LONG_FILENAME_LENGTH] = {};
 
 Panel<10> panel;
 
@@ -78,7 +79,7 @@ bool SdPanel::can_switch() {
 
 void SdPanel::create() {
   if(!panel.create()) return;
-  panel.layout_menu("microSD Card");
+  panel.layout_menu("");
 
   panel.rectangle(ROW_WIDTH, 56, 3, 228);
 
@@ -209,6 +210,9 @@ void show_first_page() {
 
 void show_current_page() {
   FileType file_type = FileType::None;
+
+  ExtUI::getSdDirName(dirname, sizeof(dirname));
+  panel.layout_title(dirname);
 
   for(uint8_t index = 0; index < NB_VISIBLE_SD_FILES; ++index) {
     auto file_name = get_file_name(index, file_type);

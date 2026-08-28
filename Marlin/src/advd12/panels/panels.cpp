@@ -252,12 +252,18 @@ void PanelBase::layout_menu(const char *title) {
   rectangle(0, 284, 480, 3);
   auto rect = rectangle(0, 53, 344, 3);
 
-  auto label = lv_label_create(scr_);
-  lv_label_set_text(label, title);
-  lv_obj_set_style_text_color(label, lv_color_white(), LV_PART_MAIN);
-  lv_obj_align_to(label, rect, LV_ALIGN_TOP_MID, 0, -36);
+  title_ = lv_label_create(scr_);
+  lv_label_set_text(title_, title);
+  lv_obj_set_style_text_color(title_, lv_color_white(), LV_PART_MAIN);
+  lv_obj_align_to(title_, rect, LV_ALIGN_TOP_MID, 0, -36);
 
   variables();
+}
+
+void PanelBase::layout_title(const char *title) {
+  auto rect = rectangle(0, 53, 344, 3);
+  lv_label_set_text(title_, title);
+  lv_obj_align_to(title_, rect, LV_ALIGN_TOP_MID, 0, -36);
 }
 
 void PanelBase::layout_reset() {

@@ -1386,6 +1386,10 @@ namespace ExtUI {
     ui.reset_status();
   }
 
+  bool getSdDirName(char *buffer, size_t size) {
+    return CardReader::getWorkDirLongName(buffer, size);
+  }
+
 #if ENABLED(SKEW_CORRECTION)
   #if ENABLED(SKEW_CORRECTION_FOR_Z)
   void setSkewFactors(float xy, float xz, float yz) {

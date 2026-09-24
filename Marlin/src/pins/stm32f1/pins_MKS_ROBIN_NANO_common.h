@@ -155,7 +155,7 @@
   #define FIL_RUNOUT2_PIN                   PE6   // MT_DET_2
 #endif
 #ifndef FIL_RUNOUT_STATE
-  #define FIL_RUNOUT_STATE                LOW
+  #define FIL_RUNOUT_STATE                  LOW
 #endif
   //#define POWER_LOSS_PIN                  PA2   // PW_DET
   //#define PS_ON_PIN                       PB2   // PW_OFF

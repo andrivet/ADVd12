@@ -206,6 +206,10 @@
   #define FIL_RUNOUT_PIN                      21
 #endif
 
+#ifndef FIL_RUNOUT2_PIN
+  #define FIL_RUNOUT2_PIN                     22
+#endif
+
 #ifndef PS_ON_PIN
   #define PS_ON_PIN                           12
 #endif

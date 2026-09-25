@@ -99,3 +99,5 @@ inline constexpr char IMG_START[7]        = "I:0068";
 inline constexpr char IMG_FEEDRATE2[7]    = "I:0069";
 inline constexpr char IMG_FLOWRATE[7]     = "I:0070";
 inline constexpr char IMG_CANCEL[7]       = "I:0071";
+
+constexpr unsigned ACTUAL_NB_IMAGES = 72;

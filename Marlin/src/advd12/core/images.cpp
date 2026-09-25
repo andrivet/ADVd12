@@ -23,11 +23,11 @@
  *
  */
 
-
 #include "images.h"
-
 #include <cassert>
 #include "assets.h"
+#include "ids.h"
+#include "styles.h"
 #include "../../libs/W25Qxx.h"
 #include "../../sd/cardreader.h"
 
@@ -58,16 +58,6 @@ void Images::init() {
   lv_img_decoder_set_close_cb(img_decoder, decoder_close);
 }
 
-static void dos_to_long(const uint8_t dos_name[11], char *long_name) {
-  uint8_t j = 0;
-  for(uint8_t i = 0; i < 11; ++i) {
-    if(i == 8) long_name[j++] = '.';
-    if(dos_name[i] == '\0' || dos_name[i] == ' ') continue;
-    long_name[j++] = static_cast<char>(dos_name[i]);
-  }
-  long_name[j] = '\0';
-}
-
 void Images::update_assets() {
   if(!CardReader::isMounted()) return;
   MediaFile dir, root = CardReader::getroot();
@@ -87,23 +77,45 @@ void Images::update_assets() {
   lv_obj_set_style_text_align(label2, LV_TEXT_ALIGN_CENTER, 0);
   lv_obj_align(label2, LV_ALIGN_CENTER, 0, 12);
 
+  auto label3 = lv_label_create(screen);
+  lv_label_set_long_mode(label3, LV_LABEL_LONG_CLIP);
+  lv_obj_set_style_text_align(label3, LV_TEXT_ALIGN_CENTER, 0);
+  lv_obj_align(label3, LV_ALIGN_CENTER, 0, 36);
+  lv_label_set_text(label3, "");
+  lv_obj_set_style_text_color(label3, red, LV_PART_MAIN | LV_STATE_DEFAULT);
+
   lv_label_set_text(label1, "Erasing previous assets...");
   lv_refr_now(nullptr);
   W25QXX.init(SPI_QUARTER_SPEED);
   erase_assets(label2);
 
-  uint32_t addresses[MAX_NB_IMAGES]{};
+  uint32_t addresses[ACTUAL_NB_IMAGES];{};
   uint32_t address = ADDR_IMAGES;
 
   lv_label_set_text(label1, "Loading new assets...");
-  for(dir_t entry; dir.readDir(&entry, CardReader::longFilename) > 0;) {
-    if(CardReader::longFilename[0] == 0 && entry.name[0] != 0)
-      dos_to_long(entry.name, CardReader::longFilename);
-    if(CardReader::longFilename[0] == 0 || CardReader::longFilename[0] == '.') continue;
-
-    lv_label_set_text(label2, CardReader::longFilename);
+  lv_label_set_text(label2, "logo.bin");
+  lv_refr_now(nullptr);
+  if(!load_logo(dir)) {
+    lv_label_set_text(label3, "Error loading asset");
     lv_refr_now(nullptr);
-    load_asset(dir, CardReader::longFilename, addresses, address);
+    dir.close();
+    delay(1000);
+    return;
+  }
+
+  char filename[9] = "";
+  for(unsigned index = 0; index < ACTUAL_NB_IMAGES; ++index) {
+    snprintf(filename, 9, "%04i.BIN", index);
+
+    lv_label_set_text(label2, filename);
+    lv_refr_now(nullptr);
+    if(!load_asset(dir, filename, index, addresses, address)) {
+      lv_label_set_text(label3, "Error loading asset");
+      lv_refr_now(nullptr);
+      dir.close();
+      delay(1000);
+      return;
+    }
   }
 
   write_addresses(addresses);
@@ -140,14 +152,8 @@ bool parse_src(const char *src, uint32_t &index) {
   return true;
 }
 
-bool Images::load_asset(MediaFile &dir, const char *name, uint32_t addresses[MAX_NB_IMAGES], uint32_t &address) {
-  if(0 == strcasecmp(name, "LOGO.BIN")) {
-    load_logo(dir);
-    return false;
-  }
-
-  unsigned index = strtoul(name, nullptr, 10);
-  assert(index < MAX_NB_IMAGES);
+bool Images::load_asset(MediaFile &dir, const char *name, unsigned index, uint32_t *addresses, uint32_t &address) {
+  assert(index < ACTUAL_NB_IMAGES);
   addresses[index] = address;
 
   MediaFile file;
@@ -191,8 +197,8 @@ bool Images::load_logo(MediaFile &dir) {
   return true;
 }
 
-void Images::write_addresses(uint32_t addresses[MAX_NB_IMAGES]) {
-  W25QXXFlash::SPI_FLASH_BufferWrite(reinterpret_cast<uint8_t*>(addresses), ADDR_ADDRS, MAX_NB_IMAGES * sizeof(uint32_t));
+void Images::write_addresses(uint32_t *addresses) {
+  W25QXXFlash::SPI_FLASH_BufferWrite(reinterpret_cast<uint8_t*>(addresses), ADDR_ADDRS, ACTUAL_NB_IMAGES * sizeof(uint32_t));
 }
 
 static lv_res_t decoder_info(lv_img_decoder_t * decoder, const void * src, lv_img_header_t * header) {

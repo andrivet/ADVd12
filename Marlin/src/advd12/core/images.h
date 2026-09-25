@@ -27,16 +27,14 @@
 #include <lvgl.h>
 #include "src/sd/cardreader.h"
 
-static constexpr unsigned MAX_NB_IMAGES = 256; // Takes 1024 bytes
-
 struct Images {
   static void init();
   static void update_assets();
 
 private:
   static void erase_assets(lv_obj_t *label);
-  static bool load_asset(MediaFile &dir, const char *name, uint32_t addresses[MAX_NB_IMAGES], uint32_t &address);
+  static bool load_asset(MediaFile &dir, const char *name, unsigned index, uint32_t *addresses, uint32_t &address);
   static bool load_logo(MediaFile &dir);
-  static void write_addresses(uint32_t addresses[MAX_NB_IMAGES]);
+  static void write_addresses(uint32_t *addresses);
 };
 

@@ -100,6 +100,7 @@ if pioutil.is_pio_build():
             from pathlib import Path
             from datetime import datetime
             from os import path
+            from shutil import copy2
 
             # Build the timestamped base name from your template (may already include ".bin")
             base = datetime.now().strftime(new_name.replace('{date}', '%Y%m%d').replace('{time}', '%H%M%S'))
@@ -122,9 +123,9 @@ if pioutil.is_pio_build():
             bin_new = Path(target[0].dir.path, bin_name)
             elf_new = Path(source[0].dir.path, elf_name)
 
-            # Rename both
-            bin_old.replace(bin_new)
-            elf_old.replace(elf_new)
+            # Copy both, keeping the original files
+            copy2(bin_old, bin_new)
+            copy2(elf_old, elf_new)
 
             # Update PROGNAME (base without extension) for any later steps that read it
             env['PROGNAME'] = path.splitext(str(bin_new))[0]

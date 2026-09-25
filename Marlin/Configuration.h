@@ -73,6 +73,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 
 // Kind of display
 #define TFT_ADV_UI
+#define HAS_LOGO_IN_FLASH 1
 
 // Be sure to physically remove the jumpers (MKS v3.1 only)
 #define DIAG_JUMPERS_REMOVED

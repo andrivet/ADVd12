@@ -39,7 +39,12 @@
 #include HAL_PATH(../../.., tft/xpt2046.h)
 
 namespace {
+#ifdef D12_230_v1_2
   constexpr uint8_t NB_LINES = 8; // Takes 960 bytes per line
+#else
+  constexpr uint8_t NB_LINES = 32; // Takes 960 bytes per line
+#endif
+
 
   void init_lvgl();
   void init_lvgl_drivers();

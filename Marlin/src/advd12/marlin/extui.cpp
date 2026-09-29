@@ -108,6 +108,7 @@ namespace ExtUI {
     //Core::pause_temperature();
   }
 
+#if ENABLED(ADVANCED_PAUSE_FEATURE)
   void onPauseMode(
       const PauseMessage message,
       const PauseMode mode,
@@ -115,6 +116,7 @@ namespace ExtUI {
   ) {
     stdOnPauseMode(message, mode, extruder);
   }
+#endif
 
   void onShowStatus() {
   }

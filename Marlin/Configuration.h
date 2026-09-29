@@ -2207,7 +2207,8 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
   // Commands to execute on filament runout.
   // With multiple runout sensors use the %c placeholder for the current tool in commands (e.g., "M600 T%c")
   // NOTE: After 'M412 H1' the host handles filament runout and this script does not apply.
-  #define FILAMENT_RUNOUT_SCRIPT "M600 T%c"
+  // #define FILAMENT_RUNOUT_SCRIPT "M600 T%c" @advd12 For the moment, M600 is not well implemented
+  #define FILAMENT_RUNOUT_SCRIPT "M125; %c" // @advd12 park nozzle
 
   // After a runout is detected, continue printing this length of filament
   // before executing the runout script. Useful for a sensor at the end of

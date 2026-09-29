@@ -171,7 +171,7 @@ void extrude() {
   ExtUI::setAxisPosition_mm(
     new_position,
     ExtUI::E0,
-    load_ ? FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE : FILAMENT_CHANGE_UNLOAD_FEEDRATE
+    load_ ? 6 : 10
   );
   Log::verbose() << "E: current = " << ExtUI::getAxisPosition_mm(ExtUI::E0) << Log::endl();
 

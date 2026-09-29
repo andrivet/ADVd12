@@ -6,39 +6,24 @@ Create a new release image. The argument is the name of the build environment.
 
 set -euo pipefail
 
-version="1.0.0"
 name="ADVd12"
 size=200 # MB
 
 if [[ "$OSTYPE" != darwin* ]]; then echo "Works only on macOS, sorry" ; exit 1 ; fi
-if [[ $# -ne 1 ]] ; then echo "Invalid number of arguments" ; exit 1; fi
+if [[ $# -ne 2 ]] ; then echo "Invalid number of arguments" ; exit 1; fi
 
-env=$1
+version=$1
+env=$2
 scripts="${0:A:h}"
-mkdir -p "${scripts}/../../releases/v${version}"
-release="$(cd "${scripts}/../release/v${version}" && pwd)"
+release="$(cd "${scripts}/../../releases/v${version}" && pwd)"
 root="$(cd "${scripts}/.." && pwd)"
 lcd="$(cd "${scripts}/../lcd" && pwd)"
-img="${release}/${env}"
+img="${release}/${env}-${version}.img"
 
-echo "======================================"
-echo "Create ADVd12 version ${version}"
-echo "======================================"
-echo
-echo "BE SURE YOU HAVE CHANGED:"
-echo "- CHANGELOG.md"
-echo "- bump-my-version <part>"
-echo "- User Manual if necessary"
-echo
-pause 'Press any key to continue or Ctrl-C to abort...'
+echo "======================================================="
+echo "Create ADVd12 version ${version} for environment ${env}"
+echo "======================================================="
 
-echo
-echo "***** Remove previous files if any"
-rm -rf "${release:?}/*"
-
-echo
-echo "***** Compile Mainboard firmwares..."
-echo
 platformio run -d "${root}" -e "${env}"
 
 dev=""
@@ -56,9 +41,6 @@ cleanup() {
 }
 
 trap cleanup EXIT INT TERM HUP
-
-echo "**** Generate assets..."
-python "${scripts}/adv_encode_assets.py" "${lcd}/png" --outdir "${lcd}/assets"
 
 echo
 echo "**** Create empty image..."
@@ -102,7 +84,8 @@ echo "Assets copied"
 
 echo
 echo "**** Copy firware..."
-cp "${root}/.pio/build/advi3pp_51/Robin_nano35.bin" "${mount_path}/"
+cp "${root}/.pio/build/${env}/Robin_nano35.bin" "${mount_path}/"
+echo "Firmware copied"
 
 echo
 echo "**** Clean volume..."
@@ -112,4 +95,10 @@ rm -rf "${mount_path}/.fseventsd"
 
 cleanup
 
+echo
+echo "**** Compress the SD image..."
+zip -j "${img}.zip" "${img}"
+rm "${img}"
+
 echo "Finished"
+echo

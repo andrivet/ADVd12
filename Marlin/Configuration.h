@@ -59,10 +59,11 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Model of printer
 // Typically defined in the environment
 // Change also the default environment in platformio.ini
-//#define D12_230_v1_2
-//#define D12_230_v1_3
-//#define D12_230_v3_0 // experimental
-//#define D12_230_v3_1 // experimental
+//#define D12_230_v12
+//#define D12_230_v13
+//#define D12_230_v30 // experimental
+//#define D12_230_v31 // experimental
+//#define D12_230_v32 // experimental
 //#define D12_SIMULATOR
 
 // Kind of drivers
@@ -82,9 +83,9 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 
 #if defined(D12_SIMULATOR)
 #define TFT_GENERIC
-#elif defined(D12_230_v1_3) || defined(D12_230_v1_2)
+#elif defined(D12_230_v13) || defined(D12_230_v12)
 #define MKS_ROBIN_TFT35
-#elif defined(D12_230_v3_0) || defined(D12_230_v3_1)
+#elif defined(D12_230_v30) || defined(D12_230_v31) || defined(D12_230_v32)
 #define MKS_TS35_V2_0
 #endif
 
@@ -127,20 +128,28 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 #if defined(D12_SIMULATOR)
   #define MOTHERBOARD BOARD_SIMULATED
   #define PRINTER_MODEL "D12-230 Simulator"
-#elif defined(D12_230_v1_3)
-  #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V1_3_F4
-  #define PRINTER_MODEL "D12-230 Robin Nano V1.3"
-#elif defined(D12_230_v1_2)
+#elif defined(D12_230_v12)
   #define MOTHERBOARD BOARD_MKS_ROBIN_NANO
+  #define MOTHERBOARD_NAME "Robin Nano V1.2"
   #define PRINTER_MODEL "D12-230 Robin Nano V1.2"
-#elif defined(D12_230_v3_0)
+#elif defined(D12_230_v13)
+  #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V1_3_F4
+  #define MOTHERBOARD_NAME "Robin Nano V1.3"
+  #define PRINTER_MODEL "D12-230 Robin Nano V1.3"
+#elif defined(D12_230_v30)
   #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V3
+  #define MOTHERBOARD_NAME "Robin Nano V3.0"
   #define PRINTER_MODEL "D12-230 Robin Nano V3.0"
-#elif defined(D12_230_v3_1)
+#elif defined(D12_230_v31)
   #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V3_1
+  #define MOTHERBOARD_NAME "Robin Nano V3.1"
   #define PRINTER_MODEL "D12-230 Robin Nano V3.1"
+#elif defined(D12_230_v32)
+  #define MOTHERBOARD BOARD_MKS_ROBIN_NANO_V3_1
+  #define MOTHERBOARD_NAME "Robin Nano V3.2"
+  #define PRINTER_MODEL "D12-230 Robin Nano V3.2"
 #else
-  #error Please define one of D12_230_v1_2, D12_230_v1_3, D12_230_v3_0, D12_230_v3_1, D12_SIMULATOR
+  #error Please define one of D12_230_v12, D12_230_v13, D12_230_v30, D12_230_v31, D12_230_v32, D12_SIMULATOR
 #endif
 
 // @section serial
@@ -153,9 +162,9 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *
  * :[-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
  */
-#if defined(D12_230_v1_2) || defined(D12_230_v1_3) || defined(D12_SIMULATOR)
+#if defined(D12_230_v12) || defined(D12_230_v13) || defined(D12_SIMULATOR)
 #define SERIAL_PORT 3
-#elif defined(D12_230_v3_0) || defined(D12_230_v3_1)
+#elif defined(D12_230_v30) || defined(D12_230_v31) || defined(D12_230_v32)
 #define SERIAL_PORT -1
 #endif
 

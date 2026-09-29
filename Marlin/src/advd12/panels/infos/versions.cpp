@@ -24,7 +24,7 @@
  */
 
 #include <lvgl.h>
-#include "../../../inc/Version.h"
+#include "../../../inc/MarlinConfig.h"
 #include "versions.h"
 #include "infos.h"
 #include "../panels.h"
@@ -55,22 +55,13 @@ void VersionsPanel::create() {
   panel.label("Marlin version:", 40, 135, LABEL::GRAY);
   panel.label("Printer model:", 40, 165, LABEL::GRAY);
   panel.label("Mainboard:", 40, 195, LABEL::GRAY);
-  panel.label("BLTouch:", 40, 225, LABEL::GRAY);
+  panel.label("3DTouch:", 40, 225, LABEL::GRAY);
 
   panel.label(Core::version(), 180, 75, LABEL::REGULAR);
   panel.label(Core::build(), 180, 105, LABEL::REGULAR);
   panel.label(SHORT_BUILD_VERSION, 180, 135, LABEL::REGULAR);
   panel.label("D12-230", 180, 165, LABEL::REGULAR);
-
-#if defined(D12_230_v1_2)
-  panel.label("Robin Nano V1.2", 180, 195, LABEL::REGULAR);
-#elif defined(D12_230_v1_3)
-  panel.label("Robin Nano V1.3", 180, 195, LABEL::REGULAR);
-#elif defined(D12_SIMULATOR)
-  panel.label("Simulator", 180, 195, LABEL::REGULAR);
-#else
-  panel.label("Unknown", 180, 195, LABEL::REGULAR);
-#endif
+  panel.label(MOTHERBOARD_NAME, 180, 195, LABEL::REGULAR);
 
 #if defined(BLTOUCH)
   panel.label("Yes", 180, 225, LABEL::REGULAR);

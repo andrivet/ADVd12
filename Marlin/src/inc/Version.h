@@ -21,18 +21,6 @@
  */
 #pragma once
 
-#if defined(D12_230_v1_2)
-  #define ADVD12_NAME "D12-230-1.2"
-#elif defined(D12_230_v1_3)
-  #define ADVD12_NAME "D12-230-1.3"
-#elif defined(D12_230_v3_0)
-  #define ADVD12_NAME "D12-230-3.0"
-#elif defined(D12_230_v3_1)
-  #define ADVD12_NAME "D12-230-3.1"
-#elif defined(D12_SIMULATOR)
-  #define ADVD12_NAME "D12-Simulator"
-#endif
-
 /**
  * Release version. Leave the Marlin version or apply a custom scheme.
  */
@@ -45,7 +33,7 @@
  * vendor name, download location, GitHub account, etc.
  */
 #ifndef DETAILED_BUILD_VERSION
-  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " (" ADVD12_NAME ")"
+  #define DETAILED_BUILD_VERSION SHORT_BUILD_VERSION " (" PRINTER_MODEL " 1.0.0)"
 #endif
 
 /**
@@ -54,7 +42,7 @@
  * version was tagged.
  */
 #ifndef STRING_DISTRIBUTION_DATE
-  #define STRING_DISTRIBUTION_DATE "2026-01-18"
+  #define STRING_DISTRIBUTION_DATE "2026-09-29"
 #endif
 
 /**

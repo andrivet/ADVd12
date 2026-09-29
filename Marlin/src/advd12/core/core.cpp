@@ -178,7 +178,7 @@ void send_gplv3_7b_notice() {
   //! Under GPLv3 provision 7(b), you are not authorized to remove or alter this notice.
   SERIAL_ECHOLNPGM("Based on ADVd12, Copyright (C) 2026 Sebastien Andrivet");
   SERIAL_ECHO_START();
-  SERIAL_ECHOLNPGM("ADVd12 version: ", advd12::Core::version(), ", build: ", advd12::Core::build(), ", flavor: ", F(ADVD12_NAME));
+  SERIAL_ECHOLNPGM("ADVd12 version: ", advd12::Core::version(), ", build: ", advd12::Core::build(), ", flavor: ", F(PRINTER_MODEL));
 }
 
 }

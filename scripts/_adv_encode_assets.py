@@ -178,7 +178,7 @@ def encode_files(files: list[Path], outdir: Path) -> bool:
             else:
                 bin_path = encode_asset_to_bin(png_path, outdir)
 
-            print(f"[OK] {png_path.name} -> {bin_path}")
+            #print(f"[OK] {png_path.name} -> {bin_path}")
             ok += 1
         except Exception as e:
             print(f"[FAIL] {png_path.name}: {e}", file=sys.stderr)

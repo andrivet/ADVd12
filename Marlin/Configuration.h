@@ -127,6 +127,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Choose the name from boards.h that matches your setup
 #if defined(D12_SIMULATOR)
   #define MOTHERBOARD BOARD_SIMULATED
+  #define MOTHERBOARD_NAME "Simulator"
   #define PRINTER_MODEL "D12-230 Simulator"
 #elif defined(D12_230_v12)
   #define MOTHERBOARD BOARD_MKS_ROBIN_NANO

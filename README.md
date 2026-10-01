@@ -33,7 +33,7 @@ The objectives of this custom firmware (when compared with the Wanhao stock firm
 
 ## Copyrights & Licenses
 
-### ADVd12
+### ADVd12 firmware
 
 * Copyright © 2017–2026 Sébastien Andrivet — [GitHub ADVd12 project](https://github.com/andrivet/ADVd12)
 * Copyright © 2016–2026 — [MarlinFirmware](https://github.com/MarlinFirmware/Marlin)
@@ -47,7 +47,7 @@ The objectives of this custom firmware (when compared with the Wanhao stock firm
 >
 > You should have received a copy of the GNU General Public License along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-### ADVd12 TFT Panels
+### ADVd12 assets
 
 * Copyright © 2026 Sebastien Andrivet — [GitHub ADVi3pp project](https://github.com/andrivet/advi3pp)
 

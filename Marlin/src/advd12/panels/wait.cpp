@@ -206,6 +206,15 @@ void Wait::heating(void (*cb)(CALLBACK_SOURCE)) {
   binder.bind(cancel, &on_cancel_heating);
 }
 
+void Wait::unimplemented() {
+  wait_base("Unimplemented", "This is not yet implemented", nullptr);
+
+  auto btn = wait_button(IMG_CANCEL, 4, 4);
+  binder.reset();
+  binder.bind(btn, &on_back);
+}
+
+
 namespace {
 
 void on_cancel_heating(lv_event_t *event) {

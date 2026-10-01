@@ -27,8 +27,8 @@
 #include <lvgl.h>
 #include "tuning.h"
 #include "../main.h"
+#include "../wait.h"
 #include "../../core/ids.h"
-#include "../../core/status.h"
 #include "../panels.h"
 
 namespace {
@@ -54,7 +54,7 @@ void TuningPanel::create() {
 
   auto back = panel.control(IMG_LEFT, 7, 2);
 
-  auto sensor = panel.medium_button(IMG_SENSOR, "BLTouch", 19, 76);
+  auto sensor = panel.medium_button(IMG_SENSOR, "3DTouch", 19, 76);
   auto extruder = panel.medium_button(IMG_EXTRUDER2, "Extruder", 101, 76);
   auto pid = panel.medium_button(IMG_PID, " PID", 183, 76);
   auto vibrations = panel.medium_button(IMG_VIBRATIONS, "Vibrations", 265, 76);
@@ -80,31 +80,31 @@ void on_back(lv_event_t *e) {
 }
 
 void on_bltouch(lv_event_t *e) {
-  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
+  Wait::unimplemented();
 }
 
 void on_extruder(lv_event_t *e) {
-  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
+  Wait::unimplemented();
 }
 
 void on_pid(lv_event_t *e) {
-  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
+  Wait::unimplemented();
 }
 
 void on_vibrations(lv_event_t *e) {
-  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
+  Wait::unimplemented();
 }
 
 void on_shaping(lv_event_t *e) {
-  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
+  Wait::unimplemented();
 }
 
 void on_skew(lv_event_t *e) {
-  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
+  Wait::unimplemented();
 }
 
 void on_linear_advance(lv_event_t *e) {
-  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
+  Wait::unimplemented();
 }
 
 }

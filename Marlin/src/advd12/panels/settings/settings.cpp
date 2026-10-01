@@ -94,23 +94,23 @@ void on_reset(lv_event_t *e) {
 }
 
 void on_motors(lv_event_t *e) {
-
+  Wait::unimplemented();
 }
 
 void on_pid(lv_event_t *e) {
-
+  Wait::unimplemented();
 }
 
 void on_sensor(lv_event_t *e) {
-
+  Wait::unimplemented();
 }
 
 void on_brightness(lv_event_t *e) {
-
+  Wait::unimplemented();
 }
 
 void on_runout(lv_event_t *e) {
-
+  Wait::unimplemented();
 }
 
 }

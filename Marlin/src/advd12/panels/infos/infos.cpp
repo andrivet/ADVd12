@@ -32,6 +32,7 @@
 #include "../main.h"
 #include "../../core/ids.h"
 #include "../../core/status.h"
+#include "src/advd12/panels/wait.h"
 
 namespace {
 
@@ -74,7 +75,7 @@ void on_back(lv_event_t *e) {
 }
 
 void on_stats(lv_event_t *e) {
-  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
+  Wait::unimplemented();
 }
 
 void on_versions(lv_event_t *e) {
@@ -86,7 +87,7 @@ void on_copyrights(lv_event_t *e) {
 }
 
 void on_io(lv_event_t *e) {
-  Status::set(GET_TEXT(ADVD12_MSG_NOT_IMPLEMENTED));
+  Wait::unimplemented();
 }
 
 }

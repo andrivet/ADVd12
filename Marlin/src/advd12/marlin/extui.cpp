@@ -26,6 +26,7 @@
 #include "../../inc/MarlinConfig.h"
 #include "../../lcd/extui/ui_api.h"
 #include "../core/core.h"
+#include "../core/status.h"
 #include "../panels/wait.h"
 #include "../panels/kill.h"
 #include "../core/progress.h"
@@ -104,17 +105,31 @@ namespace ExtUI {
     Wait::wait_user(GET_TEXT(ADVD12_TITLE_CONFIRM), msg, awaiting);
   }
 
-  void onChangeFilamentConfirmRequired() {
-    //Core::pause_temperature();
-  }
-
 #if ENABLED(ADVANCED_PAUSE_FEATURE)
   void onPauseMode(
       const PauseMessage message,
       const PauseMode mode,
       const uint8_t extruder
   ) {
-    stdOnPauseMode(message, mode, extruder);
+    if (mode != PAUSE_MODE_SAME) pause_mode = mode;
+    ExtUI::pauseModeStatus = message;
+    auto title = GET_TEXT(ADVD12_MSG_TITLE_PAUSE);
+    switch (message) {
+      case PAUSE_MESSAGE_CHANGING: Wait::wait_user(title, GET_TEXT(MSG_FILAMENT_CHANGE_INIT), false); break;
+      case PAUSE_MESSAGE_HEATING:  Wait::wait_user(title, GET_TEXT(MSG_FILAMENT_CHANGE_HEATING), false); break;
+      case PAUSE_MESSAGE_UNLOAD:   Wait::wait_user(title, GET_TEXT(MSG_FILAMENT_CHANGE_UNLOAD), false); break;
+      case PAUSE_MESSAGE_INSERT:   Wait::wait_user(title, GET_TEXT(MSG_FILAMENT_CHANGE_INSERT), false); break;
+      case PAUSE_MESSAGE_HEAT:     Wait::wait_user(title, GET_TEXT(MSG_FILAMENT_CHANGE_HEAT), false); break;
+      case PAUSE_MESSAGE_LOAD:     Wait::wait_user(title, GET_TEXT(MSG_FILAMENT_CHANGE_LOAD), false); break;
+      case PAUSE_MESSAGE_PURGE:    Wait::wait_user(title, GET_TEXT(MSG_FILAMENT_CHANGE_PURGE), false); break;
+      case PAUSE_MESSAGE_OPTION:   Wait::pause_options(); break;
+      case PAUSE_MESSAGE_RESUME:   Wait::wait_user(title, GET_TEXT(MSG_FILAMENT_CHANGE_RESUME), false); break;
+      case PAUSE_MESSAGE_STATUS:   Wait::close(); break;
+
+      case PAUSE_MESSAGE_PARKING:  Wait::wait_user(title, GET_TEXT(MSG_PAUSE_PRINT_PARKING), false); ExtUI::setUserConfirmed(false); break;
+      case PAUSE_MESSAGE_WAITING:  break;
+      default: break;
+    }
   }
 #endif
 

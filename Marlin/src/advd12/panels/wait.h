@@ -46,4 +46,5 @@ void close();
 bool check_not_busy();
 void heating(void (*cb)(CALLBACK_SOURCE));
 void unimplemented();
+void pause_options();
 };

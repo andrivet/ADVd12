@@ -37,17 +37,19 @@
 namespace {
 lv_obj_t *modal = nullptr;
 lv_obj_t *msgbox = nullptr;
-EventBinder<1> binder{};
+EventBinder<3> binder{};
 void (*wait_cb)(CALLBACK_SOURCE) = nullptr;
 void (*homing_cb)() = nullptr;
 bool close_on_homing = false;
 
 lv_obj_t *wait_base(const char *title, const char *message, void (*cb)(CALLBACK_SOURCE));
-lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y);
+lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y, const char *text = nullptr);
 void on_back(lv_event_t *event);
 void on_continue(lv_event_t *event);
 void on_confirm(lv_event_t *event);
 void on_cancel_heating(lv_event_t *event);
+void on_pause_extrude(lv_event_t *event);
+void on_pause_resume(lv_event_t *event);
 }
 
 
@@ -214,6 +216,16 @@ void Wait::unimplemented() {
   binder.bind(btn, &on_back);
 }
 
+void Wait::pause_options() {
+  wait_base("Pause", nullptr, nullptr);
+
+  auto extrude_btn = wait_button(IMG_LOAD2,  83, 100, "Purge");
+  auto resume_btn = wait_button(IMG_START, 198, 100, "Resume");
+
+  binder.reset();
+  binder.bind(extrude_btn, &on_pause_extrude);
+  binder.bind(resume_btn, &on_pause_resume);
+}
 
 namespace {
 
@@ -270,7 +282,7 @@ lv_obj_t *wait_base(const char *title, const char *message, void (*cb)(CALLBACK_
   return msgbox;
 }
 
-lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y) {
+lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y, const char *text) {
   lv_obj_t * btn = lv_imgbtn_create(msgbox);
   lv_obj_set_pos(btn, x, y);
   lv_obj_set_width(btn, 48);
@@ -282,6 +294,15 @@ lv_obj_t *wait_button(const char *src, lv_coord_t x, lv_coord_t y) {
 
   lv_obj_set_style_img_recolor(btn, lv_color_black(), LV_PART_MAIN | LV_STATE_PRESSED);
   lv_obj_set_style_img_recolor_opa(btn, LV_OPA_40, LV_PART_MAIN | LV_STATE_PRESSED);
+
+  if(text) {
+    auto label = lv_label_create(msgbox);
+    lv_label_set_text(label, text);
+    lv_obj_set_style_text_color(label, gray, LV_PART_MAIN);
+    lv_obj_set_style_text_font(label, &lv_font_montserrat_16, LV_PART_MAIN);
+    lv_obj_set_style_text_align(label, LV_ALIGN_CENTER, LV_PART_MAIN);
+    lv_obj_align_to(label, btn, LV_ALIGN_OUT_BOTTOM_MID, 0, 4);
+  }
 
   return btn;
 }
@@ -299,6 +320,14 @@ void on_continue(lv_event_t *) {
 void on_confirm(lv_event_t *event) {
   Wait::close();
   ExtUI::setUserConfirmed(false);
+}
+
+void on_pause_extrude(lv_event_t *event) {
+  ExtUI::setPauseMenuResponse(PAUSE_RESPONSE_EXTRUDE_MORE);
+}
+
+void on_pause_resume(lv_event_t *event) {
+  ExtUI::setPauseMenuResponse(PAUSE_RESPONSE_RESUME_PRINT);
 }
 
 }

@@ -898,8 +898,8 @@ namespace LanguageNarrow_en {
   // Filament Change screens show up to 2 lines on a 3-line display
   LSTR MSG_ADVANCED_PAUSE_WAITING         = _UxGT(MSG_1_LINE("Click to continue"));
   LSTR MSG_PAUSE_PRINT_PARKING            = _UxGT(MSG_1_LINE("Parking..."));
-  LSTR MSG_FILAMENT_CHANGE_INIT           = _UxGT(MSG_1_LINE("Please wait..."));
-  LSTR MSG_FILAMENT_CHANGE_INSERT         = _UxGT(MSG_1_LINE("Insert and Click"));
+  LSTR MSG_FILAMENT_CHANGE_INIT           = _UxGT(MSG_1_LINE("Changing filament"));
+  LSTR MSG_FILAMENT_CHANGE_INSERT         = _UxGT(MSG_1_LINE("Confirm to resume print"));
   LSTR MSG_FILAMENT_CHANGE_HEAT           = _UxGT(MSG_1_LINE("Click to heat"));
   LSTR MSG_FILAMENT_CHANGE_HEATING        = _UxGT(MSG_1_LINE("Heating..."));
   LSTR MSG_FILAMENT_CHANGE_UNLOAD         = _UxGT(MSG_1_LINE("Ejecting..."));
@@ -961,10 +961,10 @@ namespace LanguageNarrow_en {
   LSTR MSG_LEVEL_X_AXIS                   = _UxGT("Level X Axis");
   LSTR MSG_AUTO_CALIBRATE                 = _UxGT("Auto Calibrate");
   LSTR MSG_FTDI_HEATER_TIMEOUT            = _UxGT("Idle timeout, temperature decreased. Press Okay to reheat and again to resume.");
-  LSTR MSG_HEATER_TIMEOUT                 = _UxGT("Heater Timeout");
+  LSTR MSG_HEATER_TIMEOUT                 = _UxGT("Heater Timeout, press to heat again");
   LSTR MSG_REHEAT                         = _UxGT("Reheat");
   LSTR MSG_REHEATING                      = _UxGT("Reheating...");
-  LSTR MSG_REHEATDONE                     = _UxGT("Reheat Done");
+  LSTR MSG_REHEATDONE                     = _UxGT("Reheat Done. Confirm to resume print");
 
   LSTR MSG_PROBE_WIZARD                   = _UxGT("Z Probe Wizard");
   LSTR MSG_PROBE_WIZARD_PROBING           = _UxGT("Probing Z Reference");
@@ -1201,7 +1201,7 @@ namespace LanguageNarrow_en {
   LSTR ADVD12_TITLE_WAIT                 = _UxGT("Please Wait");
   LSTR ADVD12_TITLE_WARNING              = _UxGT("Warning");
   LSTR ADVD12_TITLE_INFORMATION          = _UxGT("Information");
-  LSTR ADVD12_MSG_TITLE_PURGE            = _UxGT("Filament purge");
+  LSTR ADVD12_MSG_TITLE_PAUSE            = _UxGT("Pause");
 }
 
 namespace LanguageWide_en {

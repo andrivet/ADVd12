@@ -53,8 +53,7 @@ float get_multiplier(uint16_t index);
 
 void on_stop(lv_event_t *e);
 void on_pause(lv_event_t *e);
-void on_continue(lv_event_t *e);
-//void on_change(lv_event_t *e);
+void on_change(lv_event_t *e);
 void on_down(lv_event_t *e);
 void on_up(lv_event_t *e);
 void on_feedrate_minus(lv_event_t *e);
@@ -75,8 +74,7 @@ void PrintPanel::create() {
 
   auto stop = panel.control(IMG_STOP, 7, 2);
   auto pause = panel.control(IMG_PAUSE, 74, 2);
-  auto cont = panel.control(IMG_START, 140, 2);
-  //auto change = panel.control(IMG_CHANGE, 288, 2);
+  auto change = panel.control(IMG_CHANGE, 288, 2);
 
   panel.icon(IMG_FS_FILE, 15, 64);
   panel.text(advd12::Core::print_filename(), 62, 69, 274, ALIGN::LEFT, LABEL::REGULAR);
@@ -107,8 +105,7 @@ void PrintPanel::create() {
   panel.reset_bindings();
   panel.bind(stop, &on_stop);
   panel.bind(pause, &on_pause);
-  panel.bind(cont, &on_continue);
-  //panel.bind(change, &on_change);
+  panel.bind(change, &on_change);
   panel.bind(down, &on_down);
   panel.bind(up, &on_up);
   panel.bind(dropdown, &on_increment_selected, EventType::CHANGED);
@@ -146,16 +143,10 @@ void on_pause(lv_event_t *e) {
   ExtUI::pausePrint();
 }
 
-void on_continue(lv_event_t *e) {
-  if(!ExtUI::isPrinting() || !ExtUI::isPrintingPaused()) return;
-  ExtUI::resumePrint();
-}
-
-/*
 void on_change(lv_event_t *e) {
   if(!ExtUI::isPrinting()) return;
   ExtUI::injectCommands("M600");
-}*/
+}
 
 void on_down(lv_event_t *e) {
   auto steps = ExtUI::mmToWholeSteps(increment, ExtUI::Z);

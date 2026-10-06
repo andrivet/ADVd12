@@ -68,14 +68,14 @@ void AutomaticPanel::create() {
 }
 
 void AutomaticPanel::on_leveling_start() {
-  Status::set(GET_TEXT(MSG_BED_LEVELING), Status::STATUS_OPTIONS::RESET);
+  LCD_MESSAGE(MSG_BED_LEVELING);
   probe = panel.icon(IMG_PROBE, 60, 177);
 }
 
 void AutomaticPanel::on_leveling_progress(uint8_t progress) {
   char text[20];
   sprintf(text, GET_TEXT(ADVD12_MSG_LEVELING_PROBING), static_cast<int>(progress), NB_POINTS);
-  Status::set(text, Status::STATUS_OPTIONS::RESET);
+  MarlinUI::set_status(text);
 
   static const lv_point_t points[] = {
     {60, 177}, {164, 177}, {264, 177 },
@@ -91,7 +91,7 @@ void AutomaticPanel::on_leveling_done(bool success) {
   ExtUI::setTargetTemp_celsius(0, ExtUI::BED);
 
   if(!success)
-    Status::set(GET_TEXT(ADVD12_MSG_LEVELING_FAILURE), Status::STATUS_OPTIONS::RESET);
+    LCD_MESSAGE(ADVD12_MSG_LEVELING_FAILURE);
   else {
     ExtUI::saveSettings();
     ExtUI::setLevelingActive(true);
@@ -110,7 +110,7 @@ void prepare() {
 
 void on_back(lv_event_t *e) {
   ExtUI::setTargetTemp_celsius(0, ExtUI::BED);
-  Status::set(GET_TEXT(ADVD12_MSG_LEVELING_CANCEL), Status::STATUS_OPTIONS::RESET);
+  LCD_MESSAGE(ADVD12_MSG_LEVELING_CANCEL);
   ExtUI::cancelLeveling();
   Wait::not_busy([](CALLBACK_SOURCE) { switch_panel<LevelingPanel>(); } );
 }

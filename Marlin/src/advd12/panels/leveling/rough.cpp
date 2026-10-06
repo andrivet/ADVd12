@@ -87,7 +87,7 @@ namespace {
 
 void prepare(CALLBACK_SOURCE src) {
   if(src == CALLBACK_SOURCE::BACK) {
-    Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+    LCD_MESSAGE(ADVD12_MSG_CANCELED);
     switch_panel<LevelingPanel>();
     return;
   }

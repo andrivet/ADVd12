@@ -115,7 +115,7 @@ void on_save(lv_event_t *e) {
   ExtUI::setAbsoluteZAxisPosition_mm(0);
   ExtUI::setAxisPosition_mm(Z_AFTER_HOMING, ExtUI::Z, FEEDRATE_Z);
   ExtUI::saveSettings();
-  Status::set(GET_TEXT(ADVD12_MSG_Z_OFFSET_SAVED), Status::STATUS_OPTIONS::RESET);
+  LCD_MESSAGE(ADVD12_MSG_Z_OFFSET_SAVED);
   Wait::not_busy([](CALLBACK_SOURCE) { switch_panel<LevelingPanel>(); });
 }
 

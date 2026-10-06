@@ -57,11 +57,11 @@ void advd12::Core::init() {
   if(ExtUI::getLevelingIsValid()) ExtUI::setLevelingActive(true);
 #endif
 
-  Status::set(GET_TEXT(WELCOME_MSG), Status::STATUS_OPTIONS::RESET);
+  MarlinUI::reset_status();
 }
 
 void advd12::Core::startup() {
-  Status::set(GET_TEXT(ADVD12_MSG_BOOTING), Status::STATUS_OPTIONS::RESET | Status::STATUS_OPTIONS::PERSISTENT);
+  LCD_MESSAGE(ADVD12_MSG_BOOTING);
 }
 
 void advd12::Core::idle() {
@@ -103,7 +103,7 @@ void advd12::Core::calibrate() {
 void advd12::Core::disable_motors() {
   // If busy, do nothing
   if(is_busy()) {
-    Status::set(GET_TEXT(ADVD12_MSG_BUSY));
+    LCD_MESSAGE(ADVD12_MSG_BUSY);
     return;
   }
 
@@ -111,7 +111,7 @@ void advd12::Core::disable_motors() {
   ExtUI::injectCommands_P("M84"); // Disable steppers
   ExtUI::setAllAxisUnhomed();
   ExtUI::setAllAxisPositionUnknown();
-  Status::set(GET_TEXT(ADVD12_MSG_MOTORS_DISABLED), Status::STATUS_OPTIONS::RESET);
+  LCD_MESSAGE(ADVD12_MSG_MOTORS_DISABLED);
 }
 
 const char *advd12::Core::version() {
@@ -155,7 +155,14 @@ void advd12::Core::print_done() {
   Progress::finish();
   switch_panel<MainPanel>();
   usb_print = true;
-  Status::set_done();
+
+  auto elapsed = ExtUI::getProgress_seconds_elapsed();
+  unsigned hours   = elapsed / 3600;
+  unsigned minutes = (elapsed % 3600) / 60;
+
+  char text[32];
+  sprintf(text, "Printed in %02u:%02u", hours, minutes);
+  MarlinUI::set_status(text);
 }
 
 const char *advd12::Core::print_filename() {

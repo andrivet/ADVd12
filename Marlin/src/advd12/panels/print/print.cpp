@@ -129,7 +129,7 @@ namespace {
 void on_stop(lv_event_t *e) {
   Wait::wait_cancel_continue(GET_TEXT(ADVD12_TITLE_CONFIRM), GET_TEXT(ADVD12_MSG_ABORT_PRINT), [] (CALLBACK_SOURCE src) -> void {
     if(src == CALLBACK_SOURCE::BACK) { // Cancel abort print
-      Status::set(GET_TEXT(ADVD12_MSG_PRINT_CONTINUE), Status::STATUS_OPTIONS::RESET);
+      LCD_MESSAGE(ADVD12_MSG_PRINT_CONTINUE);
       return;
     }
 

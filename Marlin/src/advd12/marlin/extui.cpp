@@ -137,7 +137,7 @@ namespace ExtUI {
   }
 
   void onStatusChanged(const char * const msg) {
-    //Status::set(msg, persist ? Status::STATUS_OPTIONS::PERSISTENT | Status::STATUS_OPTIONS::RESET : Status::STATUS_OPTIONS::RESET );
+    Status::on_changed(msg);
     //if(persist) Dimming::sleep_off();
   }
 

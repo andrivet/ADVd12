@@ -91,7 +91,7 @@ void LoadUnloadPanel::create() {
 
   show_temp();
 
-  Status::reset();
+  MarlinUI::reset_status();
   previous_z_ = advd12::Core::ensure_z_enough_room();
   temp_ = ExtUI::getDefaultTemp_celsius(ExtUI::H0);
 }
@@ -153,7 +153,7 @@ void prepare(unsigned length, bool load) {
   ExtUI::setHostKeepaliveState(GcodeSuite::IN_PROCESS);
   Wait::heating([](CALLBACK_SOURCE src) -> void {
     if(src == CALLBACK_SOURCE::BACK) {
-      Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+      LCD_MESSAGE(ADVD12_MSG_CANCELED);
       ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
       ExtUI::setTargetTemp_celsius(0, ExtUI::H0);
       return;
@@ -178,7 +178,7 @@ void extrude() {
   auto title = load_ ? GET_TEXT(MSG_FILAMENT_CHANGE_LOAD) : GET_TEXT(MSG_FILAMENT_CHANGE_UNLOAD);
   Wait::wait_cancel(title, GET_TEXT(ADVD12_MSG_IN_PROGRESS), [] (CALLBACK_SOURCE src) -> void {
     if(src == CALLBACK_SOURCE::BACK) {
-      Status::set(GET_TEXT(ADVD12_MSG_CANCELED), Status::STATUS_OPTIONS::RESET);
+      LCD_MESSAGE(ADVD12_MSG_CANCELED);
       ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
       ExtUI::stopMove();
     }
@@ -187,7 +187,7 @@ void extrude() {
   background_task.set([] () -> CALLBACK_RESULT {
     if(ExtUI::isMoving()) return CALLBACK_RESULT::CONTINUE;
     ExtUI::setHostKeepaliveState(GcodeSuite::NOT_BUSY);
-    Status::set_default();
+    MarlinUI::reset_status();
     Wait::close();
     return CALLBACK_RESULT::STOP;
   });

@@ -86,7 +86,7 @@ void on_reset(lv_event_t *e) {
       ExtUI::saveSettings();
       ExtUI::setAllAxisUnhomed();
       ExtUI::setAllAxisPositionUnknown();
-      Status::set(GET_TEXT(ADVD12_MSG_SETTINGS_RESET), Status::STATUS_OPTIONS::RESET);
+      LCD_MESSAGE(ADVD12_MSG_SETTINGS_RESET);
       PanelBase::layout_reset();
       delay(1000);
       switch_panel<CalibrationPanel>();

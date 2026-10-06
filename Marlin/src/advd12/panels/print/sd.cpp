@@ -112,11 +112,11 @@ void SdPanel::create() {
 
   ExtUI::mountMedia();
   if(!ExtUI::isMediaMounted()) {
-    Status::set(GET_TEXT(ADVD12_MSG_SD_CARD_NONE), Status::STATUS_OPTIONS::RESET);
+    LCD_MESSAGE(ADVD12_MSG_SD_CARD_NONE);
     return;
   }
 
-  Status::set(GET_TEXT(ADVD12_MSG_SD_CARD_DETECTED), Status::STATUS_OPTIONS::RESET);
+  LCD_MESSAGE(ADVD12_MSG_SD_CARD_DETECTED);
   show_first_page();
 }
 

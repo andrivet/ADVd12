@@ -120,10 +120,11 @@ void Wait::homing(const FlashChar* command) {
 }
 
 void Wait::homing_start() {
-  Status::set(GET_TEXT(MSG_HOMING), Status::STATUS_OPTIONS::RESET);
+  LCD_MESSAGE(MSG_HOMING);
 }
 
 void Wait::homing_done() {
+  MarlinUI::reset_status();
   if(close_on_homing) {
     close_on_homing = false;
     close();

@@ -29,47 +29,18 @@
 #include "task.h"
 #include "../panels/panels.h"
 
-namespace {
-
-millis_t status_message_expire_ms = 0;
-
-}
-
 namespace Status {
 
-void set(const char* message, STATUS_OPTIONS options) {
-  if(test_one_bit(options, STATUS_OPTIONS::RESET)) reset();
-  bool persistent = test_one_bit(options, STATUS_OPTIONS::PERSISTENT);
-  // If a persistent message is already displayed, do not override it my a non-persistent one
-  if(status_message_expire_ms == 0 && !persistent) return;
-  status_message_expire_ms = persistent ? 0 : millis() + (STATUS_MESSAGE_TIMEOUT_SEC) * 1000UL;
+void on_changed(const char* message) {
   PanelBase::set_status(message);
-}
-
-void set_default() {
-  set(GET_TEXT(WELCOME_MSG), Status::STATUS_OPTIONS::RESET);
-}
-
-void reset() {
-  status_message_expire_ms = millis() + (STATUS_MESSAGE_TIMEOUT_SEC) * 1000UL;
 }
 
 void init() {
   status_task.set([] () -> CALLBACK_RESULT {
-      if(status_message_expire_ms && ELAPSED(millis(), status_message_expire_ms))
-        ExtUI::resetStatus();
+      if(MarlinUI::status_message_expire_ms && ELAPSED(millis(), MarlinUI::status_message_expire_ms))
+        MarlinUI::reset_status();
       return CALLBACK_RESULT::CONTINUE;
     });
-}
-
-void set_done() {
-  auto elapsed = ExtUI::getProgress_seconds_elapsed();
-  unsigned hours   = elapsed / 3600;
-  unsigned minutes = (elapsed % 3600) / 60;
-
-  char text[32];
-  sprintf(text, "Printed in %02u:%02u", hours, minutes);
-  set(text, STATUS_OPTIONS::PERSISTENT);
 }
 
 }

@@ -265,7 +265,6 @@ void select_row(unsigned index) {
   snprintf(text, sizeof(text), "Print file %s?", files_.filename());
   Wait::wait_cancel_continue("Print", text, [](CALLBACK_SOURCE src) {
     if(src == CALLBACK_SOURCE::BACK) return;
-    advd12::Core::set_print_filename(files_.filename());
     ExtUI::printFile(files_.shortFilename());
   });
 }

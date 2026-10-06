@@ -40,9 +40,6 @@ namespace {
 
 constexpr unsigned int Z_ROOM = 20; // mm
 
-char filename[64];
-bool usb_print = true;
-
 void send_gplv3_7b_notice();
 
 }
@@ -154,7 +151,6 @@ void advd12::Core::print_started() {
 void advd12::Core::print_done() {
   Progress::finish();
   switch_panel<MainPanel>();
-  usb_print = true;
 
   auto elapsed = ExtUI::getProgress_seconds_elapsed();
   unsigned hours   = elapsed / 3600;
@@ -163,18 +159,6 @@ void advd12::Core::print_done() {
   char text[32];
   sprintf(text, "Printed in %02u:%02u", hours, minutes);
   MarlinUI::set_status(text);
-}
-
-const char *advd12::Core::print_filename() {
-  return usb_print ? "USB" : filename;
-}
-
-void advd12::Core::set_print_filename(const char *name) {
-  auto length = strlen(name);
-  if(length >= sizeof(filename))
-    length = sizeof(filename) - 1;
-  memcpy(filename, name, length);
-  usb_print = false;
 }
 
 namespace {

@@ -76,31 +76,28 @@ void PrintPanel::create() {
   auto pause = panel.control(IMG_PAUSE, 74, 2);
   auto change = panel.control(IMG_CHANGE, 288, 2);
 
-  panel.icon(IMG_FS_FILE, 15, 64);
-  panel.text(advd12::Core::print_filename(), 62, 69, 274, ALIGN::LEFT, LABEL::REGULAR);
-
-  panel.icon(IMG_STEPS2, 8, 106);
-  auto down = panel.control(IMG_DOWN, 62, 104);
-  auto up = panel.control(IMG_UP, 189, 104);
-  z_offset_var = panel.text("0.00", 110, 117, 79, ALIGN::CENTER, LABEL::REGULAR);
+  panel.icon(IMG_STEPS2, 8, 87);
+  auto down = panel.control(IMG_DOWN, 62, 85);
+  auto up = panel.control(IMG_UP, 189, 85);
+  z_offset_var = panel.text("0.00", 110, 98, 79, ALIGN::CENTER, LABEL::REGULAR);
 
   dropdown = lv_dropdown_create(panel.scr());
   lv_dropdown_set_options(dropdown, "0.01\n0.05\n0.25");
-  lv_obj_set_pos(dropdown, 249, 108);
+  lv_obj_set_pos(dropdown, 249, 89);
   lv_obj_set_size(dropdown, 87, 38);
   lv_obj_add_style(dropdown, &style_dropdown, LV_PART_MAIN);
   auto drop_list = lv_dropdown_get_list(dropdown);
   if(drop_list) lv_obj_add_style(drop_list, &style_dropdown, LV_PART_MAIN);
 
-  panel.icon(IMG_FEEDRATE2, 15, 172);
-  auto feedrate_minus = panel.control(IMG_MINUS, 62, 162);
-  auto feedrate_plus = panel.control(IMG_PLUS, 189, 162);
-  feedrate_var = panel.text("100%", 110, 175, 79, ALIGN::CENTER, LABEL::REGULAR);
+  panel.icon(IMG_FEEDRATE2, 15, 153);
+  auto feedrate_minus = panel.control(IMG_MINUS, 62, 143);
+  auto feedrate_plus = panel.control(IMG_PLUS, 189, 143);
+  feedrate_var = panel.text("100%", 110, 156, 79, ALIGN::CENTER, LABEL::REGULAR);
 
-  panel.icon(IMG_FLOWRATE, 15, 228);
-  auto flowrate_minus = panel.control(IMG_MINUS, 62, 220);
-  auto flowrate_plus = panel.control(IMG_PLUS, 189, 220);
-  flowrate_var = panel.text("100%", 110, 233, 79, ALIGN::CENTER, LABEL::REGULAR);
+  panel.icon(IMG_FLOWRATE, 15, 209);
+  auto flowrate_minus = panel.control(IMG_MINUS, 62, 201);
+  auto flowrate_plus = panel.control(IMG_PLUS, 189, 201);
+  flowrate_var = panel.text("100%", 110, 214, 79, ALIGN::CENTER, LABEL::REGULAR);
 
   panel.reset_bindings();
   panel.bind(stop, &on_stop);

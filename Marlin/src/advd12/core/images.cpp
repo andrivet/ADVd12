@@ -116,6 +116,7 @@ void Images::update_assets() {
       delay(1000);
       return;
     }
+    MarlinHAL::watchdog_refresh();
   }
 
   write_addresses(addresses);

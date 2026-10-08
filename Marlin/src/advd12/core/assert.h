@@ -35,6 +35,7 @@ void assert_fail(const char *expr, const char *file, int line);
 
 #else
 
+#undef assert
 #define	assert(e)	((void)0)
 
 #endif

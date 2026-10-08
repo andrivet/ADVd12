@@ -185,3 +185,5 @@ sqlite*.db
 .zed/
 *mcp*.db
 github-app.yml
+.python-version
+data/

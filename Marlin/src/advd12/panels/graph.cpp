@@ -49,7 +49,7 @@ void Graph::create(lv_obj_t *parent) {
   draw_graduations(parent);
 
   chart = lv_chart_create(parent);
-  lv_obj_set_pos(chart, 37, 58);
+  lv_obj_set_pos(chart, 40, 58);
   lv_obj_set_size(chart, NB_POINTS, 168);
   lv_chart_set_type(chart, LV_CHART_TYPE_LINE);
   lv_chart_set_range(chart, LV_CHART_AXIS_PRIMARY_Y, BED_TEMP_MIN, BED_TEMP_MAX);

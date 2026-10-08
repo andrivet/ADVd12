@@ -135,15 +135,6 @@ void TFT_FSMC::init() {
 
   DMAtx.Init.PeriphInc = DMA_PINC_DISABLE;
   HAL_DMA_Init(&DMAtx);
-
-  // @advd12
-#ifdef STM32F1xx
-  HAL_NVIC_SetPriority(DMA2_Channel1_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Channel1_IRQn);
-#elif defined(STM32F4xx)
-  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
-#endif
 }
 
 uint32_t TFT_FSMC::getID() {
@@ -208,58 +199,6 @@ void TFT_FSMC::transmit(uint32_t memoryIncrease, uint16_t *data, uint16_t count)
   HAL_DMA_Start(&DMAtx, (uint32_t)data, (uint32_t)&(LCD->RAM), count);
   HAL_DMA_PollForTransfer(&DMAtx, HAL_DMA_FULL_TRANSFER, HAL_MAX_DELAY);
   abort();
-}
-
-// @advd12
-
-static void(*dma_callback)() = nullptr;
-
-#ifdef STM32F1xx
-extern "C" void DMA2_Channel1_IRQHandler() {
-  TFT_FSMC::DMA_IRQHandler();
-}
-#elif defined(STM32F4xx)
-extern "C" void DMA2_Stream0_IRQHandler() {
-  TFT_FSMC::DMA_IRQHandler();
-}
-#endif
-
-static void dma_complete_callback(DMA_HandleTypeDef *hdma) {
-  TFT_FSMC::dataTransferEnd();
-  if (dma_callback) {
-    auto callback = dma_callback;
-    dma_callback = nullptr;
-    callback();
-  }
-}
-
-static void dma_error_callback(DMA_HandleTypeDef *hdma) {
-  TFT_FSMC::abort();
-  TFT_FSMC::dataTransferEnd();
-  if (dma_callback) {
-    auto callback = dma_callback;
-    dma_callback = nullptr;
-    callback();
-  }
-}
-
-void TFT_FSMC::transmitIT(uint32_t memoryIncrease, uint16_t *data, uint16_t count, void(*cb)()) {
-  if (!__IS_DMA_CONFIGURED(&DMAtx) || DMAtx.Init.PeriphInc != memoryIncrease) {
-    DMAtx.Init.PeriphInc = memoryIncrease;
-    HAL_DMA_Init(&DMAtx);
-  }
-  dma_callback = cb;
-  DMAtx.XferCpltCallback = dma_complete_callback;
-  DMAtx.XferErrorCallback = dma_error_callback;
-  dataTransferBegin();
-  if(HAL_DMA_Start_IT(&DMAtx, (uint32_t)data, (uint32_t)&(LCD->RAM), count) != HAL_OK) {
-    dataTransferEnd();
-    if (dma_callback) {
-      auto callback = dma_callback;
-      dma_callback = nullptr;
-      callback();
-    }
-  }
 }
 
 #endif // HAS_FSMC_TFT

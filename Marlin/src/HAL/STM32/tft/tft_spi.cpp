@@ -374,48 +374,5 @@ void TFT_SPI::transmit(uint32_t memoryIncrease, uint16_t *data, uint16_t count) 
   extern "C" void DMA2_Stream3_IRQHandler(void) { TFT_SPI::DMA_IRQHandler(); }
 #endif
 
-// @advd12
-
-static void(*dma_callback)() = nullptr;
-
-static void dma_complete_callback(DMA_HandleTypeDef *hdma) {
-  TFT_SPI::dataTransferEnd();
-  if (dma_callback) {
-    auto callback = dma_callback;
-    dma_callback = nullptr;
-    callback();
-  }
-}
-
-static void dma_error_callback(DMA_HandleTypeDef *hdma) {
-  TFT_SPI::abort();
-  TFT_SPI::dataTransferEnd();
-  if (dma_callback) {
-    auto callback = dma_callback;
-    dma_callback = nullptr;
-    callback();
-  }
-}
-
-void TFT_SPI::transmitIT(uint32_t memoryIncrease, uint16_t *data, uint16_t count, void(*cb)()) {
-
-  DMAtx.Init.MemInc = memoryIncrease;
-  HAL_DMA_Init(&DMAtx);
-
-  if (SPIx.Init.Direction == SPI_DIRECTION_1LINE) SPI_1LINE_TX(&SPIx);
-
-  dma_callback = cb;
-  DMAtx.XferCpltCallback = dma_complete_callback;
-  DMAtx.XferErrorCallback = dma_error_callback;
-  dataTransferBegin();
-
-  HAL_NVIC_SetPriority(DMA2_Stream3_IRQn, 5, 0);
-  HAL_NVIC_EnableIRQ(DMA2_Stream3_IRQn);
-  HAL_DMA_Start_IT(&DMAtx, (uint32_t)data, (uint32_t)&(SPIx.Instance->DR), count);
-  __HAL_SPI_ENABLE(&SPIx);
-
-  SET_BIT(SPIx.Instance->CR2, SPI_CR2_TXDMAEN);   // Enable Tx DMA Request
-}
-
 #endif // HAS_SPI_TFT
 #endif // HAL_STM32

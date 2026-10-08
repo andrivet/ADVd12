@@ -54,7 +54,6 @@ namespace {
   void clear(uint16_t color);
   void draw_logo();
   void draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t *color_p);
-  void draw_dma(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t *color_p, void(*cb)());
   void set_point(uint16_t x, uint16_t y, uint16_t point);
   void set_window(uint16_t x, uint16_t y, uint16_t width, uint16_t height);
 
@@ -134,22 +133,19 @@ namespace {
     // TODO: filament loading time
   }
 
-  void flush_ready_callback() {
-    lv_disp_flush_ready(&disp_drv);
-  }
-
   void flush(lv_disp_drv_t *disp, const lv_area_t *area, lv_color_t *color_p) {
     auto width = area->x2 - area->x1 + 1;
     auto height = area->y2 - area->y1 + 1;
 
-    draw_dma(
+    draw(
       area->x1,
       area->y1,
       width,
       height,
-      reinterpret_cast<uint16_t*>(color_p),
-      flush_ready_callback
+      reinterpret_cast<uint16_t*>(color_p)
     );
+
+    lv_disp_flush_ready(&disp_drv);
   }
 
   bool get_touch(int16_t * const x, int16_t * const y) {
@@ -212,11 +208,6 @@ namespace {
   [[maybe_unused]] void draw(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t * color_p) {
     set_window(x, y, width, height);
     TFT_IO::writeSequence(color_p, width * height);
-  }
-
-  void draw_dma(uint16_t x, uint16_t y, uint16_t width, uint16_t height, uint16_t * color_p, void(*cb)()) {
-    set_window(x, y, width, height);
-    TFT_IO::writeSequenceIT(color_p, width * height, cb);
   }
 
   [[maybe_unused]] void set_point(uint16_t x, uint16_t y, uint16_t point) {

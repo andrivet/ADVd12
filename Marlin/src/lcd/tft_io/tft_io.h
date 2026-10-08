@@ -82,9 +82,6 @@ public:
     inline static void writeSequenceIT(uint16_t *data, uint16_t count) { io.writeSequenceIT(data, count); }
   #endif
 
-  // @advd12
-  static void writeSequenceIT(uint16_t *data, uint16_t count, void(*cb)()) { io.writeSequenceIT(data, count, cb); }
-
 protected:
   static uint32_t lcd_id;
 };

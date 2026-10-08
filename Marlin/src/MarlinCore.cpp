@@ -83,9 +83,9 @@
     #include "lcd/dwin/creality/dwin.h"
   #elif ENABLED(DWIN_CREALITY_LCD_JYERSUI)
     #include "lcd/dwin/jyersui/dwin.h"
-  #elif ENABLED(SOVOL_SV06_RTS)
-    #include "lcd/sovol_rts/sovol_rts.h"
   #endif
+#elif ENABLED(SOVOL_SV06_RTS)
+  #include "lcd/sovol_rts/sovol_rts.h"
 #endif
 
 #if HAS_ETHERNET
@@ -264,6 +264,10 @@
   #include "feature/rs485.h"
 #endif
 
+#if ENABLED(SOFT_FEED_HOLD)
+  #include "feature/e_parser.h"
+#endif
+
 /**
  * Spin in place here while keeping temperature processing alive
  */
@@ -374,7 +378,7 @@ void Marlin::startOrResumeJob() {
   if (!printingIsPaused()) {
     TERN_(GCODE_REPEAT_MARKERS, repeat.reset());
     TERN_(CANCEL_OBJECTS, cancelable.reset());
-    TERN_(LCD_SHOW_E_TOTAL, e_move_accumulator = 0);
+    TERN_(LCD_SHOW_E_TOTAL, motion.e_move_accumulator = 0);
     TERN_(SET_REMAINING_TIME, ui.reset_remaining_time());
     TERN_(HAS_PRUSA_MMU3, MMU3::operation_statistics.reset_per_print_stats());
   }
@@ -388,7 +392,7 @@ void Marlin::startOrResumeJob() {
     card.abortFilePrintNow(TERN_(SD_RESORT, true));
 
     queue.clear();
-    quickstop_stepper();
+    motion.quickstop_stepper();
 
     print_job_timer.abort();
 
@@ -518,8 +522,14 @@ void Marlin::manage_inactivity(const bool no_stepper_sleep/*=false*/) {
     }
   #endif
 
-  #if ENABLED(FREEZE_FEATURE)
-    stepper.frozen = READ(FREEZE_PIN) == FREEZE_STATE;
+  // Handle the FREEZE button
+  #if ANY(FREEZE_FEATURE, SOFT_FEED_HOLD)
+    stepper.set_frozen_triggered(
+      TERN0(FREEZE_FEATURE, READ(FREEZE_PIN) == FREEZE_STATE)
+      #if ALL(SOFT_FEED_HOLD, REALTIME_REPORTING_COMMANDS)
+        || realtime_ramping_pause_flag
+      #endif
+    );
   #endif
 
   #if HAS_HOME
@@ -703,19 +713,19 @@ void Marlin::manage_inactivity(const bool no_stepper_sleep/*=false*/) {
   #endif
 
   #if ENABLED(EXTRUDER_RUNOUT_PREVENT)
-    if (thermalManager.degHotend(active_extruder) > (EXTRUDER_RUNOUT_MINTEMP)
+    if (thermalManager.degHotend(motion.extruder) > (EXTRUDER_RUNOUT_MINTEMP)
       && ELAPSED(ms, gcode.previous_move_ms, SEC_TO_MS(EXTRUDER_RUNOUT_SECONDS))
       && !planner.has_blocks_queued()
     ) {
-      const int8_t e_stepper = TERN(HAS_SWITCHING_EXTRUDER, active_extruder >> 1, active_extruder);
+      const int8_t e_stepper = TERN(HAS_SWITCHING_EXTRUDER, motion.extruder / 2, motion.extruder);
       const bool e_off = !stepper.AXIS_IS_ENABLED(E_AXIS, e_stepper);
       if (e_off) stepper.ENABLE_EXTRUDER(e_stepper);
 
-      const float olde = current_position.e;
-      current_position.e += EXTRUDER_RUNOUT_EXTRUDE;
-      line_to_current_position(MMM_TO_MMS(EXTRUDER_RUNOUT_SPEED));
-      current_position.e = olde;
-      planner.set_e_position_mm(olde);
+      const float olde = motion.position.e;
+      motion.position.e += EXTRUDER_RUNOUT_EXTRUDE;
+      motion.goto_current_position(MMM_TO_MMS(EXTRUDER_RUNOUT_SPEED));
+      motion.position.e = olde;
+      motion.sync_plan_position_e();
       planner.synchronize();
 
       if (e_off) stepper.DISABLE_EXTRUDER(e_stepper);
@@ -726,11 +736,11 @@ void Marlin::manage_inactivity(const bool no_stepper_sleep/*=false*/) {
 
   #if ENABLED(DUAL_X_CARRIAGE)
     // handle delayed move timeout
-    if (delayed_move_time && ELAPSED(ms, delayed_move_time) && isRunning()) {
+    if (motion.delayed_move_time && ELAPSED(ms, motion.delayed_move_time) && isRunning()) {
       // travel moves have been received so enact them
-      delayed_move_time = UINT32_MAX; // force moves to be done
-      destination = current_position;
-      prepare_line_to_destination();
+      motion.delayed_move_time = UINT32_MAX; // force moves to be done
+      motion.destination = motion.position;
+      motion.prepare_line_to_destination();
       planner.synchronize();
     }
   #endif
@@ -810,7 +820,7 @@ void Marlin::idle(const bool no_stepper_sleep/*=false*/) {
   if (is(MF_INITIALIZING)) goto IDLE_DONE;
 
   // TODO: Still causing errors
-  TERN_(TOOL_SENSOR, (void)check_tool_sensor_stats(active_extruder, true));
+  TERN_(TOOL_SENSOR, (void)check_tool_sensor_stats(motion.extruder, true));
 
   // Handle filament runout sensors
   #if HAS_FILAMENT_SENSOR
@@ -847,6 +857,17 @@ void Marlin::idle(const bool no_stepper_sleep/*=false*/) {
   // Update the Beeper queue
   TERN_(HAS_BEEPER, buzzer.tick());
 
+  // Async Babystepping via the Emergency Parser
+  #if ALL(EP_BABYSTEPPING, EMERGENCY_PARSER)
+    babystep.do_ep_steps();
+  #endif
+
+  // Direct Stepping
+  TERN_(DIRECT_STEPPING, page_manager.write_responses());
+
+  // Manage Fixed-time Motion Control
+  TERN_(FT_MOTION, ftMotion.loop());
+
   // Handle UI input / draw events
   #if ENABLED(SOVOL_SV06_RTS)
     RTS_Update();
@@ -874,7 +895,7 @@ void Marlin::idle(const bool no_stepper_sleep/*=false*/) {
       TERN_(AUTO_REPORT_TEMPERATURES, thermalManager.auto_reporter.tick());
       TERN_(AUTO_REPORT_FANS, fan_check.auto_reporter.tick());
       TERN_(AUTO_REPORT_SD_STATUS, card.auto_reporter.tick());
-      TERN_(AUTO_REPORT_POSITION, position_auto_reporter.tick());
+      TERN_(AUTO_REPORT_POSITION, motion.position_auto_reporter.tick());
       TERN_(BUFFER_MONITORING, queue.auto_report_buffer_statistics());
     }
   #endif
@@ -889,20 +910,9 @@ void Marlin::idle(const bool no_stepper_sleep/*=false*/) {
   // Handle Joystick jogging
   TERN_(POLL_JOG, joystick.inject_jog_moves());
 
-  // Async Babystepping via the Emergency Parser
-  #if ALL(EP_BABYSTEPPING, EMERGENCY_PARSER)
-    babystep.do_ep_steps();
-  #endif
-
-  // Direct Stepping
-  TERN_(DIRECT_STEPPING, page_manager.write_responses());
-
   // Update the LVGL interface
   TERN_(HAS_TFT_LVGL_UI, LV_TASK_HANDLER());
   TERN_(HAS_TFT_ADV_UI, advd12::Core::task_handler());
-
-  // Manage Fixed-time Motion Control
-  TERN_(FT_MOTION, ftMotion.loop());
 
   IDLE_DONE:
   TERN_(MARLIN_DEV_MODE, idle_depth--);
@@ -994,7 +1004,7 @@ void Marlin::stop() {
   print_job_timer.stop();
 
   #if ANY(PROBING_FANS_OFF, ADVANCED_PAUSE_FANS_PAUSE)
-    thermalManager.set_fans_paused(false); // Un-pause fans for safety
+    Fan::all_resume(); // Un-pause fans for safety
   #endif
 
   if (!isStopped()) {
@@ -1160,6 +1170,7 @@ inline void tmc_standby_setup() {
  *  - Apply Password Lock - Hold for Authentication
  *  - Open Touch Screen Calibration screen, if not calibrated
  *  - Set Marlin to RUNNING State
+ *  - Stop print timer
  */
 void setup() {
   #ifdef FASTIO_INIT
@@ -1226,7 +1237,7 @@ void setup() {
     #endif
   #endif
 
-  #if ENABLED(FREEZE_FEATURE)
+  #if ENABLED(FREEZE_FEATURE) && DISABLED(NO_FREEZE_PIN)
     SETUP_LOG("FREEZE_PIN");
     #if FREEZE_STATE
       SET_INPUT_PULLDOWN(FREEZE_PIN);
@@ -1377,6 +1388,12 @@ void setup() {
     #endif
   #endif
 
+  //#if ENABLED(PRINTJOB_TIMER_AUTOSTART)
+  //  // Stop timer and set welcome message
+  //  if (TERN1(POWER_LOSS_RECOVERY, !recovery.check()))
+  //    thermalManager.auto_job_check_timer(false, true);
+  //#endif
+
   // Prepare some LCDs to display early
   #if HAS_EARLY_LCD_SETTINGS
     SETUP_RUN(settings.load_lcd_state());
@@ -1406,9 +1423,9 @@ void setup() {
     SETUP_RUN(touchBt.init());
   #endif
 
-  TERN_(HAS_HOME_OFFSET, current_position += home_offset); // Init current position based on home_offset
+  TERN_(HAS_HOME_OFFSET, motion.position += motion.home_offset); // Init current position based on home_offset
 
-  sync_plan_position();               // Vital to init stepper/planner equivalent for current_position
+  motion.sync_plan_position();        // Vital to init stepper/planner equivalent for motion.position
 
   SETUP_RUN(thermalManager.init());   // Initialize temperature loop
 

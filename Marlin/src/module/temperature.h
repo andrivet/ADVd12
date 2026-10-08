@@ -1008,6 +1008,7 @@ class Temperature {
 
     static raw_adc_t rawHotendTemp(const uint8_t E_NAME) {
       return TERN0(HAS_HOTEND, temp_hotend[HOTEND_INDEX].getraw());
+    }
     
     // @advd12
     static celsius_t degDefaultHotend(const uint8_t E_NAME) {

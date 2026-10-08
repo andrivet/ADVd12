@@ -30,7 +30,7 @@
 #endif
 
 #ifndef DEFAULT_MACHINE_NAME
-  #define DEFAULT_MACHINE_NAME "Simulator"
+  #define DEFAULT_MACHINE_NAME "Simulator" // @advd12
 #endif
 
 #ifndef MARLIN_EEPROM_SIZE
@@ -207,7 +207,7 @@
 #endif
 
 #ifndef FIL_RUNOUT2_PIN
-  #define FIL_RUNOUT2_PIN                     22
+  #define FIL_RUNOUT2_PIN                     22  // @advd12
 #endif
 
 #ifndef PS_ON_PIN
@@ -409,7 +409,7 @@
 // LCD / Controller
 //
 
-#if ANY(TFT_COLOR_UI, TFT_CLASSIC_UI, TFT_LVGL_UI, TFT_ADV_UI)
+#if ANY(TFT_COLOR_UI, TFT_CLASSIC_UI, TFT_LVGL_UI, TFT_ADV_UI) // @advd12
 
   #define TFT_CS_PIN                          49
   #define TFT_DC_PIN                          43

@@ -286,7 +286,7 @@
 // LCD / Controller
 //
 
-#if ANY(TFT_COLOR_UI, TFT_LVGL_UI, TFT_CLASSIC_UI, TFT_ADV_UI)
+#if ANY(TFT_COLOR_UI, TFT_LVGL_UI, TFT_CLASSIC_UI, TFT_ADV_UI) // @advd12
   #define TFT_CS_PIN                 EXP1_07_PIN
   #define TFT_SCK_PIN                EXP2_02_PIN
   #define TFT_MISO_PIN               EXP2_01_PIN

@@ -414,8 +414,8 @@ namespace ExtUI {
 
   // @advd12
   void getRealtimeAxisPositions_mm(xyz_pos_t &xyz) {
-    get_cartesian_from_steppers();
-    xyze_pos_t npos = LOGICAL_AXIS_ARRAY(0, cartes.x, cartes.y, cartes.z);
+    Motion::get_cartesian_from_steppers();
+    xyze_pos_t npos = LOGICAL_AXIS_ARRAY(0, Motion::cartes.x, Motion::cartes.y, Motion::cartes.z);
     TERN_(HAS_POSITION_MODIFIERS, planner.unapply_modifiers(npos, true));
     const auto lpos = npos.asLogical();
     xyz.set(lpos.X, lpos.Y, lpos.Z);
@@ -453,7 +453,7 @@ namespace ExtUI {
     for(size_t i = 0; i < nb_axis; ++i) {
       // Get motion limit from software endstops, if any
       float min, max;
-      soft_endstop.get_manual_axis_limits((AxisEnum)axis[i], min, max);
+      motion.soft_endstop.get_manual_axis_limits((AxisEnum)axis[i], min, max);
 
       // Delta limits XY based on the current offset from center
       // This assumes the center is 0,0
@@ -464,10 +464,10 @@ namespace ExtUI {
         }
       #endif
 
-      current_position[axis[i]] = constrain(positions[i], min, max);
+      motion.position[axis[i]] = constrain(positions[i], min, max);
     }
 
-    line_to_current_position(feedrate);
+    motion.goto_current_position(feedrate);
   }
 
   void setAxisPosition_mm(const float position, const extruder_t extruder, const feedRate_t feedrate/*=0*/) {
@@ -997,17 +997,17 @@ namespace ExtUI {
         #if HAS_LEVELING_TEMP_EDIT
           void setLevelingBedTemp(const celsius_t temp) { thermalManager.leveling_temp.bed = temp; }
         #endif
+      #endif
     #endif
 
     #if ENABLED(BLTOUCH)
-    bool isLevelingHighSpeed() { return bltouch.high_speed_mode; } // @advd12
-    #if HAS_BLTOUCH_HS_MODE
-    void setLevelingHighSpeed(bool set) { bltouch.high_speed_mode = set; } // @advd12
-    #else
-    void setLevelingHighSpeed(bool set) { }
+      bool isLevelingHighSpeed() { return bltouch.high_speed_mode; } // @advd12
+      #if HAS_BLTOUCH_HS_MODE
+        void setLevelingHighSpeed(bool set) { bltouch.high_speed_mode = set; } // @advd12
+      #else
+      void setLevelingHighSpeed(bool set) { }
+      #endif
     #endif
-    //bool isLevelingTouchSw() { return bltouch.sw_mode; } // @advd12
-    //void setLevelingTouchSw(bool set) { bltouch.sw_mode = set; } // @advd12
 
     #if HAS_MESH
 
@@ -1332,12 +1332,12 @@ namespace ExtUI {
   // @advd12
   void setAllAxisUnhomed()
   {
-    ::set_all_unhomed();
+    Motion::set_all_unhomed();
   }
 
   void setAllAxisPositionUnknown()
   {
-    ::set_all_unhomed();
+    Motion::set_all_unhomed();
   }
 
   void finishAndDisableHeaters()
@@ -1457,12 +1457,12 @@ namespace ExtUI {
   }
 
   void stopMove() {
-    quickstop_stepper();
+    Motion::quickstop_stepper();
   }
 
   void setAbsoluteZAxisPosition_mm(const float position) {
-    current_position.z = position;
-    sync_plan_position();
+    Motion::position.z = position;
+    Motion::sync_plan_position();
   }
 
   void resetStatus() {
@@ -1479,8 +1479,8 @@ namespace ExtUI {
     planner.skew_factor.xy = xy;
     planner.skew_factor.xz = xz;
     planner.skew_factor.yz = yz;
-    set_current_from_steppers_for_axis(ALL_AXES_ENUM);
-    sync_plan_position();
+    Motion::set_current_from_steppers_for_axis(ALL_AXES_ENUM);
+    Motion::sync_plan_position();
   }
   #else
   void setSkewFactors(float xy) {

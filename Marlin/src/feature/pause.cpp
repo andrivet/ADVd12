@@ -545,7 +545,6 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
   TERN_(HOST_PROMPT_SUPPORT, hostui.continue_prompt(GET_TEXT_F(MSG_FILAMENT_CHANGE_INSERT))); // @advd12
   TERN_(EXTENSIBLE_UI, ExtUI::onUserConfirmRequired(GET_TEXT_F(MSG_FILAMENT_CHANGE_INSERT))); // @advd12
   marlin.wait_start();    // LCD click or M108 will clear this
-  while (marlin.wait_for_user == Marlin::WAIT_FOR_USER::WAIT ) { // @advd12
 
   #if ENABLED(FILAMENT_CHANGE_RESUME_ON_INSERT)
     // Old filament may still be in the sensor, so wait for it to stay clear before
@@ -555,7 +554,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
     bool cleared = false;
   #endif
 
-  while (marlin.wait_for_user) {
+  while (marlin.wait_for_user == Marlin::WAIT_FOR_USER::WAIT ) { // @advd12
     impatient_beep(max_beep_count);
 
     #if ENABLED(FILAMENT_CHANGE_RESUME_ON_INSERT)

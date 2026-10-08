@@ -119,7 +119,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // @section info
 
 // Author info of this build printed to the host during boot and M115
-#define STRING_CONFIG_H_AUTHOR "(Sebastien Andrivet)" // Who made the changes. @advi3++
+#define STRING_CONFIG_H_AUTHOR "(Sebastien Andrivet)" // Who made the changes. @advd12
 //#define CUSTOM_VERSION_FILE Version.h // Path from the root directory (no quotes)
 
 // @section machine
@@ -317,19 +317,19 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 
 // This defines the number of extruders
 // :[0, 1, 2, 3, 4, 5, 6, 7, 8]
-#define EXTRUDERS 2
+#define EXTRUDERS 2 // @advd12
 
 // Generally expected filament diameter (1.75, 2.85, 3.0, ...). Used for Volumetric, Filament Width Sensor, etc.
 #define DEFAULT_NOMINAL_FILAMENT_DIA 1.75
 
 // For Cyclops or any "multi-extruder" that shares a single nozzle.
-#define SINGLENOZZLE
+#define SINGLENOZZLE // @advd12
 
 // Save and restore temperature and fan speed on tool-change.
 // Set standby for the unselected tool with M104/106/109 T...
 #if ENABLED(SINGLENOZZLE)
-  #define SINGLENOZZLE_STANDBY_TEMP
-  #define SINGLENOZZLE_STANDBY_FAN
+  #define SINGLENOZZLE_STANDBY_TEMP // @advd12
+  #define SINGLENOZZLE_STANDBY_FAN // @advd12
 #endif
 
 // A dual extruder that uses a single stepper motor
@@ -767,7 +767,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Above this temperature the heater will be switched off.
 // This can protect components from overheating, but NOT from shorts and failures.
 // (Use MINTEMP for thermistor short/failure protection.)
-#define HEATER_0_MAXTEMP 265
+#define HEATER_0_MAXTEMP 265 // @advd12
 #define HEATER_1_MAXTEMP 275
 #define HEATER_2_MAXTEMP 275
 #define HEATER_3_MAXTEMP 275
@@ -775,7 +775,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 #define HEATER_5_MAXTEMP 275
 #define HEATER_6_MAXTEMP 275
 #define HEATER_7_MAXTEMP 275
-#define BED_MAXTEMP      105
+#define BED_MAXTEMP      105 // @advd12
 #define CHAMBER_MAXTEMP  60
 
 // @advd12
@@ -832,9 +832,9 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
     #define DEFAULT_KI_LIST {   1.08,   1.08 }
     #define DEFAULT_KD_LIST { 114.00, 114.00 }
   #else
-    #define DEFAULT_KP  22.77
-    #define DEFAULT_KI   1.36
-    #define DEFAULT_KD  95.62
+    #define DEFAULT_KP  22.77 // @advd12
+    #define DEFAULT_KI   1.36 // @advd12
+    #define DEFAULT_KD  95.62 // @advd12
   #endif
 #else
   #define BANG_MAX 255    // Limit hotend current while in bang-bang mode; 255=full current
@@ -923,7 +923,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *
  * With this option disabled, bang-bang will be used. BED_LIMIT_SWITCHING enables hysteresis.
  */
-#define PIDTEMPBED
+#define PIDTEMPBED // @advd12
 
 #if ENABLED(PIDTEMPBED)
   //#define MIN_BED_POWER 0   // Min power to improve PID stability (0..MAX_BED_POWER).
@@ -932,10 +932,6 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 
   // 120V 250W silicone heater into 4mm borosilicate (MendelMax 1.5+)
   // from FOPDT model - kp=.39 Tp=405 Tdead=66, Tc set to 79.2, aggressive factor of .15 (vs .1, 1, 10)
-  //#define DEFAULT_BED_KP  92.32
-  //#define DEFAULT_BED_KI  17.62
-  //#define DEFAULT_BED_KD 120.95
-  
   #define DEFAULT_BED_KP  92.32
   #define DEFAULT_BED_KI  17.62
   #define DEFAULT_BED_KD 120.95
@@ -1397,11 +1393,11 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * Endstop "Hit" State
  * Set to the state (HIGH or LOW) that applies to each endstop.
  */
-#define X_MIN_ENDSTOP_HIT_STATE LOW
+#define X_MIN_ENDSTOP_HIT_STATE LOW // @advd12
 #define X_MAX_ENDSTOP_HIT_STATE HIGH
-#define Y_MIN_ENDSTOP_HIT_STATE LOW
+#define Y_MIN_ENDSTOP_HIT_STATE LOW // @advd12
 #define Y_MAX_ENDSTOP_HIT_STATE HIGH
-//#define Z_MIN_ENDSTOP_HIT_STATE HIGH
+//#define Z_MIN_ENDSTOP_HIT_STATE HIGH // @advd12
 #define Z_MAX_ENDSTOP_HIT_STATE HIGH
 #define I_MIN_ENDSTOP_HIT_STATE HIGH
 #define I_MAX_ENDSTOP_HIT_STATE HIGH
@@ -1417,11 +1413,11 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 #define W_MAX_ENDSTOP_HIT_STATE HIGH
 
 #if defined(BLTOUCH)
-#define Z_MIN_ENDSTOP_HIT_STATE HIGH
+#define Z_MIN_ENDSTOP_HIT_STATE HIGH // @advd12
 #define Z_MIN_PROBE_ENDSTOP_HIT_STATE HIGH
 #else
-#define Z_MIN_ENDSTOP_HIT_STATE LOW
-#define Z_MIN_PROBE_ENDSTOP_HIT_STATE LOW
+#define Z_MIN_ENDSTOP_HIT_STATE LOW // @advd12
+#define Z_MIN_PROBE_ENDSTOP_HIT_STATE LOW // @advd12
 #endif
 
 // Enable this feature if all enabled endstop pins are interrupt-capable.
@@ -1470,7 +1466,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * Override with M92 (when enabled below)
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400.5, 381 }
+#define DEFAULT_AXIS_STEPS_PER_UNIT   { 80, 80, 400.5, 381 } // @advd12
 
 /**
  * Enable support for M92. Disable to save at least ~530 bytes of flash.
@@ -1482,7 +1478,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * Override with M203
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
-#define DEFAULT_MAX_FEEDRATE          { 200, 200, 20, 50 }
+#define DEFAULT_MAX_FEEDRATE          { 200, 200, 20, 50 } // @advd12
 
 //#define LIMITED_MAX_FR_EDITING        // Limit edit via M203 or LCD to DEFAULT_MAX_FEEDRATE * 2
 #if ENABLED(LIMITED_MAX_FR_EDITING)
@@ -1496,9 +1492,9 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *                                      X, Y, Z [, I [, J [, K...]]], E0 [, E1[, E2...]]
  */
 #if ENABLED(D12_500_Pro)
-#define DEFAULT_MAX_ACCELERATION      { 300, 300, 100, 2000 }
+#define DEFAULT_MAX_ACCELERATION      { 300, 300, 100, 2000 } // @advd12
 #else
-#define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 2000 }
+#define DEFAULT_MAX_ACCELERATION      { 500, 500, 100, 2000 } // @advd12
 #endif
 
 //#define LIMITED_MAX_ACCEL_EDITING     // Limit edit via M201 or LCD to DEFAULT_MAX_ACCELERATION * 2
@@ -1514,6 +1510,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *   M204 R    Retract Acceleration
  *   M204 T    Travel Acceleration
  */
+// @advd12
 #define DEFAULT_ACCELERATION           500    // X, Y, Z and E acceleration for printing moves
 #define DEFAULT_RETRACT_ACCELERATION  1000    // E acceleration for retracts
 #define DEFAULT_TRAVEL_ACCELERATION    500    // X, Y, Z acceleration for travel (non printing) moves
@@ -1526,7 +1523,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * When changing speed and direction, if the difference is less than the
  * value set here, it may happen instantaneously.
  */
-#define CLASSIC_JERK
+#define CLASSIC_JERK // @advd12
 #if ENABLED(CLASSIC_JERK)
   #define DEFAULT_XJERK 13.0
   #define DEFAULT_YJERK 13.0
@@ -1555,7 +1552,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *   https://blog.kyneticcnc.com/2018/10/computing-junction-deviation-for-marlin.html
  */
 #if DISABLED(CLASSIC_JERK)
-  #define JUNCTION_DEVIATION_MM 0.011 // (mm) Distance from real junction edge
+  #define JUNCTION_DEVIATION_MM 0.011 // (mm) Distance from real junction edge // @advd12
   #define JD_HANDLE_SMALL_SEGMENTS    // Use curvature estimation instead of just the junction angle
                                       // for small segments (< 1mm) with large junction angles (> 135°).
 #endif
@@ -1589,6 +1586,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * The probe replaces the Z-MIN endstop and is used for Z homing.
  * (Automatically enables USE_PROBE_FOR_Z_HOMING.)
  */
+// @advd12
 #if defined(BLTOUCH)
 #define Z_MIN_PROBE_USES_Z_MIN_ENDSTOP_PIN
 #endif
@@ -1849,7 +1847,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *     |    [-]    |
  *     O-- FRONT --+
  */
-#define NOZZLE_TO_PROBE_OFFSET { -45, -5, 0}
+#define NOZZLE_TO_PROBE_OFFSET { -45, -5, 0} // @advd12
 
 // Enable and set to use a specific tool for probing. Disable to allow any tool.
 #define PROBING_TOOL 0
@@ -1865,10 +1863,10 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 
 // X and Y axis travel speed between probes.
 // Leave undefined to use the average of the current XY homing feedrate.
-#define XY_PROBE_FEEDRATE    (100*60) // (mm/min)
+#define XY_PROBE_FEEDRATE    (100*60) // (mm/min) // @advd12
 
 // Feedrate for the first approach when double-probing (MULTIPLE_PROBING == 2)
-#define Z_PROBE_FEEDRATE_FAST  (6*60) // (mm/min)
+#define Z_PROBE_FEEDRATE_FAST  (6*60) // (mm/min) // @advd12
 
 // Feedrate for the "accurate" probe of each point
 #define Z_PROBE_FEEDRATE_SLOW (Z_PROBE_FEEDRATE_FAST / 2) // (mm/min)
@@ -2026,7 +2024,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // Invert the stepper direction. Change (or reverse the motor connector) if an axis goes the wrong way.
 #define INVERT_X_DIR false
 #define INVERT_Y_DIR true
-//#define INVERT_Z_DIR false
+//#define INVERT_Z_DIR false // @advd12
 //#define INVERT_I_DIR false
 //#define INVERT_J_DIR false
 //#define INVERT_K_DIR false
@@ -2044,6 +2042,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //#define INVERT_E6_DIR false
 //#define INVERT_E7_DIR false
 
+// @advd12
 #define INVERT_Z_DIR true
 #define INVERT_E0_DIR true
 #define INVERT_E1_DIR true
@@ -2099,22 +2098,16 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 // @section geometry
 
 // The size of the printable area
-#define X_BED_SIZE 230
-#define Y_BED_SIZE 230
+#define X_BED_SIZE 230 // @advd12
+#define Y_BED_SIZE 230 // @advd12
+
+// Travel limits (linear=mm, rotational=°) after homing, corresponding to endstop positions.
 #define X_MIN_POS 0
 #define Y_MIN_POS 0
 #define Z_MIN_POS 0
 #define X_MAX_POS X_BED_SIZE
 #define Y_MAX_POS Y_BED_SIZE
-#define Z_MAX_POS 250
-
-// Travel limits (linear=mm, rotational=°) after homing, corresponding to endstop positions.
-//#define X_MIN_POS 0
-//#define Y_MIN_POS 0
-//#define Z_MIN_POS 0
-//#define X_MAX_POS X_BED_SIZE
-//#define Y_MAX_POS Y_BED_SIZE
-//#define Z_MAX_POS 180
+#define Z_MAX_POS 250 // @advd12
 //#define I_MIN_POS 0
 //#define I_MAX_POS 50
 //#define J_MIN_POS 0
@@ -2232,8 +2225,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
   // Commands to execute on filament runout.
   // With multiple runout sensors use the %c placeholder for the current tool in commands (e.g., "M600 T%c")
   // NOTE: After 'M412 H1' the host handles filament runout and this script does not apply.
-  // #define FILAMENT_RUNOUT_SCRIPT "M600 T%c" @advd12 For the moment, M600 is not well implemented
-  #define FILAMENT_RUNOUT_SCRIPT "M125; %c" // @advd12 park nozzle
+  #define FILAMENT_RUNOUT_SCRIPT "M600 T%c" // @advd12
 
   // After a runout is detected, continue printing this length of filament
   // before executing the runout script. Useful for a sensor at the end of
@@ -2333,7 +2325,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //#define AUTO_BED_LEVELING_3POINT
 //#define AUTO_BED_LEVELING_LINEAR
 #if defined(BLTOUCH)
-#define AUTO_BED_LEVELING_BILINEAR
+#define AUTO_BED_LEVELING_BILINEAR // @advd12
 #endif
 //#define AUTO_BED_LEVELING_UBL
 //#define MESH_BED_LEVELING
@@ -2577,6 +2569,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * - Allows Z homing only when XY positions are known and trusted.
  * - If stepper drivers sleep, XY homing may be required again before Z homing.
  */
+// @advd12
 #if defined(BLTOUCH)
 #define Z_SAFE_HOMING
 #endif
@@ -2588,7 +2581,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 #endif
 
 // Homing speeds (linear=mm/min, rotational=°/min)
-#define HOMING_FEEDRATE_MM_M { (50*60), (40*60), (10*60) }
+#define HOMING_FEEDRATE_MM_M { (50*60), (40*60), (10*60) } // @advd12
 
 // Edit homing feedrates with M210 and MarlinUI menu items
 //#define EDITABLE_HOMING_FEEDRATE
@@ -2672,6 +2665,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *   M501 - Read settings from EEPROM. (i.e., Throw away unsaved changes)
  *   M502 - Revert settings to "factory" defaults. (Follow with M500 to init the EEPROM.)
  */
+// @advd12
 #define EEPROM_SETTINGS     // Persistent storage with M500 and M501
 //#define DISABLE_M503        // Saves ~2700 bytes of flash. Disable for release!
 #define EEPROM_CHITCHAT       // Give feedback on EEPROM commands. Disable to save flash.
@@ -2710,6 +2704,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 //
 // Preheat Constants - Up to 10 are supported without changes
 //
+// @advd12
 #define PREHEAT_1_LABEL       "A"
 #define PREHEAT_1_TEMP_HOTEND 180
 #define PREHEAT_1_TEMP_BED     60
@@ -2753,7 +2748,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *    P1  Raise the nozzle always to Z-park height.
  *    P2  Raise the nozzle by Z-park amount, limited to Z_MAX_POS.
  */
-#define NOZZLE_PARK_FEATURE
+#define NOZZLE_PARK_FEATURE // @advd12
 
 #if ENABLED(NOZZLE_PARK_FEATURE)
   // Specify a park position as { X, Y, Z_raise }
@@ -3710,12 +3705,12 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 
   // Interface. Enable one of the following options:
   //#define TFT_INTERFACE_FSMC
-  #define TFT_INTERFACE_SPI
+  //#define TFT_INTERFACE_SPI
 
   // TFT Resolution. Enable one of the following options:
   //#define TFT_RES_320x240
   //#define TFT_RES_480x272
-  #define TFT_RES_480x320
+  //#define TFT_RES_480x320
   //#define TFT_RES_1024x600
 #endif
 
@@ -3760,8 +3755,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
 #endif
 
 #if ENABLED(TFT_LVGL_UI)
-  // Disable for the moment because it is not stable enough
-  //#define MKS_WIFI_MODULE // MKS WiFi module
+  //#define MKS_WIFI_MODULE // MKS WiFi module // @advd12
 #endif
 
 /**
@@ -3774,6 +3768,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  *
  * :{ 'TFT_NO_ROTATION':'None', 'TFT_ROTATE_90':'90°', 'TFT_ROTATE_90_MIRROR_X':'90° (Mirror X)', 'TFT_ROTATE_90_MIRROR_Y':'90° (Mirror Y)', 'TFT_ROTATE_180':'180°', 'TFT_ROTATE_180_MIRROR_X':'180° (Mirror X)', 'TFT_ROTATE_180_MIRROR_Y':'180° (Mirror Y)', 'TFT_ROTATE_270':'270°', 'TFT_ROTATE_270_MIRROR_X':'270° (Mirror X)', 'TFT_ROTATE_270_MIRROR_Y':'270° (Mirror Y)', 'TFT_MIRROR_X':'Mirror X', 'TFT_MIRROR_Y':'Mirror Y' }
  */
+// @advd12
 #if ENABLED(MKS_ROBIN_TFT35)
   #define TFT_ROTATION TFT_NO_ROTATION
 #elif ENABLED(MKS_TS35_V2_0)
@@ -3856,7 +3851,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * which is not as annoying as with the hardware PWM. On the other hand, if this frequency
  * is too low, you should also increment SOFT_PWM_SCALE.
  */
-#define FAN_SOFT_PWM
+#define FAN_SOFT_PWM // @advd12
 
 /**
  * Incrementing this by 1 will double the software PWM frequency, affecting heaters, and

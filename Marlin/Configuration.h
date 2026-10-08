@@ -3769,11 +3769,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * :{ 'TFT_NO_ROTATION':'None', 'TFT_ROTATE_90':'90°', 'TFT_ROTATE_90_MIRROR_X':'90° (Mirror X)', 'TFT_ROTATE_90_MIRROR_Y':'90° (Mirror Y)', 'TFT_ROTATE_180':'180°', 'TFT_ROTATE_180_MIRROR_X':'180° (Mirror X)', 'TFT_ROTATE_180_MIRROR_Y':'180° (Mirror Y)', 'TFT_ROTATE_270':'270°', 'TFT_ROTATE_270_MIRROR_X':'270° (Mirror X)', 'TFT_ROTATE_270_MIRROR_Y':'270° (Mirror Y)', 'TFT_MIRROR_X':'Mirror X', 'TFT_MIRROR_Y':'Mirror Y' }
  */
 // @advd12
-#if ENABLED(MKS_ROBIN_TFT35)
-  #define TFT_ROTATION TFT_NO_ROTATION
-#elif ENABLED(MKS_TS35_V2_0)
-  #define TFT_ROTATION TFT_ROTATE_180
-#endif
+#define TFT_ROTATION TFT_NO_ROTATION
 
 //=============================================================================
 //============================  Other Controllers  ============================

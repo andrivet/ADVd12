@@ -43,6 +43,7 @@ float previous_z_ = 0;
 celsius_t temp_ = 200;
 bool load_ = true;
 float extrude_length_ = 0.;
+float extrude_feedrate_ = 10;
 lv_obj_t *temp_text_ = nullptr;
 
 Panel<7> panel;
@@ -55,7 +56,7 @@ void on_full_unload(lv_event_t *e);
 void on_partial_load(lv_event_t *e);
 void on_full_load(lv_event_t *e);
 void show_temp();
-void prepare(unsigned length, bool load);
+void prepare(unsigned length, bool load, float feedrate);
 void extrude();
 }
 
@@ -124,25 +125,26 @@ void on_plus(lv_event_t *e) {
 }
 
 void on_partial_unload(lv_event_t *e) {
-  prepare(65, false);
+  prepare(ADVANCED_PAUSE_PURGE_LENGTH, false, FILAMENT_CHANGE_UNLOAD_FEEDRATE);
 }
 
 void on_full_unload(lv_event_t *e) {
-  prepare(650, false);
+  prepare(FILAMENT_CHANGE_UNLOAD_LENGTH, false, FILAMENT_CHANGE_UNLOAD_FEEDRATE);
 }
 
 void on_partial_load(lv_event_t *e) {
-  prepare(65, true);
+  prepare(FILAMENT_CHANGE_SLOW_LOAD_LENGTH, true, FILAMENT_CHANGE_SLOW_LOAD_FEEDRATE);
 }
 
 void on_full_load(lv_event_t *e) {
-  prepare(650, true);
+  prepare(FILAMENT_CHANGE_FAST_LOAD_LENGTH, true, FILAMENT_CHANGE_FAST_LOAD_FEEDRATE);
 }
 
 //! Prepare Load or Unload step #1: set the target temperature, setup the next step and display a wait message
-void prepare(unsigned length, bool load) {
+void prepare(unsigned length, bool load, float feedrate) {
   load_ = load;
   extrude_length_ = static_cast<float>(length);
+  extrude_feedrate_ = feedrate;
 
   ExtUI::setTargetTemp_celsius(temp_, ExtUI::H0, true);
   if(ExtUI::getDefaultTemp_celsius(ExtUI::H0) != temp_) {
@@ -171,7 +173,7 @@ void extrude() {
   ExtUI::setAxisPosition_mm(
     new_position,
     ExtUI::E0,
-    load_ ? 6 : 10
+    extrude_feedrate_
   );
   Log::verbose() << "E: current = " << ExtUI::getAxisPosition_mm(ExtUI::E0) << Log::endl();
 

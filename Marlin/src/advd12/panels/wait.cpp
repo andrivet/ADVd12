@@ -181,12 +181,12 @@ void Wait::heating(void (*cb)(CALLBACK_SOURCE)) {
     bool reached_extruder = false;
     bool reached_bed = false;
     if(
-      ExtUI::getTargetTemp_celsius(ExtUI::E0) != 0 &&
+      ExtUI::getTargetTemp_celsius(ExtUI::E0) == 0 ||
       ExtUI::getActualTemp_celsius(ExtUI::E0) >= static_cast<celsius_float_t>(ExtUI::getTargetTemp_celsius(ExtUI::E0))
     )
       reached_extruder = true;
     if(
-      ExtUI::getTargetTemp_celsius(ExtUI::BED) != 0 &&
+      ExtUI::getTargetTemp_celsius(ExtUI::BED) == 0 ||
       ExtUI::getActualTemp_celsius(ExtUI::BED) >= static_cast<celsius_float_t>(ExtUI::getTargetTemp_celsius(ExtUI::BED))
     )
       reached_bed = true;

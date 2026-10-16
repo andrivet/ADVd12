@@ -1052,7 +1052,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
  * Note: For Bowden Extruders make this large enough to allow load/unload.
  */
 #define PREVENT_LENGTHY_EXTRUDE
-#define EXTRUDE_MAXLENGTH 800 // @advd12
+#define EXTRUDE_MAXLENGTH 1000 // @advd12
 
 //===========================================================================
 //======================== Thermal Runaway Protection =======================
@@ -3710,7 +3710,7 @@ constexpr uint16_t ADVD12_VERSION = 0x0100;
   // TFT Resolution. Enable one of the following options:
   //#define TFT_RES_320x240
   //#define TFT_RES_480x272
-  //#define TFT_RES_480x320
+  #define TFT_RES_480x320
   //#define TFT_RES_1024x600
 #endif
 

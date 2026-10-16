@@ -419,7 +419,7 @@ public:
 
   #if HAS_SOFTWARE_ENDSTOPS
 
-    typedef struct {
+    struct soft_endstops_t {
       bool _enabled, _loose;
       bool enabled() { return _enabled && !_loose; }
 
@@ -459,7 +459,7 @@ public:
           }
         #endif
       }
-    } soft_endstops_t;
+    };
 
   #else // !HAS_SOFTWARE_ENDSTOPS
 

@@ -240,7 +240,7 @@ namespace LanguageNarrow_en {
   LSTR MSG_DAC_EEPROM_WRITE               = _UxGT("DAC EEPROM Write");
   LSTR MSG_FILAMENT_CHANGE_OPTION_RESUME  = _UxGT("Continue");
   LSTR MSG_FILAMENT_CHANGE_INIT           = _UxGT(MSG_1_LINE("Please wait..."));
-  LSTR MSG_FILAMENT_CHANGE_INSERT         = _UxGT(MSG_1_LINE("Insert and Click"));
+  LSTR MSG_FILAMENT_CHANGE_INSERT         = _UxGT(MSG_1_LINE("Insert filament and Confirm"));
   LSTR MSG_FILAMENT_CHANGE_UNLOAD         = _UxGT(MSG_1_LINE("Ejecting..."));
   LSTR MSG_FILAMENT_CHANGE_LOAD           = _UxGT(MSG_1_LINE("Loading..."));
   LSTR MSG_FILAMENT_CHANGE_RESUME         = _UxGT(MSG_1_LINE("Resuming..."));

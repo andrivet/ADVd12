@@ -1,0 +1,4 @@
+h
+loadbin .pio/build/advd12_230_mks31/firmware.bin, 0x0800C000
+r
+q

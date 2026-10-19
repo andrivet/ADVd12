@@ -1180,9 +1180,9 @@ namespace ExtUI {
   void coolDown() { thermalManager.cooldown(); }
 
   bool awaitingUserConfirm() {
-    return TERN0(HAS_RESUME_CONTINUE, marlin.wait_for_user == Marlin::WAIT_FOR_USER::WAIT) || TERN0(HOST_KEEPALIVE_FEATURE, getHostKeepaliveIsPaused()); // @advd12
+    return TERN0(HAS_RESUME_CONTINUE, marlin.wait_for_user) || TERN0(HOST_KEEPALIVE_FEATURE, getHostKeepaliveIsPaused());
   }
-  void setUserConfirmed(bool abort) { TERN_(HAS_RESUME_CONTINUE, Marlin::wait_for_user = abort ? Marlin::WAIT_FOR_USER::ABORT : Marlin::WAIT_FOR_USER::CONTINUE); } // @advd12
+  void setUserConfirmed() { TERN_(HAS_RESUME_CONTINUE, marlin.user_resume()); }
 
   #if HAS_LEVELING
   void cancelLeveling() { ::g29_cancel = true; } // @advd12
@@ -1348,7 +1348,7 @@ namespace ExtUI {
   void cancelWaitForHeatup()
   {
     Marlin::wait_for_heatup = false;
-    setUserConfirmed(false);
+    setUserConfirmed();
   }
 
   void kill(FSTR_P const lcd_error, FSTR_P const lcd_component, const bool steppers_off)

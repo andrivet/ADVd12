@@ -215,7 +215,7 @@ bool load_filament(const float slow_load_length/*=0*/, const float fast_load_len
       hostui.prompt_do(PROMPT_USER_CONTINUE, F("Load Filament T"), tool, FPSTR(CONTINUE_STR));
     #endif
 
-    while (marlin.wait_for_user == Marlin::WAIT_FOR_USER::WAIT ) { // @advd12
+    while (marlin.wait_for_user ) {
       impatient_beep(max_beep_count);
       if (TERN0(FILAMENT_CHANGE_RESUME_ON_INSERT, !active_filament_is_out()))
         marlin.user_resume();
@@ -554,7 +554,7 @@ void wait_for_confirmation(const bool is_reload/*=false*/, const int8_t max_beep
     bool cleared = false;
   #endif
 
-  while (marlin.wait_for_user == Marlin::WAIT_FOR_USER::WAIT ) { // @advd12
+  while (marlin.wait_for_user) {
     impatient_beep(max_beep_count);
 
     #if ENABLED(FILAMENT_CHANGE_RESUME_ON_INSERT)

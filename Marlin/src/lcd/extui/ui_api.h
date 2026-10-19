@@ -353,7 +353,7 @@ namespace ExtUI {
 
   // Waiting for User Interaction
   bool awaitingUserConfirm();
-  void setUserConfirmed(bool abort); // @advd12 abort
+  void setUserConfirmed();
 
   #if ENABLED(ADVANCED_PAUSE_FEATURE)
     // "Purge More" has a control screen

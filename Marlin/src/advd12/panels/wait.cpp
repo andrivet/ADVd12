@@ -320,7 +320,7 @@ void on_continue(lv_event_t *) {
 
 void on_confirm(lv_event_t *event) {
   Wait::close();
-  ExtUI::setUserConfirmed(false);
+  ExtUI::setUserConfirmed();
 }
 
 void on_pause_extrude(lv_event_t *event) {

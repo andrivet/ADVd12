@@ -126,7 +126,7 @@ namespace ExtUI {
       case PAUSE_MESSAGE_RESUME:   Wait::wait_user(title, GET_TEXT(MSG_FILAMENT_CHANGE_RESUME), false); break;
       case PAUSE_MESSAGE_STATUS:   Wait::close(); break;
 
-      case PAUSE_MESSAGE_PARKING:  Wait::wait_user(title, GET_TEXT(MSG_PAUSE_PRINT_PARKING), false); ExtUI::setUserConfirmed(false); break;
+      case PAUSE_MESSAGE_PARKING:  Wait::wait_user(title, GET_TEXT(MSG_PAUSE_PRINT_PARKING), false); ExtUI::setUserConfirmed(); break;
       case PAUSE_MESSAGE_WAITING:  break;
       default: break;
     }

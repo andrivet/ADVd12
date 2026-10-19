@@ -44,9 +44,11 @@
 constexpr uint16_t ADVD12_VERSION = 0x0100;
 
 // Marlin's development mode
-//#define MARLIN_DEV_MODE
-//#define PINS_DEBUGGING
+#if defined(D12_SIMULATOR)
+#define MARLIN_DEV_MODE
+#define PINS_DEBUGGING
 //#define POSTMORTEM_DEBUGGING
+#endif
 
 // Logging
 // 0: disabled, 1: error, 2: warning, 3: info, 4: verbose, 5: everything (including suspended)

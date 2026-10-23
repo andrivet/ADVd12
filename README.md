@@ -19,11 +19,11 @@ The objectives of this custom firmware (when compared with the Wanhao stock firm
 * Fix known bugs, such as the [Y-axis moving in the wrong direction on some printers (based on the MKS Robin Nano 1.2)](https://github.com/MarlinFirmware/Marlin/issues/22967), and contribute fixes back to Marlin by submitting [pull requests](https://github.com/MarlinFirmware/Marlin/pull/28291).
 * Provide improved screens that are clearer, easier to read, well-structured, and that use graphics instead of small text.
 * Provide complete online documentation.
-* Offer support to project supporters on Patreon (via a Discourse server).
+* Offer support and pre-compiled binaries to project supporters on Patreon (via a Discourse server).
 * Enable Marlin features that are not enabled in the stock firmware (for example, the emergency parser).
-* Base **ADVd12** on the latest available version of Marlin (currently: 2.1.2.6).
-* Deliver an open-source firmware (GPLv3 for Marlin, CC BY-NC-SA for the screens).
-* Initially support D12-230 models, then extend support to other D12 models, or even other printers based on MKS Robin Nano motherboards.
+* Base **ADVd12** on the latest available version of Marlin (currently: 2.1.3-beta.3).
+* Deliver an open-source firmware (GPLv3 for Marlin, CC BY-NC-SA for the assets).
+* Initially support MKS Robin Nano V1.2 and V1.3 boards and then extend support to other boards (V3.0, V3.1, V3.2).
 * Start with simple configurations (such as systems without a Wi-Fi module) and then extend support progressively.
 * Provide a firmware comparable in quality and features to my other project ([ADVi3++](https://github.com/andrivet/advi3pp)).
 
